@@ -61,6 +61,11 @@
     input, textarea, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); outline: none; font-size: 14px; transition: border 0.2s; }
     input:focus, textarea:focus, select:focus { border-color: var(--accent); }
 
+    /* Custom File Input Styling to Force English */
+    .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; margin-top: 4px; }
+    .file-input-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+    .file-input-fake { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); font-size: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+
     .btn-main { width: 100%; padding: 14px; border-radius: 14px; background: var(--accent); color: var(--accent-text); border: none; font-weight: 700; font-size: 14px; margin-top: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
     .btn-main:active { opacity: 0.85; }
     .btn-sub { width: 100%; padding: 12px; border-radius: 14px; background: var(--accent-soft); color: var(--text-main); border: 1px solid var(--border); font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -171,9 +176,17 @@
           <h4 style="font-size:14px; margin-bottom:8px;">Mint Battle Coin</h4>
           <label>Coin Name / Symbol</label>
           <input id="b-title" placeholder="e.g. BattleCoin [BC]">
+          
           <label>Image / Logo</label>
-          <input id="b-image-file" type="file" accept="image/*">
+          <div class="file-input-wrapper">
+            <div class="file-input-fake">
+              <span id="b-file-label">Choose image file...</span>
+              <span style="font-size:12px; font-weight:700; background:var(--accent-soft); padding:4px 8px; border-radius:6px;">Browse</span>
+            </div>
+            <input id="b-image-file" type="file" accept="image/*">
+          </div>
           <img id="b-image-preview" class="img-preview" alt="Preview">
+
           <label>Initial Pool / Goal (ETH)</label>
           <input id="b-goal" type="number" placeholder="e.g. 1">
           <button class="btn-main" id="btn-create-battle-coin" style="margin-top:10px;">Mint for Battle</button>
@@ -217,7 +230,13 @@
         <input id="c-title" placeholder="e.g. AI Web3 Platform">
         
         <label>Project Image (Gallery)</label>
-        <input id="c-image-file" type="file" accept="image/*">
+        <div class="file-input-wrapper">
+          <div class="file-input-fake">
+            <span id="c-file-label">Choose image file...</span>
+            <span style="font-size:12px; font-weight:700; background:var(--accent-soft); padding:4px 8px; border-radius:6px;">Browse</span>
+          </div>
+          <input id="c-image-file" type="file" accept="image/*">
+        </div>
         <img id="c-image-preview" class="img-preview" alt="Preview">
 
         <label>Description</label>
@@ -506,6 +525,7 @@
       $('c-image-file')?.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
+          $('c-file-label').textContent = file.name;
           const reader = new FileReader();
           reader.onload = function(event) {
             selectedBase64Image = event.target.result;
@@ -520,6 +540,7 @@
       $('b-image-file')?.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
+          $('b-file-label').textContent = file.name;
           const reader = new FileReader();
           reader.onload = function(event) {
             selectedBattleBase64Image = event.target.result;
@@ -573,8 +594,9 @@
       battleCoins.push(newCoin);
       battleCoins.sort((a, b) => b.score - a.score);
 
-      $('b-title').value = '';$('b-goal').value = '';
-      $('b-image-file').value = '';$('b-image-preview').style.display = 'none';
+      $('b-title').value = '';
+      $('b-goal').value = '';$('b-image-file').value = '';
+      $('b-file-label').textContent = 'Choose image file...';$('b-image-preview').style.display = 'none';
       selectedBattleBase64Image = '';
 
       renderBattleLeaderboard();
@@ -834,10 +856,10 @@
         await tx.wait();
         alert('Launch Created Successfully!');
         
-        $('c-title').value = '';
-        $('c-desc').value = '';$('c-goal').value = '';
-        $('c-duration').value = '';$('c-shares').value = '';
-        $('c-image-file').value = '';$('c-image-preview').style.display = 'none';
+        $('c-title').value = '';$('c-desc').value = '';
+        $('c-goal').value = '';$('c-duration').value = '';
+        $('c-shares').value = '';$('c-image-file').value = '';
+        $('c-file-label').textContent = 'Choose image file...';$('c-image-preview').style.display = 'none';
         selectedBase64Image = "";
 
         loadHomeLaunches();
