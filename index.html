@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Dynamic — Milestone Launchpad</title>
+
+<!-- Favicon / Site İkonu Tanımları -->
+<link rel="icon" type="image/png" href="https://i.ibb.co/1tnYf0hb/1000085794.png">
+<link rel="shortcut icon" href="https://i.ibb.co/1tnYf0hb/1000085794.png">
+<link rel="apple-touch-icon" href="https://i.ibb.co/1tnYf0hb/1000085794.png">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -155,7 +161,7 @@ header {
   border-color: var(--accent);
 }
 
-/* Sayfa İçerik Alanı (Kaydırılabilir) */
+/* Sayfa İçerik Alanı */
 .main-content {
   padding-top: 110px;
   padding-bottom: calc(var(--nav-height) + 30px);
@@ -250,7 +256,6 @@ input {
   outline: none;
 }
 
-/* Görsel Yükleme Kutusu */
 .file-upload-box {
   border: 2px dashed var(--border);
   border-radius: 12px;
@@ -313,7 +318,6 @@ button.btn-main {
   margin-top: 12px;
 }
 
-/* Bottom Navigation Fix */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -432,7 +436,7 @@ button.btn-main {
     </div>
   </div>
 
-  <!-- SCREEN 3: CREATE LAUNCH (GÖRSEL YÜKLEME) -->
+  <!-- SCREEN 3: CREATE LAUNCH -->
   <div id="screen-create" class="screen">
     <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Create Launch</span>
     <div class="card-box">
@@ -521,10 +525,8 @@ button.btn-main {
 </div>
 
 <script>
-// DOM Yardımcısı
 const $ = i => document.getElementById(i);
 
-// Tab/Sayfa Değiştirme Mantığı
 function switchTab(screenId, targetBtn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
@@ -538,17 +540,13 @@ function switchTab(screenId, targetBtn) {
   window.scrollTo(0, 0);
 }
 
-// Event Listener'ları Dinleyicilerle Bağlama (Tıklama Garantisi İçin)
 document.addEventListener('DOMContentLoaded', () => {
-  // Alt Menü Navigasyon Dinleyicileri
   $('nav-home').addEventListener('click', (e) => switchTab('screen-browse', e.currentTarget));$('nav-explore').addEventListener('click', (e) => switchTab('screen-launch', e.currentTarget));
   $('nav-add').addEventListener('click', (e) => switchTab('screen-create', e.currentTarget));$('nav-wallet').addEventListener('click', (e) => switchTab('screen-wallet', e.currentTarget));
   $('wallet-top-btn').addEventListener('click', () => switchTab('screen-wallet',$('nav-wallet')));
 
-  // Tema Geçişi
   $('theme-btn').addEventListener('click', toggleTheme);
 
-  // Kategori Tabları
   document.querySelectorAll('.cat-tab').forEach(tab => {
     tab.addEventListener('click', (e) => {
       document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
@@ -556,10 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Dosya Yükleme & Önizleme İşleyicisi
   $('fileInput').addEventListener('change', handleFileSelect);$('remove-img-btn').addEventListener('click', removeImage);
 
-  // İşlem Butonları
   $('refresh-btn').addEventListener('click', browse);
   $('load-btn').addEventListener('click', load);$('create-launch-btn').addEventListener('click', createLaunch);
   $('new-wallet-btn').addEventListener('click', newWallet);$('unlock-btn').addEventListener('click', unlock);
@@ -570,7 +566,7 @@ function toggleTheme() {
   const current = html.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
-  $('theme-btn').textContent = next === 'dark' ? '☀️️' : '🌙';
+  $('theme-btn').textContent = next === 'dark' ? '☀' : '🌙';
 }
 
 function handleFileSelect(e) {
@@ -591,7 +587,6 @@ function removeImage() {
   $('pimgData').value = '';$('previewContainer').style.display = 'none';
 }
 
-// Web3 / Smart Contract İşlemleri
 const ABI=["function create(tuple(address pay,address sale,uint256 goal,uint256 rate,uint40 fundEnd,uint16[] bps,uint40[] durations,bytes32[] specs,string metaURI)) returns (uint256)","function contribute(uint256,uint256)","function closeFunding(uint256)","function claimMilestone(uint256,string)","function challenge(uint256)","function vote(uint256,bool)","function resolve(uint256)","function count() view returns (uint256)","function metaURI(uint256) view returns (string)","function launch(uint256) view returns (tuple(address team,address pay,address sale,uint256 goal,uint256 raised,uint256 bond,uint256 rate,uint40 fundEnd,uint8 st,uint256 paid,uint256 refundable,uint8 next,uint256 saleReclaimed,uint16 feeBps,uint8 threshold))","function milestones(uint256) view returns (tuple(uint16 bps,uint40 deadline,uint8 st,uint40 claimEnd,uint40 voteEnd,uint8 attests,uint8 round,uint256 yes,uint256 no,address challenger,uint256 stake,bytes32 spec)[])"];
 const LS=["Funding","Active","Halted","Completed","Failed"],MS=["Pending","Claimed","Challenged","Released"],SK='dyn_keystore';
 let provider,signer,W,me,c,A,ID,L,M,dec=6;
