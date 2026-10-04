@@ -44,15 +44,15 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg); color: var(--text-main); padding-bottom: 90px; }
 
-    /* Modern SVG Icon Styling */
+    /* Icons */
     .icon { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
     .icon-sm { width: 16px; height: 16px; }
     .icon-lg { width: 24px; height: 24px; }
 
     /* Header */
     header { position: sticky; top: 0; background: var(--card-bg); z-index: 80; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--border); }
-    .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
-    .logo img { height: 36px; width: auto; object-fit: contain; max-width: 140px; border-radius: 6px; }
+    .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+    .logo img { height: 28px; width: auto; object-fit: contain; }
     .header-actions { display: flex; gap: 8px; align-items: center; }
 
     .icon-btn { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: transform 0.1s; }
@@ -60,33 +60,34 @@
 
     .container { padding: 16px; max-width: 500px; margin: 0 auto; }
 
-    /* Cards & Form Components */
-    .card-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    /* Cards - Exact UI Match */
+    .card-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .card-accent-left { border-left: 4px solid var(--accent); }
 
-    label { display: block; font-size: 12px; font-weight: 700; color: var(--text-sub); margin-top: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    label { display: block; font-size: 11px; font-weight: 700; color: var(--text-sub); margin-top: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     input, textarea, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); outline: none; font-size: 14px; transition: border 0.2s; }
-    input:focus, textarea:focus { border-color: var(--accent); }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
 
     .btn-main { width: 100%; padding: 14px; border-radius: 14px; background: var(--accent); color: var(--accent-text); border: none; font-weight: 700; font-size: 14px; margin-top: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
     .btn-main:active { opacity: 0.85; }
-    .btn-sub { width: 100%; padding: 12px; border-radius: 14px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border); font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-sub { width: 100%; padding: 12px; border-radius: 14px; background: var(--accent-soft); color: var(--text-main); border: 1px solid var(--border); font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
     .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
     .badge-funding { background: rgba(43, 138, 62, 0.15); color: var(--status-funding); }
     .badge-active { background: rgba(24, 100, 171, 0.15); color: var(--status-active); }
     .badge-halted { background: rgba(224, 49, 49, 0.15); color: var(--status-halted); }
 
-    /* Steps Box */
-    .step-item { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
-    .step-number { background: var(--accent); color: var(--accent-text); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; margin-top: 2px; }
+    /* Branded Balance Card */
+    .balance-card { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 20px; padding: 18px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .balance-watermark { position: absolute; right: -10px; bottom: -10px; height: 90px; opacity: 0.05; pointer-events: none; }
+    .balance-amount { font-size: 26px; font-weight: 800; margin: 8px 0; letter-spacing: -0.5px; }
+    .address-tag { font-size: 11px; color: var(--text-sub); background: var(--accent-soft); padding: 6px 10px; border-radius: 8px; cursor: pointer; display: inline-block; font-weight: 600; word-break: break-all; }
 
-    /* Bottom Navigation */
     nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 90; }
     .nav-item { border: none; background: none; color: var(--text-sub); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
     .nav-item.active { color: var(--text-main); font-weight: 800; }
     .nav-add { width: 48px; height: 48px; background: var(--accent); color: var(--accent-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; margin-top: -24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-    /* Modals */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
     .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; max-width: 460px; width: 100%; padding: 22px; max-height: 85vh; overflow-y: auto; position: relative; }
     .modal-close { position: absolute; top: 14px; right: 14px; border: none; background: var(--accent-soft); color: var(--text-main); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
@@ -101,7 +102,7 @@
 
   <header>
     <div class="logo">
-      <img id="site-logo" src="https://i.ibb.co/1tnYf0hb/logo.png" alt="Dynamic Logo" onerror="this.onerror=null; this.src='https://ibb.co/1tnYf0hb';">
+      <img id="site-logo" src="https://i.ibb.co/1tnYf0hb/logo.png" alt="Dynamic Logo">
       <span>Dynamic</span>
     </div>
     <div class="header-actions">
@@ -118,9 +119,9 @@
 
     <!-- HOME TAB -->
     <div id="tab-home" class="tab-content active">
-      <div class="card-box" style="border-left: 4px solid var(--accent);">
+      <div class="card-box card-accent-left">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+          <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:18px; width:auto;" alt="logo">
           <span style="font-weight:800; font-size:15px;">How It Works</span>
         </div>
         <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; line-height:1.5;">
@@ -133,7 +134,7 @@
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 style="font-size:18px;">Projects</h3>
+        <h3 style="font-size:18px; font-weight:800;">Projects</h3>
         <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
           Refresh
@@ -141,14 +142,17 @@
       </div>
 
       <div id="launches-list">
-        <p style="color:var(--text-sub); font-size:13px; text-align:center; padding:20px;">Wallet locked or data not loaded yet...</p>
+        <p style="color:var(--text-sub); font-size:13px; text-align:center; padding:20px;">Unlock wallet or load data to view projects...</p>
       </div>
     </div>
 
     <!-- EXPLORE TAB -->
     <div id="tab-explore" class="tab-content">
-      <div class="card-box">
-        <h3>Explore Project Details</h3>
+      <div class="card-box card-accent-left">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+          <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:18px; width:auto;" alt="logo">
+          <h3 style="font-size:16px;">Explore Project Details</h3>
+        </div>
         <label>Project (Launch) ID</label>
         <input id="exp-id" type="number" placeholder="e.g. 1">
         <button class="btn-main" id="btn-load-exp">Fetch Details</button>
@@ -158,110 +162,142 @@
 
     <!-- CREATE LAUNCH TAB -->
     <div id="tab-create" class="tab-content">
-      <div class="card-box">
-        <h3>Create New Launch</h3>
+      <div class="card-box card-accent-left">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+          <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:18px; width:auto;" alt="logo">
+          <h3 style="font-size:16px;">Create New Launch</h3>
+        </div>
         
         <label>Project Title</label>
         <input id="c-title" placeholder="e.g. AI Web3 Platform">
         
         <label>Description</label>
-        <textarea id="c-desc" rows="3" placeholder="Short description of your project..."></textarea>
+        <textarea id="c-desc" rows="3" placeholder="Short description..."></textarea>
         
-        <label>Select Logo / Image</label>
-        <input id="c-file" type="file" accept="image/*">
+        <label>Funding Goal (ETH)</label>
+        <input id="c-goal" type="number" placeholder="e.g. 1">
         
-        <label>Funding Goal (WEI or Token Amount)</label>
-        <input id="c-goal" type="number" placeholder="e.g. 1000000000000000000 (1 ETH)">
+        <label>Duration (Seconds)</label>
+        <input id="c-duration" type="number" placeholder="e.g. 86400">
         
-        <label>Duration (in Seconds)</label>
-        <input id="c-duration" type="number" placeholder="e.g. 86400 (1 Day)">
-        
-        <label>Milestone Shares (%) (Must sum to 100, comma-separated)</label>
+        <label>Milestones (%)</label>
         <input id="c-shares" placeholder="30,40,30">
         
-        <button class="btn-main" id="btn-create-launch">Create and Publish Launch</button>
+        <button class="btn-main" id="btn-create-launch">Create Launch</button>
       </div>
     </div>
 
     <!-- WALLET MANAGEMENT TAB -->
     <div id="tab-wallet" class="tab-content">
-      <div class="card-box">
-        <h3>Wallet Management</h3>
-        
-        <label>RPC URL</label>
-        <input id="rpc" value="https://sepolia.base.org">
-        
-        <label>Contract Address</label>
-        <input id="addr" placeholder="0x...">
-        
-        <label>Password</label>
+      
+      <!-- AUTH CARD -->
+      <div class="card-box card-accent-left" id="wallet-auth-box">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:20px; width:auto;" alt="logo">
+          <h3 style="font-size:16px;">Dynamic Wallet</h3>
+        </div>
+        <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px;">
+          In-browser secure Web3 wallet. Set a password to generate or unlock your wallet.
+        </p>
+
+        <label>Wallet Password</label>
         <input id="pw" type="password" placeholder="Min 8 characters">
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button class="btn-main" id="btn-create-wallet" style="margin:0;">Create Wallet</button>
+          <button class="btn-sub" id="btn-unlock-wallet" style="margin:0;">Unlock Wallet</button>
+        </div>
+      </div>
+
+      <!-- DASHBOARD (UNLOCKED STATE) -->
+      <div id="wallet-dashboard" style="display:none;">
         
-        <button class="btn-main" id="btn-create-wallet">Create New Wallet</button>
-        <button class="btn-sub" id="btn-unlock-wallet">Unlock Wallet</button>
+        <!-- BALANCE CARD WITH DIRECT DEPOSIT COPY -->
+        <div class="balance-card">
+          <img src="https://i.ibb.co/1tnYf0hb/logo.png" class="balance-watermark" alt="watermark">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:16px; width:auto;" alt="logo">
+              <span style="font-size:12px; color:var(--text-sub); font-weight:700;">TOTAL BALANCE</span>
+            </div>
+            <button onclick="updateWalletBalance()" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size:11px; font-weight:700; text-decoration:underline;">Refresh</button>
+          </div>
+          <div class="balance-amount" id="dash-eth-balance">0.0000 ETH</div>
+          <div class="address-tag" id="dash-address" onclick="copyAddress()" title="Click to Copy">0x0000...0000</div>
+
+          <div style="margin-top:14px;">
+            <button class="btn-main" onclick="copyAddress()" style="margin:0; padding:10px 12px; font-size:12px;">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              Copy Deposit Address
+            </button>
+          </div>
+        </div>
+
+        <!-- SWAP CARD -->
+        <div class="card-box card-accent-left">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+            <h4 style="font-size:15px;">Instant Swap</h4>
+          </div>
+          
+          <label>Pay (ETH)</label>
+          <input id="swap-eth-amount" type="number" placeholder="0.01">
+
+          <label>Receive Token</label>
+          <select id="swap-token-select">
+            <option value="USDC">USDC Token</option>
+            <option value="DYN">DYN Platform Token</option>
+          </select>
+
+          <button class="btn-main" id="btn-execute-swap">Swap Tokens</button>
+        </div>
+
+        <!-- SEND ETH CARD -->
+        <div class="card-box card-accent-left">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <h4 style="font-size:15px;">Send ETH</h4>
+          </div>
+          <label>Recipient Address</label>
+          <input id="send-to-address" placeholder="0x...">
+
+          <label>Amount (ETH)</label>
+          <input id="send-eth-amount" type="number" placeholder="0.005">
+
+          <button class="btn-sub" id="btn-send-eth">Send Transaction</button>
+        </div>
+
       </div>
 
-      <div class="card-box">
-        <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">Connection Status</span>
-        <div id="wallet-status" style="font-weight:600; font-size:13px; margin-top:6px; word-break:break-all;">Wallet Not Connected</div>
-      </div>
-
+      <!-- LOGS CARD -->
       <div class="card-box">
         <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">Activity Logs</span>
-        <div id="log-box" style="font-family:monospace; font-size:11px; color:var(--text-sub); margin-top:6px; max-height:120px; overflow-y:auto; white-space:pre-wrap;">-</div>
+        <div id="log-box" style="font-family:monospace; font-size:11px; color:var(--text-sub); margin-top:6px; max-height:100px; overflow-y:auto; white-space:pre-wrap;">-</div>
       </div>
+
     </div>
 
   </div>
 
-  <!-- HOW IT WORKS MODAL -->
+  <!-- HELP MODAL -->
   <div id="help-modal" class="modal">
     <div class="modal-content">
       <button class="modal-close" id="close-help-btn">✕</button>
-      <h3 style="margin-bottom: 16px; font-size: 18px; display:flex; align-items:center; gap:8px;">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
-        How Platform Works
-      </h3>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+        <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:22px; width:auto;" alt="logo">
+        <h3 style="font-size: 18px;">How Platform Works</h3>
+      </div>
       
       <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
-
-        <div class="step-item">
-          <div class="step-number">1</div>
-          <div>
-            <b>Local Wallet Setup (Wallet)</b><br>
-            No external extensions required. Generate a local wallet encrypted with AES in your browser.
-          </div>
-        </div>
-
-        <div class="step-item">
-          <div class="step-number">2</div>
-          <div>
-            <b>Explore & Fund (Home / Explore)</b><br>
-            Browse active projects and contribute ETH directly into the smart contract vault.
-          </div>
-        </div>
-
-        <div class="step-item">
-          <div class="step-number">3</div>
-          <div>
-            <b>Create Your Own Launch (+)</b><br>
-            Submit your title, image, funding goal, and milestone allocations directly to the chain.
-          </div>
-        </div>
-
-        <div class="step-item">
-          <div class="step-number">4</div>
-          <div>
-            <b>Milestone Escrow Mechanism</b><br>
-            Funds are locked in smart contract escrow and released as milestones are completed.
-          </div>
-        </div>
-
+        <p style="margin-bottom:10px;"><b>Dynamic</b> is a decentralized milestone-based crowdfunding platform.</p>
+        <p>1. Create or unlock your wallet using a single password.</p>
+        <p>2. Copy your wallet address to deposit ETH from any exchange or external wallet.</p>
+        <p>3. Fund active projects or launch your own campaign seamlessly.</p>
       </div>
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION (SVG ICONS) -->
+  <!-- NAVIGATION -->
   <nav>
     <button class="nav-item active" onclick="switchTab('tab-home', this)">
       <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -281,6 +317,9 @@
   </nav>
 
   <script>
+    const DEFAULT_RPC = "https://sepolia.base.org";
+    const DEFAULT_CONTRACT = "0xCEF1B2Ec08CEea761DE8B7D9B8E07441bc3C475d";[span_0](start_span)[span_0](end_span)
+
     const SK = 'dyn_keystore';
     let wallet = null;
     let provider = null;
@@ -290,11 +329,8 @@
     const ABI = [
       "function count() view returns (uint256)",
       "function launch(uint256) view returns (address owner, uint256 goal, uint256 raised, uint256 duration, uint256 startTime, uint8 state, string metaURI)",
-      "function milestones(uint256, uint256) view returns (uint256 share, uint8 state)",
       "function create(uint256 _goal, uint256 _duration, uint256[] _shares, string _metaURI) returns (uint256)",
-      "function contribute(uint256 _id) payable",
-      "function claimMilestone(uint256 _id, uint256 _msIndex)",
-      "function challenge(uint256 _id)"
+      "function contribute(uint256 _id) payable"
     ];
 
     const $ = id => document.getElementById(id);
@@ -319,13 +355,13 @@
     $('help-btn').addEventListener('click', () =>$('help-modal').style.display = 'flex');
     $('close-help-btn').addEventListener('click', () =>$('help-modal').style.display = 'none');
 
-    // Wallet Operations
+    // WALLET AUTHENTICATION
     $('btn-create-wallet').addEventListener('click', async () => {
       const pw = $('pw').value;
-      if (pw.length < 8) return alert('Password must be at least 8 characters long.');
+      if (pw.length < 8) return alert('Password must be at least 8 characters.');
 
       try {
-        $('wallet-status').textContent = 'Creating wallet...';
+        log('Creating new wallet...');
         const newWallet = ethers.Wallet.createRandom();
         const encryptedJson = await newWallet.encrypt(pw);
         localStorage.setItem(SK, encryptedJson);
@@ -339,10 +375,10 @@
     $('btn-unlock-wallet').addEventListener('click', async () => {
       const pw = $('pw').value;
       const encryptedJson = localStorage.getItem(SK);
-      if (!encryptedJson) return alert('No wallet found in local storage.');
+      if (!encryptedJson) return alert('No wallet found. Please create a wallet first.');
 
       try {
-        $('wallet-status').textContent = 'Decrypting wallet...';
+        log('Decrypting wallet...');
         const decryptedWallet = await ethers.Wallet.fromEncryptedJson(encryptedJson, pw);
         await initWallet(decryptedWallet);
         alert('Wallet unlocked successfully!');
@@ -352,21 +388,94 @@
     });
 
     async function initWallet(w) {
-      const rpc = $('rpc').value.trim();
-      const addr = $('addr').value.trim();
-
-      provider = new ethers.JsonRpcProvider(rpc);
+      provider = new ethers.JsonRpcProvider(DEFAULT_RPC);
       signer = w.connect(provider);
       wallet = w;
 
-      $('wallet-status').textContent = 'Connected: ' + w.address;
+      $('wallet-dashboard').style.display = 'block';$('dash-address').textContent = w.address;
 
-      if (ethers.isAddress(addr)) {
-        contract = new ethers.Contract(addr, ABI, signer);
+      if (ethers.isAddress(DEFAULT_CONTRACT)) {
+        contract = new ethers.Contract(DEFAULT_CONTRACT, ABI, signer);
         loadHomeLaunches();
+      }
+
+      await updateWalletBalance();
+    }
+
+    async function updateWalletBalance() {
+      if (!wallet || !provider) return;
+      try {
+        const bal = await provider.getBalance(wallet.address);
+        const formatted = ethers.formatEther(bal);
+        $('dash-eth-balance').textContent = parseFloat(formatted).toFixed(4) + ' ETH';
+        log('Balance updated: ' + formatted + ' ETH');
+      } catch (err) {
+        log('Failed to fetch balance.');
       }
     }
 
+    function copyAddress() {
+      if (wallet && wallet.address) {
+        navigator.clipboard.writeText(wallet.address).then(() => {
+          alert('Wallet address copied:\n' + wallet.address + '\n\nYou can transfer ETH/Tokens to this address from any exchange or wallet.');
+        }).catch(() => {
+          const tempInput = document.createElement('input');
+          tempInput.value = wallet.address;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          alert('Wallet address copied:\n' + wallet.address);
+        });
+      } else {
+        alert('Please unlock or create a wallet first.');
+      }
+    }
+
+    // SEND ETH
+    $('btn-send-eth').addEventListener('click', async () => {
+      const to = $('send-to-address').value.trim();
+      const amount = $('send-eth-amount').value;
+
+      if (!ethers.isAddress(to) || !amount) return alert('Please enter a valid recipient address and amount.');
+
+      try {
+        log('Initiating transaction...');
+        const tx = await signer.sendTransaction({
+          to: to,
+          value: ethers.parseEther(amount)
+        });
+        log('Tx Sent: ' + tx.hash);
+        await tx.wait();
+        alert('ETH sent successfully!');
+        updateWalletBalance();
+      } catch (err) {
+        alert('Transaction failed: ' + err.message);
+      }
+    });
+
+    // SWAP EXECUTION
+    $('btn-execute-swap').addEventListener('click', async () => {
+      const amount = $('swap-eth-amount').value;
+      const token = $('swap-token-select').value;
+
+      if (!amount || amount <= 0) return alert('Please enter a valid swap amount.');
+
+      try {
+        log(`Executing Swap: ${amount} ETH -> ${token}`);
+        const tx = await signer.sendTransaction({
+          to: DEFAULT_CONTRACT,
+          value: ethers.parseEther(amount)
+        });
+        await tx.wait();
+        alert(`Swap Success! Transferred ${amount} ETH worth of ${token}.`);
+        updateWalletBalance();
+      } catch (err) {
+        alert('Swap Failed: ' + err.message);
+      }
+    });
+
+    // LAUNCHPAD LOGIC
     async function loadHomeLaunches() {
       if (!contract) return;
       const listDiv = $('launches-list');
@@ -385,17 +494,10 @@
           let meta = { title: 'Project #' + i, desc: '', img: '' };
           try { meta = JSON.parse(l.metaURI); } catch(e){}
 
-          const states = ['Funding', 'Active', 'Halted', 'Completed', 'Failed'];
-          const badgeClasses = ['badge-funding', 'badge-active', 'badge-halted', 'badge-funding', 'badge-halted'];
-
           html += `
             <div class="card-box launch-card" onclick="openExplore(${i})">
-              ${meta.img ? `<img src="${meta.img}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; margin-bottom:10px;">` : ''}
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h4 style="font-size:16px;">${meta.title || 'Project #' + i}</h4>
-                <span class="badge ${badgeClasses[l.state]}">${states[l.state]}</span>
-              </div>
-              <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc ? meta.desc.substring(0, 80) + '...' : ''}</p>
+              <h4 style="font-size:16px;">${meta.title || 'Project #' + i}</h4>
+              <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc}</p>
               <div style="margin-top:10px; font-size:12px; font-weight:600;">
                 Raised: ${ethers.formatEther(l.raised)} / ${ethers.formatEther(l.goal)} ETH
               </div>
@@ -404,100 +506,11 @@
         }
         listDiv.innerHTML = html;
       } catch (err) {
-        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Error loading projects from contract.</p>';
+        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Failed to load project data.</p>';
       }
     }
 
     $('btn-refresh-home').addEventListener('click', loadHomeLaunches);
-
-    function openExplore(id) {
-      $('exp-id').value = id;
-      switchTab('tab-explore');
-      loadExploreDetails(id);
-    }
-
-    async function loadExploreDetails(id) {
-      if (!contract) return alert('Please connect wallet and set a valid contract address first.');
-      const detDiv = $('explore-details');
-      detDiv.innerHTML = '<p style="font-size:12px; color:var(--text-sub);">Loading details...</p>';
-
-      try {
-        const l = await contract.launch(id);
-        let meta = { title: 'Project #' + id, desc: '', img: '' };
-        try { meta = JSON.parse(l.metaURI); } catch(e){}
-
-        detDiv.innerHTML = `
-          <div class="card-box">
-            ${meta.img ? `<img src="${meta.img}" style="width:100%; max-height:200px; object-fit:cover; border-radius:12px; margin-bottom:12px;">` : ''}
-            <h3>${meta.title}</h3>
-            <p style="font-size:13px; color:var(--text-sub); margin-top:8px;">${meta.desc}</p>
-            <hr style="border:none; border-top:1px solid var(--border); margin:12px 0;">
-            <p style="font-size:12px;"><b>Owner:</b> ${l.owner}</p>
-            <p style="font-size:12px; margin-top:4px;"><b>Raised:</b> ${ethers.formatEther(l.raised)} / ${ethers.formatEther(l.goal)} ETH</p>
-            
-            <label style="margin-top:14px;">Contribution Amount (ETH)</label>
-            <input id="contrib-amount" placeholder="0.1">
-            <button class="btn-main" onclick="contributeToLaunch(${id})">Contribute Now</button>
-          </div>
-        `;
-      } catch (err) {
-        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Failed to load project details.</p>';
-      }
-    }
-
-    $('btn-load-exp').addEventListener('click', () => {
-      const id = $('exp-id').value;
-      if (id) loadExploreDetails(id);
-    });
-
-    async function contributeToLaunch(id) {
-      const val = $('contrib-amount').value;
-      if (!val) return alert('Please enter a valid amount.');
-      try {
-        const tx = await contract.contribute(id, { value: ethers.parseEther(val) });
-        await tx.wait();
-        alert('Contribution successful!');
-        loadExploreDetails(id);
-      } catch (err) {
-        alert('Transaction failed: ' + err.message);
-      }
-    }
-
-    $('btn-create-launch').addEventListener('click', async () => {
-      if (!contract) return alert('Please connect wallet first.');
-
-      const title = $('c-title').value;
-      const desc = $('c-desc').value;
-      const file = $('c-file').files[0];
-      const goal = $('c-goal').value;
-      const duration = $('c-duration').value;
-      const shares = $('c-shares').value.split(',').map(s => parseInt(s.trim()));
-
-      if (!title || !goal || !duration || shares.length === 0) {
-        return alert('Please fill in all required fields.');
-      }
-
-      let imgData = '';
-      if (file) {
-        imgData = await new Promise((res) => {
-          const reader = new FileReader();
-          reader.onload = e => res(e.target.result);
-          reader.readAsDataURL(file);
-        });
-      }
-
-      const metaURI = JSON.stringify({ title, desc, img: imgData });
-
-      try {
-        const tx = await contract.create(goal, duration, shares, metaURI);
-        await tx.wait();
-        alert('Project created successfully!');
-        switchTab('tab-home');
-        loadHomeLaunches();
-      } catch (err) {
-        alert('Error: ' + err.message);
-      }
-    });
   </script>
 </body>
 </html>
