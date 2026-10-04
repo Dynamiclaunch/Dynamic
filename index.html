@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -90,8 +90,8 @@
   <header>
     <div class="logo">⚡ Dynamic</div>
     <div class="header-actions">
-      <button class="icon-btn" id="help-btn" title="Platform Nasıl Çalışır?">❓</button>
-      <button class="icon-btn" id="theme-btn" title="Koyu/Açık Tema">🌙</button>
+      <button class="icon-btn" id="help-btn" title="How It Works">❓</button>
+      <button class="icon-btn" id="theme-btn" title="Toggle Theme">🌙</button>
     </div>
   </header>
 
@@ -99,32 +99,32 @@
 
     <!-- HOME TAB -->
     <div id="tab-home" class="tab-content active">
-      <!-- Genel Platform Rehberi Kartı -->
+      <!-- Quick Start Banner -->
       <div class="card-box" style="border-left: 4px solid var(--accent);">
-        <span style="font-weight:800; font-size:15px; display:block; margin-bottom:6px;">Platform Nasıl Çalışır? 🚀</span>
+        <span style="font-weight:800; font-size:15px; display:block; margin-bottom:6px;">How It Works 🚀</span>
         <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; line-height:1.5;">
-          <b>Dynamic</b>, Web3 girişimcileri ve yatırımcıları güvence altına alan **aşama bazlı (milestone) ve merkeziyetsiz** bir fonlama platformudur.
+          <b>Dynamic</b> is a decentralized, milestone-based crowdfunding platform that protects both Web3 entrepreneurs and investors.
         </p>
-        <button class="btn-sub" style="padding: 10px 14px; font-size: 12px; margin:0;" onclick="document.getElementById('help-modal').style.display='flex'">Detaylı Kullanım Rehberini Oku 📖</button>
+        <button class="btn-sub" style="padding: 10px 14px; font-size: 12px; margin:0;" onclick="document.getElementById('help-modal').style.display='flex'">Read Full Guide 📖</button>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 style="font-size:18px;">Projeler</h3>
-        <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">Yenile 🔄</button>
+        <h3 style="font-size:18px;">Projects</h3>
+        <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">Refresh 🔄</button>
       </div>
 
       <div id="launches-list">
-        <p style="color:var(--text-sub); font-size:13px; text-align:center; padding:20px;">Cüzdan kilitli veya henüz veri yüklenmedi...</p>
+        <p style="color:var(--text-sub); font-size:13px; text-align:center; padding:20px;">Wallet locked or data not loaded yet...</p>
       </div>
     </div>
 
-    <!-- EXPLORE / DETAY TAB -->
+    <!-- EXPLORE / DETAILS TAB -->
     <div id="tab-explore" class="tab-content">
       <div class="card-box">
-        <h3>Proje Detay Sorgula</h3>
-        <label>Proje (Launch) ID</label>
-        <input id="exp-id" type="number" placeholder="Örn: 1">
-        <button class="btn-main" id="btn-load-exp">Proje Detayını Getir</button>
+        <h3>Explore Project Details</h3>
+        <label>Project (Launch) ID</label>
+        <input id="exp-id" type="number" placeholder="e.g. 1">
+        <button class="btn-main" id="btn-load-exp">Fetch Details</button>
       </div>
       <div id="explore-details"></div>
     </div>
@@ -132,106 +132,106 @@
     <!-- CREATE LAUNCH TAB -->
     <div id="tab-create" class="tab-content">
       <div class="card-box">
-        <h3>Yeni Proje Başlat (Create Launch)</h3>
+        <h3>Create New Launch</h3>
         
-        <label>Proje Başlığı</label>
-        <input id="c-title" placeholder="Örn: AI Web3 Platform">
+        <label>Project Title</label>
+        <input id="c-title" placeholder="e.g. AI Web3 Platform">
         
-        <label>Açıklama</label>
-        <textarea id="c-desc" rows="3" placeholder="Projeniz hakkında kısa bilgi..."></textarea>
+        <label>Description</label>
+        <textarea id="c-desc" rows="3" placeholder="Short description of your project..."></textarea>
         
-        <label>Logo / Görsel Seç</label>
+        <label>Select Logo / Image</label>
         <input id="c-file" type="file" accept="image/*">
         
-        <label>Fon Hedefi (WEI veya Token Miktarı)</label>
-        <input id="c-goal" type="number" placeholder="Örn: 1000000000000000000 (1 ETH)">
+        <label>Funding Goal (WEI or Token Amount)</label>
+        <input id="c-goal" type="number" placeholder="e.g. 1000000000000000000 (1 ETH)">
         
-        <label>Süre (Saniye cinsinden)</label>
-        <input id="c-duration" type="number" placeholder="Örn: 86400 (1 Gün)">
+        <label>Duration (in Seconds)</label>
+        <input id="c-duration" type="number" placeholder="e.g. 86400 (1 Day)">
         
-        <label>Aşama Payları (%) (Toplamı 100 olmalı, virgülle ayırın)</label>
+        <label>Milestone Shares (%) (Must sum to 100, comma-separated)</label>
         <input id="c-shares" placeholder="30,40,30">
         
-        <button class="btn-main" id="btn-create-launch">Projeyi Oluştur ve Yayınla</button>
+        <button class="btn-main" id="btn-create-launch">Create and Publish Launch</button>
       </div>
     </div>
 
     <!-- WALLET MANAGEMENT TAB -->
     <div id="tab-wallet" class="tab-content">
       <div class="card-box">
-        <h3>Cüzdan Yönetimi (Wallet)</h3>
+        <h3>Wallet Management</h3>
         
         <label>RPC URL</label>
         <input id="rpc" value="https://sepolia.base.org">
         
-        <label>Contract Address (Sözleşme Adresi)</label>
+        <label>Contract Address</label>
         <input id="addr" placeholder="0x...">
         
-        <label>Şifre (Password)</label>
-        <input id="pw" type="password" placeholder="En az 8 karakter">
+        <label>Password</label>
+        <input id="pw" type="password" placeholder="Min 8 characters">
         
-        <button class="btn-main" id="btn-create-wallet">Yeni Cüzdan Oluştur (Create)</button>
-        <button class="btn-sub" id="btn-unlock-wallet">Kilidi Aç (Unlock)</button>
+        <button class="btn-main" id="btn-create-wallet">Create New Wallet</button>
+        <button class="btn-sub" id="btn-unlock-wallet">Unlock Wallet</button>
       </div>
 
       <div class="card-box">
-        <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">Bağlantı Durumu</span>
-        <div id="wallet-status" style="font-weight:600; font-size:13px; margin-top:6px; word-break:break-all;">Cüzdan Bağlı Değil</div>
+        <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">Connection Status</span>
+        <div id="wallet-status" style="font-weight:600; font-size:13px; margin-top:6px; word-break:break-all;">Wallet Not Connected</div>
       </div>
 
       <div class="card-box">
-        <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">İşlem Kayıtları (Log)</span>
+        <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">Activity Logs</span>
         <div id="log-box" style="font-family:monospace; font-size:11px; color:var(--text-sub); margin-top:6px; max-height:120px; overflow-y:auto; white-space:pre-wrap;">-</div>
       </div>
     </div>
 
   </div>
 
-  <!-- HOW IT WORKS MODAL (GENEL SİTE ÇALIŞMA MANTIĞI) -->
+  <!-- HOW IT WORKS MODAL -->
   <div id="help-modal" class="modal">
     <div class="modal-content">
       <button class="modal-close" id="close-help-btn">✕</button>
-      <h3 style="margin-bottom: 16px; font-size: 18px;">Genel Platform Rehberi ⚡</h3>
+      <h3 style="margin-bottom: 16px; font-size: 18px;">How Platform Works ⚡</h3>
       
       <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
 
         <div class="step-item">
           <div class="step-number">1</div>
           <div>
-            <b>Yerel Cüzdan Oluşturma (Wallet)</b><br>
-            MetaMask gibi eklentilere ihtiyaç duymadan doğrudan site üzerinden cüzdan oluşturabilirsiniz. Belirlediğiniz şifre ile özel anahtarınız (Private Key) tarayıcınızda AES yöntemiyle şifrelenir.
+            <b>Local Wallet Setup (Wallet)</b><br>
+            No external extensions like MetaMask are required. Enter a password to generate a local wallet. Your private key is encrypted locally using AES in your browser.
           </div>
         </div>
 
         <div class="step-item">
           <div class="step-number">2</div>
           <div>
-            <b>Proje Keşfetme & Fonlama (Home / Explore)</b><br>
-            Ana sayfada akıllı sözleşmede yayınlanmış tüm aktif projeler listelenir. Beğendiğiniz projeleri inceleyebilir ve <code>Contribute</code> seçeneği ile doğrudan akıllı sözleşmeye ETH aktararak destek olabilirsiniz.
+            <b>Explore & Fund (Home / Explore)</b><br>
+            Browse all active projects deployed on the smart contract. Support projects by contributing ETH directly into the secure contract vault using the <code>Contribute</code> action.
           </div>
         </div>
 
         <div class="step-item">
           <div class="step-number">3</div>
           <div>
-            <b>Kendi Projenizi Başlatma (+)</b><br>
-            Alt menüdeki <b>"+"</b> butonunu kullanarak proje adınızı, görsellerinizi, toplam fon hedefinizi ve projeyi tamamlayacağınız aşama (Milestone) yüzdelerini tanımlayarak blokzincir üzerinde yayınlayabilirsiniz.
+            <b>Create Your Own Launch (+)</b><br>
+            Click the <b>"+"</b> button in the bottom menu to submit your project title, media, overall funding target, and milestone release percentages directly to the blockchain.
           </div>
         </div>
 
         <div class="step-item">
           <div class="step-number">4</div>
           <div>
-            <b>Kademeli Serbest Bırakma (Escrow)</b><br>
-            Toplanan tüm fonlar akıllı sözleşmede (Escrow) dondurulur. Proje sahipleri tüm parayı tek seferde çekemez. Yalnızca vaat ettikleri her bir aşamayı (Milestone) başarıyla tamamladıklarında fondan kademeli olarak pay alabilirler.
+            <b>Milestone Escrow Mechanism</b><br>
+            All raised funds are locked inside the smart contract escrow. Project creators cannot withdraw the full amount at once. Funds are unlocked gradually as each predefined milestone is completed.
           </div>
         </div>
 
         <div class="step-item">
           <div class="step-number">5</div>
           <div>
-            <b>Topluluk Denetimi & İtiraz (Challenge)</b><br>
-            Eğer bir proje sahibi vaat ettiği teslimatları yapmazsa veya topluluğu yanıltırsa, yatırımcılar <code>Challenge</code> (İtiraz) mekanizmasını tetikleyerek fon akışını dondurabilir.
+            <b>Community Oversight & Challenge</b><br>
+            If a creator fails to deliver promised milestones or misleads the community, backers can trigger a <code>Challenge</code> process to halt fund distribution.
           </div>
         </div>
 
@@ -254,7 +254,7 @@
     let signer = null;
     let contract = null;
 
-    // Minimum ABI tanımı
+    // Minimum ABI
     const ABI = [
       "function count() view returns (uint256)",
       "function launch(uint256) view returns (address owner, uint256 goal, uint256 raised, uint256 duration, uint256 startTime, uint8 state, string metaURI)",
@@ -272,7 +272,7 @@
       box.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n` + box.textContent;
     }
 
-    // Tab Değiştirme Mantığı
+    // Navigation Switch
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -280,56 +280,56 @@
       if(el && el.classList) el.classList.add('active');
     }
 
-    // Tema Değiştirme Mantığı
+    // Theme Toggle
     $('theme-btn').addEventListener('click', () => {
       const isDark = document.body.getAttribute('data-theme') === 'dark';
       document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
       $('theme-btn').textContent = isDark ? '🌙' : '☀️';
     });
 
-    // Yardım Modal Açma/Kapatma
+    // Modal Control
     $('help-btn').addEventListener('click', () =>$('help-modal').style.display = 'flex');
     $('close-help-btn').addEventListener('click', () =>$('help-modal').style.display = 'none');
 
-    // 1. Cüzdan Oluşturma
+    // 1. Create Wallet
     $('btn-create-wallet').addEventListener('click', async () => {
       const pw = $('pw').value;
-      if (pw.length < 8) return alert('Şifre en az 8 karakter olmalıdır.');
+      if (pw.length < 8) return alert('Password must be at least 8 characters long.');
 
       try {
-        $('wallet-status').textContent = 'Cüzdan üretiliyor ve şifreleniyor...';
-        log('Yeni cüzdan üretimi başlatıldı.');
+        $('wallet-status').textContent = 'Creating and encrypting wallet...';
+        log('Starting new wallet creation.');
         const newWallet = ethers.Wallet.createRandom();
         const encryptedJson = await newWallet.encrypt(pw);
         localStorage.setItem(SK, encryptedJson);
         await initWallet(newWallet);
-        alert('Cüzdan başarıyla oluşturuldu ve yerel hafızaya şifreli olarak kaydedildi!');
+        alert('Wallet successfully created and encrypted in local storage!');
       } catch (err) {
-        log('Hata: ' + err.message);
-        alert('Cüzdan oluşturma hatası: ' + err.message);
+        log('Error: ' + err.message);
+        alert('Wallet creation error: ' + err.message);
       }
     });
 
-    // 2. Cüzdan Kilidi Açma (Unlock)
+    // 2. Unlock Wallet
     $('btn-unlock-wallet').addEventListener('click', async () => {
       const pw = $('pw').value;
       const encryptedJson = localStorage.getItem(SK);
-      if (!encryptedJson) return alert('Kayıtlı cüzdan bulunamadı. Lütfen önce yeni cüzdan oluşturun.');
+      if (!encryptedJson) return alert('No stored wallet found. Please create a new wallet first.');
 
       try {
-        $('wallet-status').textContent = 'Şifre çözülüyor...';
-        log('Cüzdan kilidi açılıyor...');
+        $('wallet-status').textContent = 'Decrypting...';
+        log('Unlocking wallet...');
         const decryptedWallet = await ethers.Wallet.fromEncryptedJson(encryptedJson, pw);
         await initWallet(decryptedWallet);
-        alert('Cüzdan kilidi başarıyla açıldı!');
+        alert('Wallet unlocked successfully!');
       } catch (err) {
-        log('Hata: Şifre yanlış.');
-        alert('Hatalı şifre!');
-        $('wallet-status').textContent = 'Kilit açma başarısız.';
+        log('Error: Incorrect password.');
+        alert('Incorrect password!');
+        $('wallet-status').textContent = 'Unlock failed.';
       }
     });
 
-    // Cüzdan & Sözleşme Başlatma
+    // Initialize Wallet & Contract Connection
     async function initWallet(w) {
       const rpc = $('rpc').value.trim();
       const addr = $('addr').value.trim();
@@ -338,36 +338,36 @@
       signer = w.connect(provider);
       wallet = w;
 
-      $('wallet-status').textContent = 'Bağlı Cüzdan: ' + w.address;
-      log('Cüzdan aktif: ' + w.address);
+      $('wallet-status').textContent = 'Connected: ' + w.address;
+      log('Wallet active: ' + w.address);
 
       if (ethers.isAddress(addr)) {
         contract = new ethers.Contract(addr, ABI, signer);
-        log('Sözleşme bağlandı: ' + addr);
+        log('Contract connected: ' + addr);
         loadHomeLaunches();
       } else {
-        log('Sözleşme adresi geçersiz veya girilmedi.');
+        log('Contract address is invalid or empty.');
       }
     }
 
-    // 3. Proje Listesi Yükleme (Home)
+    // 3. Load Projects (Home)
     async function loadHomeLaunches() {
       if (!contract) return;
       const listDiv = $('launches-list');
-      listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Yükleniyor...</p>';
+      listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Loading...</p>';
 
       try {
         const count = await contract.count();
-        log('Toplam Proje Sayısı: ' + count.toString());
+        log('Total Projects Count: ' + count.toString());
         if (count == 0) {
-          listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Henüz yayınlanan bir proje yok.</p>';
+          listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">No published projects found.</p>';
           return;
         }
 
         let html = '';
         for (let i = 1; i <= count; i++) {
           const l = await contract.launch(i);
-          let meta = { title: 'Proje #' + i, desc: '', img: '' };
+          let meta = { title: 'Project #' + i, desc: '', img: '' };
           try { meta = JSON.parse(l.metaURI); } catch(e){}
 
           const states = ['Funding', 'Active', 'Halted', 'Completed', 'Failed'];
@@ -377,20 +377,20 @@
             <div class="card-box launch-card" onclick="openExplore(${i})">
               ${meta.img ? `<img src="${meta.img}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; margin-bottom:10px;">` : ''}
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h4 style="font-size:16px;">${meta.title || 'Proje #' + i}</h4>
+                <h4 style="font-size:16px;">${meta.title || 'Project #' + i}</h4>
                 <span class="badge ${badgeClasses[l.state]}">${states[l.state]}</span>
               </div>
-              <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc ? meta.desc.substring(0, 80) + '...' : 'Açıklama yok'}</p>
+              <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc ? meta.desc.substring(0, 80) + '...' : 'No description provided.'}</p>
               <div style="margin-top:10px; font-size:12px; font-weight:600;">
-                Toplanan: ${ethers.formatEther(l.raised)} ETH / Hedef: ${ethers.formatEther(l.goal)} ETH
+                Raised: ${ethers.formatEther(l.raised)} ETH / Goal: ${ethers.formatEther(l.goal)} ETH
               </div>
             </div>
           `;
         }
         listDiv.innerHTML = html;
       } catch (err) {
-        log('Projeler yüklenirken hata: ' + err.message);
-        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Projeler yüklenemedi.</p>';
+        log('Error loading projects: ' + err.message);
+        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Failed to load projects.</p>';
       }
     }
 
@@ -402,15 +402,15 @@
       loadExploreDetails(id);
     }
 
-    // 4. Proje Detayı Yükleme (Explore)
+    // 4. Load Project Details (Explore)
     async function loadExploreDetails(id) {
-      if (!contract) return alert('Lütfen önce cüzdan ve sözleşme adresini bağlayın.');
+      if (!contract) return alert('Please connect your wallet and contract address first.');
       const detDiv = $('explore-details');
-      detDiv.innerHTML = '<p style="font-size:12px; color:var(--text-sub);">Yükleniyor...</p>';
+      detDiv.innerHTML = '<p style="font-size:12px; color:var(--text-sub);">Loading...</p>';
 
       try {
         const l = await contract.launch(id);
-        let meta = { title: 'Proje #' + id, desc: '', img: '' };
+        let meta = { title: 'Project #' + id, desc: '', img: '' };
         try { meta = JSON.parse(l.metaURI); } catch(e){}
 
         detDiv.innerHTML = `
@@ -419,16 +419,16 @@
             <h3>${meta.title}</h3>
             <p style="font-size:13px; color:var(--text-sub); margin-top:8px;">${meta.desc}</p>
             <hr style="border:none; border-top:1px solid var(--border); margin:12px 0;">
-            <p style="font-size:12px;"><b>Sahibi:</b> ${l.owner}</p>
-            <p style="font-size:12px; margin-top:4px;"><b>Toplanan:</b> ${ethers.formatEther(l.raised)} / ${ethers.formatEther(l.goal)} ETH</p>
+            <p style="font-size:12px;"><b>Owner:</b> ${l.owner}</p>
+            <p style="font-size:12px; margin-top:4px;"><b>Raised:</b> ${ethers.formatEther(l.raised)} / ${ethers.formatEther(l.goal)} ETH</p>
             
-            <label style="margin-top:14px;">Fon Sağla (ETH)</label>
+            <label style="margin-top:14px;">Contribution Amount (ETH)</label>
             <input id="contrib-amount" placeholder="0.1">
-            <button class="btn-main" onclick="contributeToLaunch(${id})">Yatırım Yap (Contribute)</button>
+            <button class="btn-main" onclick="contributeToLaunch(${id})">Contribute Now</button>
           </div>
         `;
       } catch (err) {
-        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Proje bulunamadı veya hata oluştu.</p>';
+        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Project not found or an error occurred.</p>';
       }
     }
 
@@ -437,24 +437,24 @@
       if (id) loadExploreDetails(id);
     });
 
-    // 5. Katkı Yapma (Contribute)
+    // 5. Contribute Action
     async function contributeToLaunch(id) {
       const val = $('contrib-amount').value;
-      if (!val) return alert('Lütfen miktar girin.');
+      if (!val) return alert('Please enter an amount.');
       try {
-        log(`Proje #${id} için ${val} ETH yatırım yapılıyor...`);
+        log(`Contributing ${val} ETH to Project #${id}...`);
         const tx = await contract.contribute(id, { value: ethers.parseEther(val) });
         await tx.wait();
-        alert('Yatırım başarılı!');
+        alert('Contribution successful!');
         loadExploreDetails(id);
       } catch (err) {
-        alert('İşlem başarısız: ' + err.message);
+        alert('Transaction failed: ' + err.message);
       }
     }
 
-    // 6. Proje Oluşturma (Create Launch)
+    // 6. Create Launch Action
     $('btn-create-launch').addEventListener('click', async () => {
-      if (!contract) return alert('Lütfen önce Wallet sekmesinden cüzdan ve sözleşmeyi bağlayın.');
+      if (!contract) return alert('Please connect your wallet and contract first in the Wallet tab.');
 
       const title = $('c-title').value;
       const desc = $('c-desc').value;
@@ -464,7 +464,7 @@
       const shares = $('c-shares').value.split(',').map(s => parseInt(s.trim()));
 
       if (!title || !goal || !duration || shares.length === 0) {
-        return alert('Lütfen gerekli alanları doldurun.');
+        return alert('Please fill in all required fields.');
       }
 
       let imgData = '';
@@ -479,14 +479,14 @@
       const metaURI = JSON.stringify({ title, desc, img: imgData });
 
       try {
-        log('Proje oluşturma işlemi başlatıldı...');
+        log('Initiating project creation transaction...');
         const tx = await contract.create(goal, duration, shares, metaURI);
         await tx.wait();
-        alert('Projeniz başarıyla blokzincirde oluşturuldu!');
+        alert('Project successfully created on blockchain!');
         switchTab('tab-home');
         loadHomeLaunches();
       } catch (err) {
-        alert('Proje oluşturma hatası: ' + err.message);
+        alert('Project creation error: ' + err.message);
       }
     });
   </script>
