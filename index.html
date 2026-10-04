@@ -61,7 +61,6 @@
     input, textarea, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); outline: none; font-size: 14px; transition: border 0.2s; }
     input:focus, textarea:focus, select:focus { border-color: var(--accent); }
 
-    /* Custom File Input Styling to Force English */
     .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; margin-top: 4px; }
     .file-input-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
     .file-input-fake { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); font-size: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
@@ -471,9 +470,8 @@
     let selectedBase64Image = "";
     let selectedBattleBase64Image = "";
 
-    // Load saved coins from localStorage or start empty
     let battleCoins = JSON.parse(localStorage.getItem(BATTLE_COINS_KEY) || '[]');
-    let battleTimeRemaining = 1800; // 30 Minutes default
+    let battleTimeRemaining = 1800;
 
     const ABI = [
       "function count() view returns (uint256)",
@@ -561,13 +559,11 @@
       renderBattleLeaderboard();
     });
 
-    // Persistent Real-Time Battle Timer using localStorage
     function initBattleTimer() {
       const now = Date.now();
       let targetTime = localStorage.getItem(BATTLE_TIMER_KEY);
 
       if (!targetTime || now > parseInt(targetTime)) {
-        // Set new target time 30 minutes from now
         targetTime = now + (1800 * 1000);
         localStorage.setItem(BATTLE_TIMER_KEY, targetTime);
       }
@@ -584,7 +580,6 @@
       let timeLeft = Math.floor((targetTime - now) / 1000);
 
       if (timeLeft <= 0) {
-        // Reset timer for the next 30 minutes cycle
         targetTime = Date.now() + (1800 * 1000);
         localStorage.setItem(BATTLE_TIMER_KEY, targetTime);
         timeLeft = 1800;
@@ -622,7 +617,6 @@
       battleCoins.push(newCoin);
       battleCoins.sort((a, b) => b.score - a.score);
 
-      // Save updated list to localStorage
       localStorage.setItem(BATTLE_COINS_KEY, JSON.stringify(battleCoins));
 
       $('b-title').value = '';
