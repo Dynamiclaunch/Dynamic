@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Dynamic — Milestone Launchpad</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -10,11 +10,11 @@
 /* Light Theme Variables */
 [data-theme="light"] {
   --bg: #ffffff;
-  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-bg: rgba(255, 255, 255, 0.95);
   --card-bg: #f8f9fa;
   --text-main: #0d0e12;
   --text-sub: #6c757d;
-  --border: #f1f3f5;
+  --border: #e9ecef;
   --accent: #000000;
   --accent-text: #ffffff;
   --input-bg: #ffffff;
@@ -25,7 +25,7 @@
 /* Dark Theme Variables */
 [data-theme="dark"] {
   --bg: #0b0e14;
-  --header-bg: rgba(11, 14, 20, 0.85);
+  --header-bg: rgba(11, 14, 20, 0.95);
   --card-bg: #161b26;
   --text-main: #f3f4f6;
   --text-sub: #9ca3af;
@@ -42,27 +42,41 @@
   --nav-height: 64px;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { 
+  box-sizing: border-box; 
+  -webkit-tap-highlight-color: transparent; 
+  touch-action: manipulation;
+}
 
-body {
+html, body {
+  width: 100%;
+  height: 100%;
   margin: 0;
+  padding: 0;
   background: var(--bg);
   color: var(--text-main);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px;
-  padding-bottom: calc(var(--nav-height) + 20px);
+}
+
+body {
   max-width: 480px;
   margin-left: auto;
   margin-right: auto;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative;
 }
 
 header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
   background: var(--header-bg);
   backdrop-filter: blur(12px);
-  z-index: 100;
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 50;
   padding: 12px 16px 8px;
   border-bottom: 1px solid var(--border);
 }
@@ -71,7 +85,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .brand {
@@ -81,11 +95,10 @@ header {
 }
 
 .brand-logo {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   filter: var(--logo-filter);
-  transition: filter 0.2s ease;
 }
 
 .logo-text {
@@ -101,8 +114,8 @@ header {
 }
 
 .icon-btn {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -112,7 +125,7 @@ header {
   font-size: 16px;
   cursor: pointer;
   color: var(--text-main);
-  transition: all 0.2s ease;
+  user-select: none;
 }
 
 .cat-tabs {
@@ -142,8 +155,21 @@ header {
   border-color: var(--accent);
 }
 
-.screen { display: none; padding: 16px; }
-.screen.active { display: block; }
+/* Sayfa İçerik Alanı (Kaydırılabilir) */
+.main-content {
+  padding-top: 110px;
+  padding-bottom: calc(var(--nav-height) + 30px);
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 100vh;
+}
+
+.screen { 
+  display: none; 
+}
+.screen.active { 
+  display: block; 
+}
 
 .list-item {
   display: flex;
@@ -161,8 +187,8 @@ header {
 }
 
 .item-icon {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -170,7 +196,7 @@ header {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   overflow: hidden;
 }
 
@@ -224,7 +250,7 @@ input {
   outline: none;
 }
 
-/* Cihazdan Fotoğraf Yükleme Alanı Stilleri */
+/* Görsel Yükleme Kutusu */
 .file-upload-box {
   border: 2px dashed var(--border);
   border-radius: 12px;
@@ -232,12 +258,18 @@ input {
   text-align: center;
   cursor: pointer;
   background: var(--input-bg);
-  transition: border-color 0.2s ease;
   margin-top: 6px;
+  position: relative;
 }
 
-.file-upload-box:hover {
-  border-color: var(--accent);
+.file-upload-box input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .preview-container {
@@ -248,7 +280,7 @@ input {
 
 .preview-img {
   width: 100%;
-  max-height: 160px;
+  max-height: 180px;
   object-fit: cover;
   border-radius: 12px;
   border: 1px solid var(--border);
@@ -262,10 +294,10 @@ input {
   color: white;
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 button.btn-main {
@@ -281,21 +313,23 @@ button.btn-main {
   margin-top: 12px;
 }
 
+/* Bottom Navigation Fix */
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
+  left: 0;
+  right: 0;
   max-width: 480px;
+  margin: 0 auto;
   height: var(--nav-height);
   background: var(--header-bg);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-around;
-  z-index: 100;
+  z-index: 50;
 }
 
 .nav-item {
@@ -309,6 +343,8 @@ button.btn-main {
   font-size: 10px;
   font-weight: 600;
   cursor: pointer;
+  padding: 8px 12px;
+  width: 20%;
 }
 
 .nav-item.active { color: var(--text-main); }
@@ -319,11 +355,13 @@ button.btn-main {
   border-radius: 50%;
   background: var(--accent);
   color: var(--accent-text);
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 300;
+  cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
@@ -350,252 +388,265 @@ button.btn-main {
       <span class="logo-text">Dynamic</span>
     </div>
     <div class="top-actions">
-      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
-      <div class="icon-btn" onclick="switchTab('screen-wallet')">👛</div>
+      <button class="icon-btn" id="theme-btn">🌙</button>
+      <button class="icon-btn" id="wallet-top-btn">👛</button>
     </div>
   </div>
   
   <div class="cat-tabs">
-    <button class="cat-tab active" onclick="setSubCat(this)">Trending</button>
-    <button class="cat-tab" onclick="setSubCat(this)">Top</button>
-    <button class="cat-tab" onclick="setSubCat(this)">New</button>
-    <button class="cat-tab" onclick="setSubCat(this)">Creators</button>
+    <button class="cat-tab active" data-cat="trending">Trending</button>
+    <button class="cat-tab" data-cat="top">Top</button>
+    <button class="cat-tab" data-cat="new">New</button>
+    <button class="cat-tab" data-cat="creators">Creators</button>
   </div>
 </header>
 
-<!-- SCREEN 1: BROWSE LAUNCHES -->
-<div id="screen-browse" class="screen active">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
-    <span style="font-weight: 700; font-size: 16px;">Launches</span>
-    <button onclick="browse()" style="border:none; background:none; color:var(--text-sub); font-weight:600; cursor:pointer;">Refresh</button>
-  </div>
-  <div id="list">
-    <div style="text-align:center; padding: 20px; color:var(--text-sub);">Click refresh or wallet to setup.</div>
-  </div>
-</div>
-
-<!-- SCREEN 2: OPEN / VIEW LAUNCH -->
-<div id="screen-launch" class="screen">
-  <div style="display:flex; gap: 8px; margin-bottom: 12px;">
-    <input id="id" type="number" placeholder="Launch ID" value="1">
-    <button class="btn-main" style="margin:0; width: auto; padding: 0 16px;" onclick="load()">Load</button>
-    <button class="btn-main" style="margin:0; width: auto; padding: 0 16px; background:var(--card-bg); color:var(--text-main); border:1px solid var(--border);" onclick="last()">Latest</button>
-  </div>
-  <div id="info"></div>
-  
-  <div id="act" class="card-box" style="display:none; margin-top:16px;">
-    <span style="font-weight:700;">Actions</span>
-    <input id="amt" placeholder="Amount to contribute" style="margin-top:8px;">
-    <button class="btn-main" onclick="contribute()">Contribute</button>
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
-      <button style="flex:1; padding:8px;" onclick="claimMs()">Claim MS</button>
-      <button style="flex:1; padding:8px;" onclick="chal()">Challenge</button>
-      <button style="flex:1; padding:8px;" onclick="run(()=>c.vote(ID,true))">Vote Yes</button>
-      <button style="flex:1; padding:8px;" onclick="run(()=>c.vote(ID,false))">Vote No</button>
+<div class="main-content">
+  <!-- SCREEN 1: BROWSE LAUNCHES -->
+  <div id="screen-browse" class="screen active">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+      <span style="font-weight: 700; font-size: 16px;">Launches</span>
+      <button id="refresh-btn" style="border:none; background:none; color:var(--text-sub); font-weight:600; cursor:pointer;">Refresh</button>
+    </div>
+    <div id="list">
+      <div style="text-align:center; padding: 20px; color:var(--text-sub);">Click refresh or setup wallet to view.</div>
     </div>
   </div>
-</div>
 
-<!-- SCREEN 3: CREATE LAUNCH (GÖRSEL YÜKLEME BUTONU) -->
-<div id="screen-create" class="screen">
-  <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Create Launch</span>
-  <div class="card-box">
-    <label>Project Name</label>
-    <input id="pname" placeholder="My Web3 Project">
-    
-    <label>Project Image / Logo</label>
-    <div class="file-upload-box" onclick="document.getElementById('fileInput').click()">
-      <span style="font-size:20px; display:block;">📁</span>
-      <span style="font-weight:600; font-size:13px; color:var(--text-main);">Click to upload image from device</span>
-      <span style="font-size:11px; color:var(--text-sub); display:block; margin-top:2px;">PNG, JPG, WEBP up to 2MB</span>
-      <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+  <!-- SCREEN 2: OPEN / VIEW LAUNCH -->
+  <div id="screen-launch" class="screen">
+    <div style="display:flex; gap: 8px; margin-bottom: 12px;">
+      <input id="id" type="number" placeholder="Launch ID" value="1">
+      <button class="btn-main" id="load-btn" style="margin:0; width: auto; padding: 0 16px;">Load</button>
     </div>
+    <div id="info"></div>
     
-    <div id="previewContainer" class="preview-container">
-      <img id="pimgPreview" class="preview-img" alt="Project Preview">
-      <button class="remove-img-btn" onclick="removeImage()">✕</button>
-    </div>
-    <input type="hidden" id="pimgData">
-
-    <label>Short Description</label>
-    <input id="pdesc" placeholder="Brief details...">
-    
-    <label>Payment Token Address</label>
-    <input id="pay" placeholder="0x...">
-    
-    <label>Sale Token Address</label>
-    <input id="sale" placeholder="0x...">
-    
-    <label>Goal (Payment Tokens)</label>
-    <input id="goal" value="1000">
-    
-    <label>Sale Tokens per 1 Payment Token</label>
-    <input id="tpp" value="20">
-    
-    <label>Funding Window (Days)</label>
-    <input id="days" value="14">
-    
-    <label>Milestones (percent:days:title)</label>
-    <input id="mls" value="30:14:Public testnet,40:30:DEX listing,30:60:10k users">
-    
-    <button class="btn-main" onclick="createLaunch()">Create Launch</button>
-  </div>
-</div>
-
-<!-- SCREEN 4: WALLET & SETTINGS -->
-<div id="screen-wallet" class="screen">
-  <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Wallet Management</span>
-  <div class="card-box">
-    <label>RPC URL</label>
-    <input id="rpc" value="https://sepolia.base.org">
-    <label>Contract Address</label>
-    <input id="addr" placeholder="0x...">
-    <label>Password</label>
-    <input id="pw" type="password">
-    
-    <button class="btn-main" onclick="newWallet()">Create Wallet</button>
-    <button class="btn-main" style="background:var(--card-bg); color:var(--text-main); border:1px solid var(--border);" onclick="unlock()">Unlock</button>
-    <div style="display:flex; gap:6px; margin-top:8px;">
-      <button style="flex:1; padding:8px;" onclick="impKey()">Import</button>
-      <button style="flex:1; padding:8px;" onclick="exportKey()">Export</button>
-      <button style="flex:1; padding:8px;" onclick="lock()">Lock</button>
+    <div id="act" class="card-box" style="display:none; margin-top:16px;">
+      <span style="font-weight:700;">Actions</span>
+      <input id="amt" placeholder="Amount to contribute" style="margin-top:8px;">
+      <button class="btn-main" id="contrib-btn">Contribute</button>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+        <button style="flex:1; padding:8px;" id="claim-btn">Claim MS</button>
+        <button style="flex:1; padding:8px;" id="chal-btn">Challenge</button>
+      </div>
     </div>
   </div>
-  <div id="me" style="font-size:12px; color:var(--text-sub); white-space:pre-wrap; margin-bottom:12px;"></div>
-  
-  <div class="card-box">
-    <label>Activity Log</label>
-    <div id="log">Logs will appear here...</div>
+
+  <!-- SCREEN 3: CREATE LAUNCH (GÖRSEL YÜKLEME) -->
+  <div id="screen-create" class="screen">
+    <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Create Launch</span>
+    <div class="card-box">
+      <label>Project Name</label>
+      <input id="pname" placeholder="My Web3 Project">
+      
+      <label>Project Image / Logo</label>
+      <div class="file-upload-box">
+        <span style="font-size:20px; display:block;">📁</span>
+        <span style="font-weight:600; font-size:13px; color:var(--text-main);">Tap to select image</span>
+        <input type="file" id="fileInput" accept="image/*">
+      </div>
+      
+      <div id="previewContainer" class="preview-container">
+        <img id="pimgPreview" class="preview-img" alt="Project Preview">
+        <button class="remove-img-btn" id="remove-img-btn">✕</button>
+      </div>
+      <input type="hidden" id="pimgData">
+
+      <label>Short Description</label>
+      <input id="pdesc" placeholder="Brief details...">
+      
+      <label>Payment Token Address</label>
+      <input id="pay" placeholder="0x...">
+      
+      <label>Sale Token Address</label>
+      <input id="sale" placeholder="0x...">
+      
+      <label>Goal (Payment Tokens)</label>
+      <input id="goal" value="1000">
+      
+      <label>Sale Tokens per 1 Payment Token</label>
+      <input id="tpp" value="20">
+      
+      <label>Funding Window (Days)</label>
+      <input id="days" value="14">
+      
+      <label>Milestones (percent:days:title)</label>
+      <input id="mls" value="30:14:Public testnet,40:30:DEX listing,30:60:10k users">
+      
+      <button class="btn-main" id="create-launch-btn">Create Launch</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: WALLET & SETTINGS -->
+  <div id="screen-wallet" class="screen">
+    <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Wallet Management</span>
+    <div class="card-box">
+      <label>RPC URL</label>
+      <input id="rpc" value="https://sepolia.base.org">
+      <label>Contract Address</label>
+      <input id="addr" placeholder="0x...">
+      <label>Password</label>
+      <input id="pw" type="password">
+      
+      <button class="btn-main" id="new-wallet-btn">Create Wallet</button>
+      <button class="btn-main" style="background:var(--card-bg); color:var(--text-main); border:1px solid var(--border);" id="unlock-btn">Unlock</button>
+    </div>
+    <div id="me" style="font-size:12px; color:var(--text-sub); white-space:pre-wrap; margin-bottom:12px;"></div>
+    
+    <div class="card-box">
+      <label>Activity Log</label>
+      <div id="log">Logs will appear here...</div>
+    </div>
   </div>
 </div>
 
 <!-- BOTTOM NAVIGATION -->
 <div class="bottom-nav">
-  <button class="nav-item active" onclick="switchTab('screen-browse', this)">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+  <button class="nav-item active" id="nav-home">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
     <span>Home</span>
   </button>
   
-  <button class="nav-item" onclick="switchTab('screen-launch', this)">
+  <button class="nav-item" id="nav-explore">
     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
     <span>Explore</span>
   </button>
   
-  <button class="nav-item-add" onclick="switchTab('screen-create', this)">+</button>
+  <button class="nav-item-add" id="nav-add">+</button>
   
-  <button class="nav-item" onclick="switchTab('screen-wallet', this)">
+  <button class="nav-item" id="nav-wallet">
     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
     <span>Wallet</span>
   </button>
 </div>
 
 <script>
-function toggleTheme() {
-  const html = document.documentElement;
-  const currentTheme = html.getAttribute('data-theme');
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', newTheme);
-  document.getElementById('theme-btn').textContent = newTheme === 'dark' ? '☀️' : '🌙';
-  try { localStorage.setItem('dyn_theme', newTheme); } catch(e){}
-}
+// DOM Yardımcısı
+const $ = i => document.getElementById(i);
 
-(function initTheme() {
-  const saved = localStorage.getItem('dyn_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', saved);
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('theme-btn');
-    if(btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
-  });
-})();
-
-function switchTab(screenId, btn) {
+// Tab/Sayfa Değiştirme Mantığı
+function switchTab(screenId, targetBtn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
-  if(btn) {
+  
+  if (targetBtn) {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    if(!btn.classList.contains('nav-item-add')) btn.classList.add('active');
+    if (targetBtn.classList.contains('nav-item')) {
+      targetBtn.classList.add('active');
+    }
   }
+  window.scrollTo(0, 0);
 }
 
-function setSubCat(btn) {
-  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
+// Event Listener'ları Dinleyicilerle Bağlama (Tıklama Garantisi İçin)
+document.addEventListener('DOMContentLoaded', () => {
+  // Alt Menü Navigasyon Dinleyicileri
+  $('nav-home').addEventListener('click', (e) => switchTab('screen-browse', e.currentTarget));$('nav-explore').addEventListener('click', (e) => switchTab('screen-launch', e.currentTarget));
+  $('nav-add').addEventListener('click', (e) => switchTab('screen-create', e.currentTarget));$('nav-wallet').addEventListener('click', (e) => switchTab('screen-wallet', e.currentTarget));
+  $('wallet-top-btn').addEventListener('click', () => switchTab('screen-wallet',$('nav-wallet')));
+
+  // Tema Geçişi
+  $('theme-btn').addEventListener('click', toggleTheme);
+
+  // Kategori Tabları
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+    });
+  });
+
+  // Dosya Yükleme & Önizleme İşleyicisi
+  $('fileInput').addEventListener('change', handleFileSelect);$('remove-img-btn').addEventListener('click', removeImage);
+
+  // İşlem Butonları
+  $('refresh-btn').addEventListener('click', browse);
+  $('load-btn').addEventListener('click', load);$('create-launch-btn').addEventListener('click', createLaunch);
+  $('new-wallet-btn').addEventListener('click', newWallet);$('unlock-btn').addEventListener('click', unlock);
+});
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  $('theme-btn').textContent = next === 'dark' ? '☀️️' : '🌙';
 }
 
-// Dosya Seçimi ve Önizleme İşleyicisi
 function handleFileSelect(e) {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = function(evt) {
-      document.getElementById('pimgData').value = evt.target.result;
-      document.getElementById('pimgPreview').src = evt.target.result;
-      document.getElementById('previewContainer').style.display = 'block';
+      $('pimgData').value = evt.target.result;
+      $('pimgPreview').src = evt.target.result;
+      $('previewContainer').style.display = 'block';
     };
     reader.readAsDataURL(file);
   }
 }
 
 function removeImage() {
-  document.getElementById('fileInput').value = '';
-  document.getElementById('pimgData').value = '';
-  document.getElementById('previewContainer').style.display = 'none';
+  $('fileInput').value = '';
+  $('pimgData').value = '';$('previewContainer').style.display = 'none';
 }
 
-const ABI=["function create(tuple(address pay,address sale,uint256 goal,uint256 rate,uint40 fundEnd,uint16[] bps,uint40[] durations,bytes32[] specs,string metaURI)) returns (uint256)","function contribute(uint256,uint256)","function closeFunding(uint256)","function claimMilestone(uint256,string)","function challenge(uint256)","function vote(uint256,bool)","function resolve(uint256)","function failByDeadline(uint256)","function refund(uint256)","function claimTokens(uint256)","function reclaimSale(uint256)","function count() view returns (uint256)","function owner() view returns (address)","function threshold() view returns (uint8)","function addOracle(address)","function removeOracle(address)","function setPolicy(uint16,uint16,uint256,uint256)","function setMaxGoal(uint256)","function setPaused(bool)","function paused() view returns (bool)","function maxGoal() view returns (uint256)","function metaURI(uint256) view returns (string)","function rep(address) view returns (uint8)","function bondBpsFor(address) view returns (uint16)","function insurance(address) view returns (uint256)","function starterCap() view returns (uint256)","function setThreshold(uint8)","function setTreasury(address)","function setFees(uint16,uint256)","function treasury() view returns (address)","function releaseFeeBps() view returns (uint16)","function createFee() view returns (uint256)","function launch(uint256) view returns (tuple(address team,address pay,address sale,uint256 goal,uint256 raised,uint256 bond,uint256 rate,uint40 fundEnd,uint8 st,uint256 paid,uint256 refundable,uint8 next,uint256 saleReclaimed,uint16 feeBps,uint8 threshold))","function milestones(uint256) view returns (tuple(uint16 bps,uint40 deadline,uint8 st,uint40 claimEnd,uint40 voteEnd,uint8 attests,uint8 round,uint256 yes,uint256 no,address challenger,uint256 stake,bytes32 spec)[])"];
+// Web3 / Smart Contract İşlemleri
+const ABI=["function create(tuple(address pay,address sale,uint256 goal,uint256 rate,uint40 fundEnd,uint16[] bps,uint40[] durations,bytes32[] specs,string metaURI)) returns (uint256)","function contribute(uint256,uint256)","function closeFunding(uint256)","function claimMilestone(uint256,string)","function challenge(uint256)","function vote(uint256,bool)","function resolve(uint256)","function count() view returns (uint256)","function metaURI(uint256) view returns (string)","function launch(uint256) view returns (tuple(address team,address pay,address sale,uint256 goal,uint256 raised,uint256 bond,uint256 rate,uint40 fundEnd,uint8 st,uint256 paid,uint256 refundable,uint8 next,uint256 saleReclaimed,uint16 feeBps,uint8 threshold))","function milestones(uint256) view returns (tuple(uint16 bps,uint40 deadline,uint8 st,uint40 claimEnd,uint40 voteEnd,uint8 attests,uint8 round,uint256 yes,uint256 no,address challenger,uint256 stake,bytes32 spec)[])"];
 const LS=["Funding","Active","Halted","Completed","Failed"],MS=["Pending","Claimed","Challenged","Released"],SK='dyn_keystore';
 let provider,signer,W,me,c,A,ID,L,M,dec=6;
-const $=i=>document.getElementById(i);
+
 const err=e=>e.reason||e.shortMessage||e.message;
 function log(s){$('log').textContent=s+"\n"+$('log').textContent}
 function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function fetchS(k){try{return localStorage.getItem(k)}catch(e){return null}}
-$('addr').value=fetchS('dyn_addr')||'';$('rpc').value=fetchS('dyn_rpc')\vert{}\vert{}$('rpc').value;
 
 async function setup(w){
- A=$('addr').value.trim();if(!ethers.isAddress(A))return alert('Enter contract address');
+ A=$('addr').value.trim();if(!ethers.isAddress(A))return alert('Enter contract address in Wallet tab');
  store('dyn_addr',A);store('dyn_rpc',$('rpc').value.trim());
- provider=new ethers.JsonRpcProvider($('rpc').value.trim());W=w;signer=w.connect(provider);me=w.address;c=new ethers.Contract(A,ABI,signer);
- await balances();}
+ provider=new ethers.JsonRpcProvider($('rpc').value.trim());W=w;signer=w.connect(provider);me=w.address;c=new ethers.Contract(A,ABI,signer);$('me').textContent='Wallet: '+me;
+}
 
-async function balances(){try{
- let t='Wallet: '+me+'\nETH: '+ethers.formatEther(await provider.getBalance(me));
- $('me').textContent=t}catch(e){log('Error: '+err(e))}}
+async function newWallet(){
+  const pw=$('pw').value;if(pw.length<8)return alert('Min 8 chars password');
+  const w=ethers.Wallet.createRandom();store(SK,await w.encrypt(pw));await setup(w);alert('Wallet created!');
+}
 
-async function newWallet(){const pw=$('pw').value;if(pw.length<8)return alert('Min 8 chars password');
- const w=ethers.Wallet.createRandom();store(SK,await w.encrypt(pw));await setup(w);alert('Wallet created!')}
+async function unlock(){
+  const j=fetchS(SK);if(!j)return alert('No wallet saved');
+  try{await setup(await ethers.Wallet.fromEncryptedJson(j,$('pw').value));alert('Unlocked!')}catch(e){log('Wrong password')}
+}
 
-async function unlock(){const j=fetchS(SK);if(!j)return alert('No wallet saved');
- try{await setup(await ethers.Wallet.fromEncryptedJson(j,$('pw').value));alert('Unlocked!')}catch(e){log('Wrong password')}}
-
-function exportKey(){if(!W)return;prompt('Private Key:',W.privateKey)}
-function lock(){W=signer=c=null;me=null;$('me').textContent='Locked'}
-async function run(fn){try{if(!c)return alert('Unlock wallet');const t=await fn();log('TX: '+t.hash);await t.wait();log('Confirmed')}catch(e){log('Error: '+err(e))}}
+async function run(fn){
+  try{if(!c)return alert('Unlock wallet first');const t=await fn();log('TX: '+t.hash);await t.wait();log('Confirmed')}catch(e){log('Error: '+err(e))}
+}
 
 const esc=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 const pmeta=u=>{try{return JSON.parse(decodeURIComponent(u.split(',').slice(1).join(',')))}catch(e){return{}}};
 
-async function browse(){try{
- const a=$('addr').value.trim();if(!ethers.isAddress(a))return alert('Enter contract address in Wallet tab');
- const rc=new ethers.Contract(a,ABI,new ethers.JsonRpcProvider($('rpc').value.trim())),n=Number(await rc.count());let h='';
- for(let i=n;i>=Math.max(1,n-19);i--){
-  const l=await rc.launch(i),mt=pmeta(await rc.metaURI(i)),pct=(l.goal>0n?Number(l.raised*100n/l.goal):0);
-  const imgTag = mt.image ? `<img src="${esc(mt.image)}">` : (mt.name ? mt.name[0] : '#');
-  h+='<div class="list-item" onclick="$(\'id\').value='+i+';switchTab(\'screen-launch\');load();"><div class="item-left"><div class="item-icon">'+imgTag+'</div><div class="item-info"><div class="title">'+esc(mt.name||('Launch #'+i))+'</div><div class="sub">'+LS[l.st]+' · #'+i+'</div></div></div><div class="item-right"><div class="val">'+pct+'%</div><div class="badge">Funded</div></div></div>';
- }
- $('list').innerHTML=h||'<div style="text-align:center; padding:20px; color:var(--text-sub);">No launches yet.</div>'}catch(e){log('Error: '+err(e))}}
+async function browse(){
+  try{
+    const a=$('addr').value.trim();if(!ethers.isAddress(a))return alert('Enter contract address in Wallet tab');
+    const rc=new ethers.Contract(a,ABI,new ethers.JsonRpcProvider($('rpc').value.trim())),n=Number(await rc.count());let h='';
+    for(let i=n;i>=Math.max(1,n-19);i--){
+      const l=await rc.launch(i),mt=pmeta(await rc.metaURI(i)),pct=(l.goal>0n?Number(l.raised*100n/l.goal):0);
+      const imgTag = mt.image ? `<img src="${esc(mt.image)}">` : (mt.name ? mt.name[0] : '#');
+      h+='<div class="list-item" onclick="$(\'id\').value='+i+';switchTab(\'screen-launch\');load();"><div class="item-left"><div class="item-icon">'+imgTag+'</div><div class="item-info"><div class="title">'+esc(mt.name||('Launch #'+i))+'</div><div class="sub">'+LS[l.st]+' · #'+i+'</div></div></div><div class="item-right"><div class="val">'+pct+'%</div><div class="badge">Funded</div></div></div>';
+    }
+    $('list').innerHTML=h||'<div style="text-align:center; padding:20px; color:var(--text-sub);">No launches yet.</div>';
+  }catch(e){log('Error: '+err(e))}
+}
 
-async function load(){try{
- if(!c)return alert('Unlock wallet first');ID=BigInt($('id').value);L=await c.launch(ID);M=await c.milestones(ID);
- const mt=pmeta(await c.metaURI(ID));
- const imgHeader = mt.image ? `<img src="${esc(mt.image)}" style="width:100%; height:180px; object-fit:cover; border-radius:12px; margin-bottom:12px;">` : '';
- let h='<div class="card-box">'+imgHeader+'<h3>'+esc(mt.name||('Launch #'+ID))+'</h3><p style="color:var(--text-sub);">'+esc(mt.desc||'')+'</p><div>Status: <b>'+LS[L.st]+'</b></div></div>';
- M.forEach((m,i)=>{h+='<div class="card-box"><b>Milestone '+(i+1)+'</b>: '+MS[m.st]+' ('+(Number(m.bps)/100)+'%)</div>'});
- $('info').innerHTML=h;$('act').style.display='block'}catch(e){log('Error: '+err(e))}}
-
-async function contribute(){await run(async()=>{const a=ethers.parseUnits($('amt').value,dec);return c.contribute(ID,a)})}
-async function claimMs(){const u=prompt('Evidence URL:');if(u)run(()=>c.claimMilestone(ID,u))}
-async function chal(){run(()=>c.challenge(ID))}
+async function load(){
+  try{
+    if(!c)return alert('Unlock wallet first');ID=BigInt($('id').value);L=await c.launch(ID);M=await c.milestones(ID);
+    const mt=pmeta(await c.metaURI(ID));
+    const imgHeader = mt.image ? `<img src="${esc(mt.image)}" style="width:100%; height:180px; object-fit:cover; border-radius:12px; margin-bottom:12px;">` : '';
+    let h='<div class="card-box">'+imgHeader+'<h3>'+esc(mt.name||('Launch #'+ID))+'</h3><p style="color:var(--text-sub);">'+esc(mt.desc||'')+'</p><div>Status: <b>'+LS[L.st]+'</b></div></div>';
+    M.forEach((m,i)=>{h+='<div class="card-box"><b>Milestone '+(i+1)+'</b>: '+MS[m.st]+' ('+(Number(m.bps)/100)+'%)</div>'});
+    $('info').innerHTML=h;$('act').style.display='block';
+  }catch(e){log('Error: '+err(e))}
+}
 
 async function createLaunch(){
   await run(async () => {
