@@ -120,7 +120,7 @@
           <span style="font-weight:800; font-size:15px;">How It Works</span>
         </div>
         <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; line-height:1.5;">
-          <b>Dynamic</b> is a decentralized, milestone-based crowdfunding platform that protects both Web3 entrepreneurs and investors.
+          <b>Dynamic</b> is a decentralized, milestone-based crowdfunding platform that protects both Web3 entrepreneurs and investors[span_2](start_span)[span_2](end_span).
         </p>
         <button class="btn-sub" style="padding: 10px 14px; font-size: 12px; margin:0;" onclick="document.getElementById('help-modal').style.display='flex'">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
@@ -153,6 +153,56 @@
         <button class="btn-main" id="btn-load-exp">Fetch Details</button>
       </div>
       <div id="explore-details"></div>
+    </div>
+
+    <!-- ÇARPIŞMA (BATTLE / TOURNAMENT) TAB -->
+    <div id="tab-battle" class="tab-content">
+      <div class="card-box card-accent-left">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+          <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:18px; width:auto;" alt="logo">
+          <h3 style="font-size:16px;">Çarpışma Arena & Turnuva</h3>
+        </div>
+        <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; line-height:1.5;">
+          Sadece bu sekmeden (Çarpışma Launchpad) oluşturulan coinler yarışmaya katılır. Her 30 dakikada bir yeni turnuva başlar. Liderlik tablosundaki ilk 16 coin turnuva ağacına (bracket) yerleşir. Her karşılaşma 5 dakika sürer. Kazanan coinler sonraki yarışmalara tekrar katılabilir!
+        </p>
+
+        <!-- Çarpışma Coin Oluşturma Alanı -->
+        <div style="background:var(--bg); padding:12px; border-radius:14px; border:1px solid var(--border); margin-bottom:16px;">
+          <h4 style="font-size:14px; margin-bottom:8px;">Çarpışma Coini Oluştur</h4>
+          <label>Coin Adı / Sembolü</label>
+          <input id="b-title" placeholder="e.g. BattleCoin [BC]">
+          <label>Görsel / Logo</label>
+          <input id="b-image-file" type="file" accept="image/*">
+          <img id="b-image-preview" class="img-preview" alt="Preview">
+          <label>Başlangıç Havuzu / Hedef (ETH)</label>
+          <input id="b-goal" type="number" placeholder="e.g. 1">
+          <button class="btn-main" id="btn-create-battle-coin" style="margin-top:10px;">Çarpışma İçin Coin Bas</button>
+        </div>
+
+        <!-- Geri Sayım ve Durum -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--accent-soft); padding:12px; border-radius:12px; margin-bottom:16px;">
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--text-sub);">YARIŞMAYA KALAN SÜRE</div>
+            <div id="battle-timer" style="font-size:18px; font-weight:800; font-family:monospace;">30:00</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px; font-weight:700; color:var(--text-sub);">DURUM</div>
+            <div id="battle-status" style="font-size:14px; font-weight:800; color:var(--accent);">Liderlik Sıralaması Bekleniyor</div>
+          </div>
+        </div>
+
+        <!-- Liderlik Tablosu (İlk 16) -->
+        <h3 style="font-size:15px; margin-bottom:8px;">Canlı Liderlik Tablosu (İlk 16 Seçilir)</h3>
+        <div id="battle-leaderboard" style="font-size:13px; margin-bottom:16px;">
+          <p style="color:var(--text-sub); text-align:center; padding:10px;">Henüz çarpışma coini bulunmuyor.</p>
+        </div>
+
+        <!-- Turnuva Ağacı (Bracket) ve Eşleşmeler (5 Dk) -->
+        <h3 style="font-size:15px; margin-bottom:8px;">Turnuva Ağacı & 5 Dakikalık Maçlar</h3>
+        <div id="battle-bracket" style="font-size:12px; background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--border);">
+          <p style="color:var(--text-sub); text-align:center;">30 dakikalık süre tamamlandığında ilk 16 coin eşleşecektir.</p>
+        </div>
+      </div>
     </div>
 
     <!-- CREATE LAUNCH TAB -->
@@ -306,7 +356,7 @@
         <h3 style="font-size: 18px;">How Platform Works</h3>
       </div>
       <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
-        <p style="margin-bottom:10px;"><b>Dynamic</b> is a decentralized milestone-based crowdfunding platform.</p>
+        <p style="margin-bottom:10px;"><b>Dynamic</b> is a decentralized milestone-based crowdfunding platform[span_3](start_span)[span_3](end_span).</p>
         <p>1. Create or import your wallet. Your encrypted keys are stored safely on your browser.</p>
         <p>2. Lock your wallet anytime. Unlock it using your password.</p>
       </div>
@@ -373,6 +423,10 @@
       <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg>
       <span>Explore</span>
     </button>
+    <button class="nav-item" onclick="switchTab('tab-battle', this)" title="Çarpışma Arena">
+      <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19v-2zm19.57-9.36c-.22-.8-1.04-1.28-1.84-1.06L16 9.87V7.5c0-.83-.67-1.5-1.5-1.5h-9C4.67 6 4 6.67 4 7.5v9c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-2.37l4.23 1.29c.8.22 1.62-.26 1.84-1.06l.8-2.91c.22-.8-.26-1.62-1.06-1.84z"/></svg>
+      <span>Çarpışma</span>
+    </button>
     <button class="nav-add" onclick="switchTab('tab-create', this)">
       <svg class="icon icon-lg" style="fill:#fff;" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
     </button>
@@ -393,6 +447,11 @@
     let signer = null;
     let contract = null;
     let selectedBase64Image = "";
+    let selectedBattleBase64Image = "";
+
+    // Çarpışma Tablosu için lokal hafıza dizisi
+    let battleCoins = [];
+    let battleTimeRemaining = 1800; // 30 Dakika (Saniye cinsinden)
 
     const ABI = [
       "function count() view returns (uint256)",
@@ -459,8 +518,123 @@
         }
       });
 
+      $('b-image-file')?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            selectedBattleBase64Image = event.target.result;
+            const preview = $('b-image-preview');
+            preview.src = selectedBattleBase64Image;
+            preview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
       checkStoredWallet();
+      startBattleTimer();
     });
+
+    // Çarpışma Sayaç ve Turnuva Mantığı
+    function startBattleTimer() {
+      setInterval(() => {
+        battleTimeRemaining--;
+        if (battleTimeRemaining <= 0) {
+          battleTimeRemaining = 1800; // Süre bittiğinde yeniden 30 dakikaya dön ve turnuvayı başlat/güncelle
+          triggerBattleTournament();
+        }
+        updateBattleTimerDisplay();
+      }, 1000);
+    }
+
+    function updateBattleTimerDisplay() {
+      const timerEl = $('battle-timer');
+      if (!timerEl) return;
+      const mins = Math.floor(battleTimeRemaining / 60);
+      const secs = battleTimeRemaining % 60;
+      timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    $('btn-create-battle-coin')?.addEventListener('click', () => {
+      const title = $('b-title').value.trim();
+      const goal = $('b-goal').value;
+
+      if (!title || !goal) {
+        return alert('Lütfen coin adını ve hedef miktarını girin.');
+      }
+
+      const newCoin = {
+        id: Date.now(),
+        title: title,
+        image: selectedBattleBase64Image || 'https://i.ibb.co/1tnYf0hb/logo.png',
+        goal: goal,
+        score: Math.floor(Math.random() * 100) // Başlangıç skoru/hacmi
+      };
+
+      battleCoins.push(newCoin);
+      // Puana göre büyükten küçüğe sırala
+      battleCoins.sort((a, b) => b.score - a.score);
+
+      $('b-title').value = '';$('b-goal').value = '';
+      $('b-image-file').value = '';$('b-image-preview').style.display = 'none';
+      selectedBattleBase64Image = '';
+
+      renderBattleLeaderboard();
+      alert('Çarpışma coini başarıyla oluşturuldu ve liderlik tablosuna eklendi!');
+    });
+
+    function renderBattleLeaderboard() {
+      const lbDiv = $('battle-leaderboard');
+      if (!lbDiv) return;
+
+      if (battleCoins.length === 0) {
+        lbDiv.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:10px;">Henüz çarpışma coini bulunmuyor.</p>';
+        return;
+      }
+
+      let html = '';
+      battleCoins.slice(0, 16).forEach((coin, idx) => {
+        html += `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); border:1px solid var(--border); padding:8px 12px; border-radius:8px; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-weight:800; width:20px;">#${idx + 1}</span>
+              <img src="${coin.image}" style="width:24px; height:24px; object-fit:cover; border-radius:50%;">
+              <span style="font-weight:700;">${coin.title}</span>
+            </div>
+            <span style="font-size:12px; color:var(--text-sub);">Skor/Hacim: ${coin.score}</span>
+          </div>
+        `;
+      });
+      lbDiv.innerHTML = html;
+    }
+
+    function triggerBattleTournament() {
+      const bracketDiv = $('battle-bracket');
+      const statusDiv = $('battle-status');
+      if (!bracketDiv) return;
+
+      if (battleCoins.length === 0) {
+        statusDiv.textContent = 'Katılımcı Yok';
+        return;
+      }
+
+      statusDiv.textContent = 'Turnuva Devam Ediyor (5dk Maçlar)';
+      const top16 = battleCoins.slice(0, 16);
+
+      let html = '<div style="font-weight:700; margin-bottom:8px; color:var(--accent);">Eşleşen İlk 16 Coin (5 Dakikalık Maçlar Başladı):</div>';
+      for (let i = 0; i < top16.length; i += 2) {
+        const coin1 = top16[i];
+        const coin2 = top16[i + 1] ? top16[i + 1] : { title: 'BYE (Tur Atladı)' };
+        html += `
+          <div style="display:flex; justify-content:space-between; background:var(--card-bg); padding:6px 10px; border-radius:6px; margin-bottom:4px; border:1px solid var(--border);">
+            <span>⚔️ ${coin1.title} vs ${coin2.title}</span>
+            <span style="font-size:11px; color:var(--danger); font-weight:700;">5 dk Sürüyor</span>
+          </div>
+        `;
+      }
+      bracketDiv.innerHTML = html;
+    }
 
     function checkStoredWallet() {
       const encData = localStorage.getItem(SK);
@@ -760,7 +934,7 @@
     });
 
     async function contributeToProject(id) {
-      const amount = $('contrib-amount').value;
+      const amount = $('contrib-amount'].value;
       if (!amount || amount <= 0) return alert('Enter valid amount.');
 
       try {
