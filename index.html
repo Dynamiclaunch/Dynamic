@@ -84,6 +84,8 @@
     .tab-content.active { display: block !important; }
     .launch-card { cursor: pointer; transition: transform 0.1s; }
     .launch-card:active { transform: scale(0.98); }
+    
+    .img-preview { width: 100%; max-height: 180px; object-fit: cover; border-radius: 12px; margin-top: 8px; display: none; border: 1px solid var(--border); }
   </style>
 </head>
 <body>
@@ -122,7 +124,7 @@
         </button>
       </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <div style="display:flex; justify-space-between; align-items:center; margin-bottom:12px;">
         <h3 style="font-size:18px; font-weight:800;">Projects</h3>
         <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
@@ -160,6 +162,10 @@
         <label>Project Title</label>
         <input id="c-title" placeholder="e.g. AI Web3 Platform">
         
+        <label>Project Image (Gallery)</label>
+        <input id="c-image-file" type="file" accept="image/*">
+        <img id="c-image-preview" class="img-preview" alt="Preview">
+
         <label>Description</label>
         <textarea id="c-desc" rows="3" placeholder="Short description..."></textarea>
         
@@ -179,7 +185,7 @@
     <!-- WALLET MANAGEMENT TAB -->
     <div id="tab-wallet" class="tab-content">
       
-      <!-- AUTH 1: UNLOCK WALLET (VAR OLAN CÜZDANI ŞİFRE İLE AÇMA) -->
+      <!-- AUTH 1: UNLOCK WALLET -->
       <div class="card-box card-accent-left" id="wallet-unlock-box" style="display:none;">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:20px; width:auto;" alt="logo">
@@ -199,7 +205,7 @@
         </button>
       </div>
 
-      <!-- AUTH 2: CREATE / IMPORT (SİSTEMDE CÜZDAN YOKSA GÖRÜNECEK) -->
+      <!-- AUTH 2: CREATE / IMPORT -->
       <div class="card-box card-accent-left" id="wallet-auth-box">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:20px; width:auto;" alt="logo">
@@ -224,10 +230,8 @@
         </div>
       </div>
 
-      <!-- DASHBOARD (OTURUM AÇIKKEN GÖRÜNECEK KISIM) -->
+      <!-- DASHBOARD -->
       <div id="wallet-dashboard" style="display:none;">
-        
-        <!-- BALANCE CARD -->
         <div class="balance-card">
           <img src="https://i.ibb.co/1tnYf0hb/logo.png" class="balance-watermark" alt="watermark">
           <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -251,48 +255,12 @@
           </div>
         </div>
 
-        <!-- SWAP CARD -->
-        <div class="card-box card-accent-left">
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
-            <h4 style="font-size:15px;">Instant Swap</h4>
-          </div>
-          
-          <label>Pay (ETH)</label>
-          <input id="swap-eth-amount" type="number" placeholder="0.01">
-
-          <label>Receive Token</label>
-          <select id="swap-token-select">
-            <option value="USDC">USDC Token</option>
-            <option value="DYN">DYN Platform Token</option>
-          </select>
-
-          <button class="btn-main" id="btn-execute-swap">Swap Tokens</button>
-        </div>
-
-        <!-- SEND ETH CARD -->
-        <div class="card-box card-accent-left">
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-            <h4 style="font-size:15px;">Send ETH</h4>
-          </div>
-          <label>Recipient Address</label>
-          <input id="send-to-address" placeholder="0x...">
-
-          <label>Amount (ETH)</label>
-          <input id="send-eth-amount" type="number" placeholder="0.005">
-
-          <button class="btn-sub" id="btn-send-eth">Send Transaction</button>
-        </div>
-
-        <!-- LOGOUT / LOCK BUTTON -->
         <div style="margin-top:20px; margin-bottom:20px;">
           <button class="btn-sub btn-danger" id="btn-logout-wallet">
             <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
             Lock Wallet (Log Out)
           </button>
         </div>
-
       </div>
 
       <!-- LOGS CARD -->
@@ -346,11 +314,12 @@
     const DEFAULT_RPC = "https://sepolia.base.org";
     const DEFAULT_CONTRACT = "0xCEF1B2Ec08CEea761DE8B7D9B8E07441bc3C475d";
 
-    const SK = 'dyn_keystore_enc'; // Şifrelenmiş Cüzdan Verisi
+    const SK = 'dyn_keystore_enc';
     let wallet = null;
     let provider = null;
     let signer = null;
     let contract = null;
+    let selectedBase64Image = "";
 
     const ABI = [
       "function count() view returns (uint256)",
@@ -392,25 +361,35 @@
       $('help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'flex'; });
       $('close-help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'none'; });
 
-      // SAYFA İLK AÇILDIĞINDA DURUMU KONTROL ET
+      // Görsel seçildiğinde Base64 dönüşümü ve Önizleme
+      $('c-image-file')?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            selectedBase64Image = event.target.result;
+            const preview = $('c-image-preview');
+            preview.src = selectedBase64Image;
+            preview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
       checkStoredWallet();
     });
 
-    // CİHAZDA CÜZDAN VAR MI KONTROL ET
     function checkStoredWallet() {
       const encData = localStorage.getItem(SK);
       if (encData) {
-        // Cüzdan var: Şifre ile giriş (Unlock) ekranını göster
         $('wallet-auth-box').style.display = 'none';
         $('wallet-unlock-box').style.display = 'block';$('wallet-dashboard').style.display = 'none';
       } else {
-        // Cüzdan yok: Create / Import ekranını göster
         $('wallet-auth-box').style.display = 'block';
         $('wallet-unlock-box').style.display = 'none';$('wallet-dashboard').style.display = 'none';
       }
     }
 
-    // YENİ CÜZDAN OLUŞTURMA (ŞİFRE İLE KİLİTLE)
     $('btn-create-wallet')?.addEventListener('click', async () => {
       const pw = $('pw').value;
       if (pw.length < 8) return alert('Password must be at least 8 characters.');
@@ -427,7 +406,6 @@
       }
     });
 
-    // CÜZDAN İÇE AKTARMA (IMPORT)
     $('btn-import-wallet')?.addEventListener('click', async () => {
       const pw = $('pw').value;
       const importKey = $('import-key').value.trim();
@@ -454,7 +432,6 @@
       }
     });
 
-    // ŞİFRE İLE CÜZDANI AÇMA (UNLOCK / LOG IN)
     $('btn-unlock-wallet')?.addEventListener('click', async () => {
       const pw = $('unlock-pw').value;
       const encData = localStorage.getItem(SK);
@@ -472,7 +449,6 @@
       }
     });
 
-    // LOCK WALLET (CÜZDANI KİLİTLE / LOG OUT)
     $('btn-logout-wallet')?.addEventListener('click', () => {
       wallet = null;
       signer = null;
@@ -481,7 +457,6 @@
       log('Wallet locked.');
     });
 
-    // CÜZDANI CİHAZDAN SİL
     $('btn-reset-wallet')?.addEventListener('click', () => {
       if (confirm("Are you sure you want to remove this wallet from this device? Make sure you backed up your Private Key!")) {
         localStorage.removeItem(SK);
@@ -519,49 +494,56 @@
       }
     }
 
-    function copyAddress() {
-      if (wallet && wallet.address) {
-        navigator.clipboard.writeText(wallet.address).then(() => {
-          alert('Address copied: ' + wallet.address);
+    // PROJE OLUŞTURMA İŞLEMİ (GÖRSEL DAHİL)
+    $('btn-create-launch')?.addEventListener('click', async () => {
+      if (!contract) return alert('Please unlock your wallet first.');
+
+      const title = $('c-title').value.trim();
+      const desc = $('c-desc').value.trim();
+      const goal = $('c-goal').value;
+      const duration = $('c-duration').value;
+      const sharesStr = $('c-shares').value.trim();
+
+      if (!title || !goal || !duration || !sharesStr) {
+        return alert('Please fill in all required fields.');
+      }
+
+      const shares = sharesStr.split(',').map(s => parseInt(s.trim()));
+      const totalShare = shares.reduce((a, b) => a + b, 0);
+      if (totalShare !== 100) {
+        return alert('Milestone percentages must sum to 100.');
+      }
+
+      try {
+        log('Creating launch...');
+        const metaData = JSON.stringify({
+          title: title,
+          desc: desc,
+          image: selectedBase64Image
         });
-      }
-    }
 
-    function exportPrivateKey() {
-      if (wallet && wallet.privateKey) {
-        alert('YOUR PRIVATE KEY:\n\n' + wallet.privateKey);
-      }
-    }
+        const tx = await contract.create(
+          ethers.parseEther(goal),
+          duration,
+          shares,
+          metaData
+        );
 
-    $('btn-send-eth')?.addEventListener('click', async () => {
-      const to = $('send-to-address').value.trim();
-      const amount = $('send-eth-amount').value;
-      if (!ethers.isAddress(to) || !amount) return alert('Enter valid address and amount.');
-
-      try {
-        log('Sending transaction...');
-        const tx = await signer.sendTransaction({ to: to, value: ethers.parseEther(amount) });
+        log('Transaction sent, waiting for confirmation...');
         await tx.wait();
-        alert('ETH Sent!');
-        updateWalletBalance();
-      } catch (err) {
-        alert('Send failed: ' + err.message);
-      }
-    });
+        alert('Launch Created Successfully!');
+        
+        // Form Temizleme
+        $('c-title').value = '';
+        $('c-desc').value = '';$('c-goal').value = '';
+        $('c-duration').value = '';$('c-shares').value = '';
+        $('c-image-file').value = '';$('c-image-preview').style.display = 'none';
+        selectedBase64Image = "";
 
-    $('btn-execute-swap')?.addEventListener('click', async () => {
-      const amount = $('swap-eth-amount').value;
-      const token = $('swap-token-select').value;
-      if (!amount || amount <= 0) return alert('Enter valid amount.');
-
-      try {
-        log(`Swapping ${amount} ETH -> ${token}`);
-        const tx = await signer.sendTransaction({ to: DEFAULT_CONTRACT, value: ethers.parseEther(amount) });
-        await tx.wait();
-        alert(`Swap Success!`);
-        updateWalletBalance();
+        loadHomeLaunches();
+        switchTab('tab-home');
       } catch (err) {
-        alert('Swap Failed: ' + err.message);
+        alert('Creation failed: ' + err.message);
       }
     });
 
@@ -580,11 +562,14 @@
         let html = '';
         for (let i = 1; i <= count; i++) {
           const l = await contract.launch(i);
-          let meta = { title: 'Project #' + i, desc: '' };
+          let meta = { title: 'Project #' + i, desc: '', image: '' };
           try { meta = JSON.parse(l.metaURI); } catch(e){}
+
+          const imgHtml = meta.image ? `<img src="${meta.image}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; margin-bottom:8px;">` : '';
 
           html += `
             <div class="card-box launch-card" onclick="openExplore(${i})">
+              ${imgHtml}
               <h4 style="font-size:16px;">${meta.title || 'Project #' + i}</h4>
               <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc}</p>
               <div style="margin-top:10px; font-size:12px; font-weight:600;">
@@ -612,11 +597,14 @@
 
       try {
         const l = await contract.launch(id);
-        let meta = { title: 'Project #' + id, desc: '' };
+        let meta = { title: 'Project #' + id, desc: '', image: '' };
         try { meta = JSON.parse(l.metaURI); } catch(e){}
+
+        const imgHtml = meta.image ? `<img src="${meta.image}" style="width:100%; height:200px; object-fit:cover; border-radius:12px; margin-bottom:12px;">` : '';
 
         detailsDiv.innerHTML = `
           <div class="card-box card-accent-left">
+            ${imgHtml}
             <h3 style="font-size:18px;">${meta.title || 'Project #' + id}</h3>
             <p style="font-size:13px; color:var(--text-sub); margin-top:6px;">${meta.desc || 'No description.'}</p>
             <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
