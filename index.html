@@ -461,6 +461,9 @@
     const DEFAULT_CONTRACT = "0xCEF1B2Ec08CEea761DE8B7D9B8E07441bc3C475d";
 
     const SK = 'dyn_keystore_enc';
+    const BATTLE_TIMER_KEY = 'dyn_battle_target_time';
+    const BATTLE_COINS_KEY = 'dyn_battle_coins_list';
+
     let wallet = null;
     let provider = null;
     let signer = null;
@@ -468,8 +471,9 @@
     let selectedBase64Image = "";
     let selectedBattleBase64Image = "";
 
-    let battleCoins = [];
-    let battleTimeRemaining = 1800; // 30 Minutes in seconds
+    // Load saved coins from localStorage or start empty
+    let battleCoins = JSON.parse(localStorage.getItem(BATTLE_COINS_KEY) || '[]');
+    let battleTimeRemaining = 1800; // 30 Minutes default
 
     const ABI = [
       "function count() view returns (uint256)",
@@ -553,18 +557,42 @@
       });
 
       checkStoredWallet();
-      startBattleTimer();
+      initBattleTimer();
+      renderBattleLeaderboard();
     });
 
-    function startBattleTimer() {
+    // Persistent Real-Time Battle Timer using localStorage
+    function initBattleTimer() {
+      const now = Date.now();
+      let targetTime = localStorage.getItem(BATTLE_TIMER_KEY);
+
+      if (!targetTime || now > parseInt(targetTime)) {
+        // Set new target time 30 minutes from now
+        targetTime = now + (1800 * 1000);
+        localStorage.setItem(BATTLE_TIMER_KEY, targetTime);
+      }
+
+      updateTimerValue();
       setInterval(() => {
-        battleTimeRemaining--;
-        if (battleTimeRemaining <= 0) {
-          battleTimeRemaining = 1800;
-          triggerBattleTournament();
-        }
-        updateBattleTimerDisplay();
+        updateTimerValue();
       }, 1000);
+    }
+
+    function updateTimerValue() {
+      const now = Date.now();
+      let targetTime = parseInt(localStorage.getItem(BATTLE_TIMER_KEY) || Date.now());
+      let timeLeft = Math.floor((targetTime - now) / 1000);
+
+      if (timeLeft <= 0) {
+        // Reset timer for the next 30 minutes cycle
+        targetTime = Date.now() + (1800 * 1000);
+        localStorage.setItem(BATTLE_TIMER_KEY, targetTime);
+        timeLeft = 1800;
+        triggerBattleTournament();
+      }
+
+      battleTimeRemaining = timeLeft;
+      updateBattleTimerDisplay();
     }
 
     function updateBattleTimerDisplay() {
@@ -593,6 +621,9 @@
 
       battleCoins.push(newCoin);
       battleCoins.sort((a, b) => b.score - a.score);
+
+      // Save updated list to localStorage
+      localStorage.setItem(BATTLE_COINS_KEY, JSON.stringify(battleCoins));
 
       $('b-title').value = '';
       $('b-goal').value = '';$('b-image-file').value = '';
