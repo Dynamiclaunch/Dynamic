@@ -1,675 +1,494 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Dynamic — Milestone Launchpad</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dynamic Launchpad</title>
+  <!-- Ethers.js v6 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --border: #e9ecef;
+      --text-main: #121212;
+      --text-sub: #6c757d;
+      --accent: #000000;
+      --accent-text: #ffffff;
+      --accent-soft: #f1f3f5;
+      --status-funding: #2b8a3e;
+      --status-active: #1864ab;
+      --status-halted: #e03131;
+    }
 
-<!-- Favicon / Site İkonu Tanımları -->
-<link rel="icon" type="image/png" href="https://i.ibb.co/1tnYf0hb/1000085794.png">
-<link rel="shortcut icon" href="https://i.ibb.co/1tnYf0hb/1000085794.png">
-<link rel="apple-touch-icon" href="https://i.ibb.co/1tnYf0hb/1000085794.png">
+    [data-theme="dark"] {
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --border: #2d2d2d;
+      --text-main: #f8f9fa;
+      --text-sub: #a0a0a0;
+      --accent: #ffffff;
+      --accent-text: #000000;
+      --accent-soft: #2a2a2a;
+      --status-funding: #40c057;
+      --status-active: #4dabf7;
+      --status-halted: #ff6b6b;
+    }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-/* Light Theme Variables */
-[data-theme="light"] {
-  --bg: #ffffff;
-  --header-bg: rgba(255, 255, 255, 0.95);
-  --card-bg: #f8f9fa;
-  --text-main: #0d0e12;
-  --text-sub: #6c757d;
-  --border: #e9ecef;
-  --accent: #000000;
-  --accent-text: #ffffff;
-  --input-bg: #ffffff;
-  --green: #10b981;
-  --logo-filter: none;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text-main); padding-bottom: 90px; }
 
-/* Dark Theme Variables */
-[data-theme="dark"] {
-  --bg: #0b0e14;
-  --header-bg: rgba(11, 14, 20, 0.95);
-  --card-bg: #161b26;
-  --text-main: #f3f4f6;
-  --text-sub: #9ca3af;
-  --border: rgba(255, 255, 255, 0.08);
-  --accent: #ffffff;
-  --accent-text: #000000;
-  --input-bg: #0f131d;
-  --green: #34d399;
-  --logo-filter: invert(1);
-}
+    /* Header */
+    header { position: sticky; top: 0; background: var(--card-bg); z-index: 80; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+    .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
 
-:root {
-  --radius: 16px;
-  --nav-height: 64px;
-}
+    .icon-btn { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-main); transition: transform 0.1s; }
+    .icon-btn:active { transform: scale(0.95); }
 
-* { 
-  box-sizing: border-box; 
-  -webkit-tap-highlight-color: transparent; 
-  touch-action: manipulation;
-}
+    .container { padding: 16px; max-width: 500px; margin: 0 auto; }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text-main);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
-}
+    /* Cards & Form Components */
+    .card-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
-body {
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-}
+    label { display: block; font-size: 12px; font-weight: 700; color: var(--text-sub); margin-top: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, textarea, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); outline: none; font-size: 14px; transition: border 0.2s; }
+    input:focus, textarea:focus { border-color: var(--accent); }
 
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  max-width: 480px;
-  margin: 0 auto;
-  background: var(--header-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 50;
-  padding: 12px 16px 8px;
-  border-bottom: 1px solid var(--border);
-}
+    .btn-main { width: 100%; padding: 14px; border-radius: 14px; background: var(--accent); color: var(--accent-text); border: none; font-weight: 700; font-size: 14px; margin-top: 14px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-main:active { opacity: 0.85; }
+    .btn-sub { width: 100%; padding: 12px; border-radius: 14px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border); font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer; }
 
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .badge-funding { background: rgba(43, 138, 62, 0.15); color: var(--status-funding); }
+    .badge-active { background: rgba(24, 100, 171, 0.15); color: var(--status-active); }
+    .badge-halted { background: rgba(224, 49, 49, 0.15); color: var(--status-halted); }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    /* Steps Box */
+    .step-item { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+    .step-number { background: var(--accent); color: var(--accent-text); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; margin-top: 2px; }
 
-.brand-logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  filter: var(--logo-filter);
-}
+    /* Bottom Navigation */
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 90; }
+    .nav-item { border: none; background: none; color: var(--text-sub); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
+    .nav-item.active { color: var(--text-main); font-weight: 800; }
+    .nav-add { width: 46px; height: 46px; background: var(--accent); color: var(--accent-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: none; margin-top: -24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-.logo-text {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
+    /* Modals */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+    .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; max-width: 460px; width: 100%; padding: 22px; max-height: 85vh; overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 14px; right: 14px; border: none; background: var(--accent-soft); color: var(--text-main); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
 
-.top-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.icon-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  color: var(--text-main);
-  user-select: none;
-}
-
-.cat-tabs {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 4px;
-}
-.cat-tabs::-webkit-scrollbar { display: none; }
-
-.cat-tab {
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: var(--card-bg);
-  color: var(--text-sub);
-  font-weight: 600;
-  font-size: 13px;
-  white-space: nowrap;
-  border: 1px solid var(--border);
-  cursor: pointer;
-}
-
-.cat-tab.active {
-  background: var(--accent);
-  color: var(--accent-text);
-  border-color: var(--accent);
-}
-
-/* Sayfa İçerik Alanı */
-.main-content {
-  padding-top: 110px;
-  padding-bottom: calc(var(--nav-height) + 30px);
-  padding-left: 16px;
-  padding-right: 16px;
-  min-height: 100vh;
-}
-
-.screen { 
-  display: none; 
-}
-.screen.active { 
-  display: block; 
-}
-
-.list-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-}
-
-.item-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.item-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-  overflow: hidden;
-}
-
-.item-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.item-info .title {
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 2px;
-}
-
-.item-info .sub {
-  color: var(--text-sub);
-  font-size: 12px;
-}
-
-.item-right { text-align: right; }
-.item-right .val { font-weight: 700; font-size: 14px; }
-.item-right .badge { color: var(--green); font-weight: 600; font-size: 12px; }
-
-.card-box {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-sub);
-  margin-bottom: 6px;
-  margin-top: 10px;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--input-bg);
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-}
-
-.file-upload-box {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  background: var(--input-bg);
-  margin-top: 6px;
-  position: relative;
-}
-
-.file-upload-box input[type="file"] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.preview-container {
-  display: none;
-  position: relative;
-  margin-top: 10px;
-}
-
-.preview-img {
-  width: 100%;
-  max-height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-}
-
-.remove-img-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-button.btn-main {
-  width: 100%;
-  padding: 14px;
-  border-radius: 20px;
-  background: var(--accent);
-  color: var(--accent-text);
-  border: none;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: 12px;
-}
-
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 480px;
-  margin: 0 auto;
-  height: var(--nav-height);
-  background: var(--header-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  z-index: 50;
-}
-
-.nav-item {
-  background: none;
-  border: none;
-  color: var(--text-sub);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 8px 12px;
-  width: 20%;
-}
-
-.nav-item.active { color: var(--text-main); }
-
-.nav-item-add {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-text);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 300;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-#log {
-  font-family: monospace;
-  font-size: 11px;
-  background: var(--input-bg);
-  color: var(--text-sub);
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  max-height: 100px;
-  overflow-y: auto;
-  white-space: pre-wrap;
-}
-</style>
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .launch-card { cursor: pointer; transition: transform 0.1s; }
+    .launch-card:active { transform: scale(0.98); }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="top-bar">
-    <div class="brand">
-      <img src="https://i.ibb.co/1tnYf0hb/1000085794.png" alt="Dynamic Logo" class="brand-logo">
-      <span class="logo-text">Dynamic</span>
+  <header>
+    <div class="logo">⚡ Dynamic</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="help-btn" title="Platform Nasıl Çalışır?">❓</button>
+      <button class="icon-btn" id="theme-btn" title="Koyu/Açık Tema">🌙</button>
     </div>
-    <div class="top-actions">
-      <button class="icon-btn" id="theme-btn">🌙</button>
-      <button class="icon-btn" id="wallet-top-btn">👛</button>
-    </div>
-  </div>
-  
-  <div class="cat-tabs">
-    <button class="cat-tab active" data-cat="trending">Trending</button>
-    <button class="cat-tab" data-cat="top">Top</button>
-    <button class="cat-tab" data-cat="new">New</button>
-    <button class="cat-tab" data-cat="creators">Creators</button>
-  </div>
-</header>
+  </header>
 
-<div class="main-content">
-  <!-- SCREEN 1: BROWSE LAUNCHES -->
-  <div id="screen-browse" class="screen active">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
-      <span style="font-weight: 700; font-size: 16px;">Launches</span>
-      <button id="refresh-btn" style="border:none; background:none; color:var(--text-sub); font-weight:600; cursor:pointer;">Refresh</button>
+  <div class="container">
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content active">
+      <!-- Genel Platform Rehberi Kartı -->
+      <div class="card-box" style="border-left: 4px solid var(--accent);">
+        <span style="font-weight:800; font-size:15px; display:block; margin-bottom:6px;">Platform Nasıl Çalışır? 🚀</span>
+        <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; line-height:1.5;">
+          <b>Dynamic</b>, Web3 girişimcileri ve yatırımcıları güvence altına alan **aşama bazlı (milestone) ve merkeziyetsiz** bir fonlama platformudur.
+        </p>
+        <button class="btn-sub" style="padding: 10px 14px; font-size: 12px; margin:0;" onclick="document.getElementById('help-modal').style.display='flex'">Detaylı Kullanım Rehberini Oku 📖</button>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="font-size:18px;">Projeler</h3>
+        <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">Yenile 🔄</button>
+      </div>
+
+      <div id="launches-list">
+        <p style="color:var(--text-sub); font-size:13px; text-align:center; padding:20px;">Cüzdan kilitli veya henüz veri yüklenmedi...</p>
+      </div>
     </div>
-    <div id="list">
-      <div style="text-align:center; padding: 20px; color:var(--text-sub);">Click refresh or setup wallet to view.</div>
+
+    <!-- EXPLORE / DETAY TAB -->
+    <div id="tab-explore" class="tab-content">
+      <div class="card-box">
+        <h3>Proje Detay Sorgula</h3>
+        <label>Proje (Launch) ID</label>
+        <input id="exp-id" type="number" placeholder="Örn: 1">
+        <button class="btn-main" id="btn-load-exp">Proje Detayını Getir</button>
+      </div>
+      <div id="explore-details"></div>
     </div>
+
+    <!-- CREATE LAUNCH TAB -->
+    <div id="tab-create" class="tab-content">
+      <div class="card-box">
+        <h3>Yeni Proje Başlat (Create Launch)</h3>
+        
+        <label>Proje Başlığı</label>
+        <input id="c-title" placeholder="Örn: AI Web3 Platform">
+        
+        <label>Açıklama</label>
+        <textarea id="c-desc" rows="3" placeholder="Projeniz hakkında kısa bilgi..."></textarea>
+        
+        <label>Logo / Görsel Seç</label>
+        <input id="c-file" type="file" accept="image/*">
+        
+        <label>Fon Hedefi (WEI veya Token Miktarı)</label>
+        <input id="c-goal" type="number" placeholder="Örn: 1000000000000000000 (1 ETH)">
+        
+        <label>Süre (Saniye cinsinden)</label>
+        <input id="c-duration" type="number" placeholder="Örn: 86400 (1 Gün)">
+        
+        <label>Aşama Payları (%) (Toplamı 100 olmalı, virgülle ayırın)</label>
+        <input id="c-shares" placeholder="30,40,30">
+        
+        <button class="btn-main" id="btn-create-launch">Projeyi Oluştur ve Yayınla</button>
+      </div>
+    </div>
+
+    <!-- WALLET MANAGEMENT TAB -->
+    <div id="tab-wallet" class="tab-content">
+      <div class="card-box">
+        <h3>Cüzdan Yönetimi (Wallet)</h3>
+        
+        <label>RPC URL</label>
+        <input id="rpc" value="https://sepolia.base.org">
+        
+        <label>Contract Address (Sözleşme Adresi)</label>
+        <input id="addr" placeholder="0x...">
+        
+        <label>Şifre (Password)</label>
+        <input id="pw" type="password" placeholder="En az 8 karakter">
+        
+        <button class="btn-main" id="btn-create-wallet">Yeni Cüzdan Oluştur (Create)</button>
+        <button class="btn-sub" id="btn-unlock-wallet">Kilidi Aç (Unlock)</button>
+      </div>
+
+      <div class="card-box">
+        <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">Bağlantı Durumu</span>
+        <div id="wallet-status" style="font-weight:600; font-size:13px; margin-top:6px; word-break:break-all;">Cüzdan Bağlı Değil</div>
+      </div>
+
+      <div class="card-box">
+        <span style="font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase;">İşlem Kayıtları (Log)</span>
+        <div id="log-box" style="font-family:monospace; font-size:11px; color:var(--text-sub); margin-top:6px; max-height:120px; overflow-y:auto; white-space:pre-wrap;">-</div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- SCREEN 2: OPEN / VIEW LAUNCH -->
-  <div id="screen-launch" class="screen">
-    <div style="display:flex; gap: 8px; margin-bottom: 12px;">
-      <input id="id" type="number" placeholder="Launch ID" value="1">
-      <button class="btn-main" id="load-btn" style="margin:0; width: auto; padding: 0 16px;">Load</button>
-    </div>
-    <div id="info"></div>
-    
-    <div id="act" class="card-box" style="display:none; margin-top:16px;">
-      <span style="font-weight:700;">Actions</span>
-      <input id="amt" placeholder="Amount to contribute" style="margin-top:8px;">
-      <button class="btn-main" id="contrib-btn">Contribute</button>
-      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
-        <button style="flex:1; padding:8px;" id="claim-btn">Claim MS</button>
-        <button style="flex:1; padding:8px;" id="chal-btn">Challenge</button>
+  <!-- HOW IT WORKS MODAL (GENEL SİTE ÇALIŞMA MANTIĞI) -->
+  <div id="help-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="close-help-btn">✕</button>
+      <h3 style="margin-bottom: 16px; font-size: 18px;">Genel Platform Rehberi ⚡</h3>
+      
+      <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
+
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div>
+            <b>Yerel Cüzdan Oluşturma (Wallet)</b><br>
+            MetaMask gibi eklentilere ihtiyaç duymadan doğrudan site üzerinden cüzdan oluşturabilirsiniz. Belirlediğiniz şifre ile özel anahtarınız (Private Key) tarayıcınızda AES yöntemiyle şifrelenir.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div>
+            <b>Proje Keşfetme & Fonlama (Home / Explore)</b><br>
+            Ana sayfada akıllı sözleşmede yayınlanmış tüm aktif projeler listelenir. Beğendiğiniz projeleri inceleyebilir ve <code>Contribute</code> seçeneği ile doğrudan akıllı sözleşmeye ETH aktararak destek olabilirsiniz.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div>
+            <b>Kendi Projenizi Başlatma (+)</b><br>
+            Alt menüdeki <b>"+"</b> butonunu kullanarak proje adınızı, görsellerinizi, toplam fon hedefinizi ve projeyi tamamlayacağınız aşama (Milestone) yüzdelerini tanımlayarak blokzincir üzerinde yayınlayabilirsiniz.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div>
+            <b>Kademeli Serbest Bırakma (Escrow)</b><br>
+            Toplanan tüm fonlar akıllı sözleşmede (Escrow) dondurulur. Proje sahipleri tüm parayı tek seferde çekemez. Yalnızca vaat ettikleri her bir aşamayı (Milestone) başarıyla tamamladıklarında fondan kademeli olarak pay alabilirler.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">5</div>
+          <div>
+            <b>Topluluk Denetimi & İtiraz (Challenge)</b><br>
+            Eğer bir proje sahibi vaat ettiği teslimatları yapmazsa veya topluluğu yanıltırsa, yatırımcılar <code>Challenge</code> (İtiraz) mekanizmasını tetikleyerek fon akışını dondurabilir.
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- SCREEN 3: CREATE LAUNCH -->
-  <div id="screen-create" class="screen">
-    <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Create Launch</span>
-    <div class="card-box">
-      <label>Project Name</label>
-      <input id="pname" placeholder="My Web3 Project">
-      
-      <label>Project Image / Logo</label>
-      <div class="file-upload-box">
-        <span style="font-size:20px; display:block;">📁</span>
-        <span style="font-weight:600; font-size:13px; color:var(--text-main);">Tap to select image</span>
-        <input type="file" id="fileInput" accept="image/*">
-      </div>
-      
-      <div id="previewContainer" class="preview-container">
-        <img id="pimgPreview" class="preview-img" alt="Project Preview">
-        <button class="remove-img-btn" id="remove-img-btn">✕</button>
-      </div>
-      <input type="hidden" id="pimgData">
+  <!-- BOTTOM NAVIGATION -->
+  <nav>
+    <button class="nav-item active" onclick="switchTab('tab-home', this)">🏠 <span>Home</span></button>
+    <button class="nav-item" onclick="switchTab('tab-explore', this)">⚡ <span>Explore</span></button>
+    <button class="nav-add" onclick="switchTab('tab-create', this)">+</button>
+    <button class="nav-item" onclick="switchTab('tab-wallet', this)">👛 <span>Wallet</span></button>
+  </nav>
 
-      <label>Short Description</label>
-      <input id="pdesc" placeholder="Brief details...">
-      
-      <label>Payment Token Address</label>
-      <input id="pay" placeholder="0x...">
-      
-      <label>Sale Token Address</label>
-      <input id="sale" placeholder="0x...">
-      
-      <label>Goal (Payment Tokens)</label>
-      <input id="goal" value="1000">
-      
-      <label>Sale Tokens per 1 Payment Token</label>
-      <input id="tpp" value="20">
-      
-      <label>Funding Window (Days)</label>
-      <input id="days" value="14">
-      
-      <label>Milestones (percent:days:title)</label>
-      <input id="mls" value="30:14:Public testnet,40:30:DEX listing,30:60:10k users">
-      
-      <button class="btn-main" id="create-launch-btn">Create Launch</button>
-    </div>
-  </div>
+  <script>
+    const SK = 'dyn_keystore';
+    let wallet = null;
+    let provider = null;
+    let signer = null;
+    let contract = null;
 
-  <!-- SCREEN 4: WALLET & SETTINGS -->
-  <div id="screen-wallet" class="screen">
-    <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Wallet Management</span>
-    <div class="card-box">
-      <label>RPC URL</label>
-      <input id="rpc" value="https://sepolia.base.org">
-      <label>Contract Address</label>
-      <input id="addr" placeholder="0x...">
-      <label>Password</label>
-      <input id="pw" type="password">
-      
-      <button class="btn-main" id="new-wallet-btn">Create Wallet</button>
-      <button class="btn-main" style="background:var(--card-bg); color:var(--text-main); border:1px solid var(--border);" id="unlock-btn">Unlock</button>
-    </div>
-    <div id="me" style="font-size:12px; color:var(--text-sub); white-space:pre-wrap; margin-bottom:12px;"></div>
-    
-    <div class="card-box">
-      <label>Activity Log</label>
-      <div id="log">Logs will appear here...</div>
-    </div>
-  </div>
-</div>
+    // Minimum ABI tanımı
+    const ABI = [
+      "function count() view returns (uint256)",
+      "function launch(uint256) view returns (address owner, uint256 goal, uint256 raised, uint256 duration, uint256 startTime, uint8 state, string metaURI)",
+      "function milestones(uint256, uint256) view returns (uint256 share, uint8 state)",
+      "function create(uint256 _goal, uint256 _duration, uint256[] _shares, string _metaURI) returns (uint256)",
+      "function contribute(uint256 _id) payable",
+      "function claimMilestone(uint256 _id, uint256 _msIndex)",
+      "function challenge(uint256 _id)"
+    ];
 
-<!-- BOTTOM NAVIGATION -->
-<div class="bottom-nav">
-  <button class="nav-item active" id="nav-home">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-    <span>Home</span>
-  </button>
-  
-  <button class="nav-item" id="nav-explore">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-    <span>Explore</span>
-  </button>
-  
-  <button class="nav-item-add" id="nav-add">+</button>
-  
-  <button class="nav-item" id="nav-wallet">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-    <span>Wallet</span>
-  </button>
-</div>
+    const $ = id => document.getElementById(id);
 
-<script>
-const $ = i => document.getElementById(i);
-
-function switchTab(screenId, targetBtn) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(screenId).classList.add('active');
-  
-  if (targetBtn) {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    if (targetBtn.classList.contains('nav-item')) {
-      targetBtn.classList.add('active');
+    function log(msg) {
+      const box = $('log-box');
+      box.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n` + box.textContent;
     }
-  }
-  window.scrollTo(0, 0);
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-  $('nav-home').addEventListener('click', (e) => switchTab('screen-browse', e.currentTarget));$('nav-explore').addEventListener('click', (e) => switchTab('screen-launch', e.currentTarget));
-  $('nav-add').addEventListener('click', (e) => switchTab('screen-create', e.currentTarget));$('nav-wallet').addEventListener('click', (e) => switchTab('screen-wallet', e.currentTarget));
-  $('wallet-top-btn').addEventListener('click', () => switchTab('screen-wallet',$('nav-wallet')));
-
-  $('theme-btn').addEventListener('click', toggleTheme);
-
-  document.querySelectorAll('.cat-tab').forEach(tab => {
-    tab.addEventListener('click', (e) => {
-      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-      e.currentTarget.classList.add('active');
-    });
-  });
-
-  $('fileInput').addEventListener('change', handleFileSelect);$('remove-img-btn').addEventListener('click', removeImage);
-
-  $('refresh-btn').addEventListener('click', browse);
-  $('load-btn').addEventListener('click', load);$('create-launch-btn').addEventListener('click', createLaunch);
-  $('new-wallet-btn').addEventListener('click', newWallet);$('unlock-btn').addEventListener('click', unlock);
-});
-
-function toggleTheme() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  $('theme-btn').textContent = next === 'dark' ? '☀' : '🌙';
-}
-
-function handleFileSelect(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      $('pimgData').value = evt.target.result;
-      $('pimgPreview').src = evt.target.result;
-      $('previewContainer').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function removeImage() {
-  $('fileInput').value = '';
-  $('pimgData').value = '';$('previewContainer').style.display = 'none';
-}
-
-const ABI=["function create(tuple(address pay,address sale,uint256 goal,uint256 rate,uint40 fundEnd,uint16[] bps,uint40[] durations,bytes32[] specs,string metaURI)) returns (uint256)","function contribute(uint256,uint256)","function closeFunding(uint256)","function claimMilestone(uint256,string)","function challenge(uint256)","function vote(uint256,bool)","function resolve(uint256)","function count() view returns (uint256)","function metaURI(uint256) view returns (string)","function launch(uint256) view returns (tuple(address team,address pay,address sale,uint256 goal,uint256 raised,uint256 bond,uint256 rate,uint40 fundEnd,uint8 st,uint256 paid,uint256 refundable,uint8 next,uint256 saleReclaimed,uint16 feeBps,uint8 threshold))","function milestones(uint256) view returns (tuple(uint16 bps,uint40 deadline,uint8 st,uint40 claimEnd,uint40 voteEnd,uint8 attests,uint8 round,uint256 yes,uint256 no,address challenger,uint256 stake,bytes32 spec)[])"];
-const LS=["Funding","Active","Halted","Completed","Failed"],MS=["Pending","Claimed","Challenged","Released"],SK='dyn_keystore';
-let provider,signer,W,me,c,A,ID,L,M,dec=6;
-
-const err=e=>e.reason||e.shortMessage||e.message;
-function log(s){$('log').textContent=s+"\n"+$('log').textContent}
-function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-function fetchS(k){try{return localStorage.getItem(k)}catch(e){return null}}
-
-async function setup(w){
- A=$('addr').value.trim();if(!ethers.isAddress(A))return alert('Enter contract address in Wallet tab');
- store('dyn_addr',A);store('dyn_rpc',$('rpc').value.trim());
- provider=new ethers.JsonRpcProvider($('rpc').value.trim());W=w;signer=w.connect(provider);me=w.address;c=new ethers.Contract(A,ABI,signer);$('me').textContent='Wallet: '+me;
-}
-
-async function newWallet(){
-  const pw=$('pw').value;if(pw.length<8)return alert('Min 8 chars password');
-  const w=ethers.Wallet.createRandom();store(SK,await w.encrypt(pw));await setup(w);alert('Wallet created!');
-}
-
-async function unlock(){
-  const j=fetchS(SK);if(!j)return alert('No wallet saved');
-  try{await setup(await ethers.Wallet.fromEncryptedJson(j,$('pw').value));alert('Unlocked!')}catch(e){log('Wrong password')}
-}
-
-async function run(fn){
-  try{if(!c)return alert('Unlock wallet first');const t=await fn();log('TX: '+t.hash);await t.wait();log('Confirmed')}catch(e){log('Error: '+err(e))}
-}
-
-const esc=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
-const pmeta=u=>{try{return JSON.parse(decodeURIComponent(u.split(',').slice(1).join(',')))}catch(e){return{}}};
-
-async function browse(){
-  try{
-    const a=$('addr').value.trim();if(!ethers.isAddress(a))return alert('Enter contract address in Wallet tab');
-    const rc=new ethers.Contract(a,ABI,new ethers.JsonRpcProvider($('rpc').value.trim())),n=Number(await rc.count());let h='';
-    for(let i=n;i>=Math.max(1,n-19);i--){
-      const l=await rc.launch(i),mt=pmeta(await rc.metaURI(i)),pct=(l.goal>0n?Number(l.raised*100n/l.goal):0);
-      const imgTag = mt.image ? `<img src="${esc(mt.image)}">` : (mt.name ? mt.name[0] : '#');
-      h+='<div class="list-item" onclick="$(\'id\').value='+i+';switchTab(\'screen-launch\');load();"><div class="item-left"><div class="item-icon">'+imgTag+'</div><div class="item-info"><div class="title">'+esc(mt.name||('Launch #'+i))+'</div><div class="sub">'+LS[l.st]+' · #'+i+'</div></div></div><div class="item-right"><div class="val">'+pct+'%</div><div class="badge">Funded</div></div></div>';
+    // Tab Değiştirme Mantığı
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      $(tabId).classList.add('active');
+      if(el && el.classList) el.classList.add('active');
     }
-    $('list').innerHTML=h||'<div style="text-align:center; padding:20px; color:var(--text-sub);">No launches yet.</div>';
-  }catch(e){log('Error: '+err(e))}
-}
 
-async function load(){
-  try{
-    if(!c)return alert('Unlock wallet first');ID=BigInt($('id').value);L=await c.launch(ID);M=await c.milestones(ID);
-    const mt=pmeta(await c.metaURI(ID));
-    const imgHeader = mt.image ? `<img src="${esc(mt.image)}" style="width:100%; height:180px; object-fit:cover; border-radius:12px; margin-bottom:12px;">` : '';
-    let h='<div class="card-box">'+imgHeader+'<h3>'+esc(mt.name||('Launch #'+ID))+'</h3><p style="color:var(--text-sub);">'+esc(mt.desc||'')+'</p><div>Status: <b>'+LS[L.st]+'</b></div></div>';
-    M.forEach((m,i)=>{h+='<div class="card-box"><b>Milestone '+(i+1)+'</b>: '+MS[m.st]+' ('+(Number(m.bps)/100)+'%)</div>'});
-    $('info').innerHTML=h;$('act').style.display='block';
-  }catch(e){log('Error: '+err(e))}
-}
-
-async function createLaunch(){
-  await run(async () => {
-    const name = $('pname').value.trim();
-    const image = $('pimgData').value;
-    const desc = $('pdesc').value.trim();
-    const metaObj = { name, image, desc };
-    const metaURI = "data:application/json," + encodeURIComponent(JSON.stringify(metaObj));
-    
-    const pay = $('pay').value.trim();
-    const sale = $('sale').value.trim();
-    const goal = ethers.parseUnits($('goal').value, dec);
-    const rate = ethers.parseUnits($('tpp').value, 18);
-    const fundEnd = Math.floor(Date.now() / 1000) + (Number($('days').value) * 86400);
-    
-    const rawMls = $('mls').value.split(',');
-    const bps = [], durations = [], specs = [];
-    rawMls.forEach(m => {
-      const [p, d, t] = m.split(':');
-      bps.push(Number(p) * 100);
-      durations.push(Number(d) * 86400);
-      specs.push(ethers.keccak256(ethers.toUtf8Bytes(t)));
+    // Tema Değiştirme Mantığı
+    $('theme-btn').addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      $('theme-btn').textContent = isDark ? '🌙' : '☀️';
     });
-    
-    const params = { pay, sale, goal, rate, fundEnd, bps, durations, specs, metaURI };
-    return c.create(params);
-  });
-}
-</script>
+
+    // Yardım Modal Açma/Kapatma
+    $('help-btn').addEventListener('click', () =>$('help-modal').style.display = 'flex');
+    $('close-help-btn').addEventListener('click', () =>$('help-modal').style.display = 'none');
+
+    // 1. Cüzdan Oluşturma
+    $('btn-create-wallet').addEventListener('click', async () => {
+      const pw = $('pw').value;
+      if (pw.length < 8) return alert('Şifre en az 8 karakter olmalıdır.');
+
+      try {
+        $('wallet-status').textContent = 'Cüzdan üretiliyor ve şifreleniyor...';
+        log('Yeni cüzdan üretimi başlatıldı.');
+        const newWallet = ethers.Wallet.createRandom();
+        const encryptedJson = await newWallet.encrypt(pw);
+        localStorage.setItem(SK, encryptedJson);
+        await initWallet(newWallet);
+        alert('Cüzdan başarıyla oluşturuldu ve yerel hafızaya şifreli olarak kaydedildi!');
+      } catch (err) {
+        log('Hata: ' + err.message);
+        alert('Cüzdan oluşturma hatası: ' + err.message);
+      }
+    });
+
+    // 2. Cüzdan Kilidi Açma (Unlock)
+    $('btn-unlock-wallet').addEventListener('click', async () => {
+      const pw = $('pw').value;
+      const encryptedJson = localStorage.getItem(SK);
+      if (!encryptedJson) return alert('Kayıtlı cüzdan bulunamadı. Lütfen önce yeni cüzdan oluşturun.');
+
+      try {
+        $('wallet-status').textContent = 'Şifre çözülüyor...';
+        log('Cüzdan kilidi açılıyor...');
+        const decryptedWallet = await ethers.Wallet.fromEncryptedJson(encryptedJson, pw);
+        await initWallet(decryptedWallet);
+        alert('Cüzdan kilidi başarıyla açıldı!');
+      } catch (err) {
+        log('Hata: Şifre yanlış.');
+        alert('Hatalı şifre!');
+        $('wallet-status').textContent = 'Kilit açma başarısız.';
+      }
+    });
+
+    // Cüzdan & Sözleşme Başlatma
+    async function initWallet(w) {
+      const rpc = $('rpc').value.trim();
+      const addr = $('addr').value.trim();
+
+      provider = new ethers.JsonRpcProvider(rpc);
+      signer = w.connect(provider);
+      wallet = w;
+
+      $('wallet-status').textContent = 'Bağlı Cüzdan: ' + w.address;
+      log('Cüzdan aktif: ' + w.address);
+
+      if (ethers.isAddress(addr)) {
+        contract = new ethers.Contract(addr, ABI, signer);
+        log('Sözleşme bağlandı: ' + addr);
+        loadHomeLaunches();
+      } else {
+        log('Sözleşme adresi geçersiz veya girilmedi.');
+      }
+    }
+
+    // 3. Proje Listesi Yükleme (Home)
+    async function loadHomeLaunches() {
+      if (!contract) return;
+      const listDiv = $('launches-list');
+      listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Yükleniyor...</p>';
+
+      try {
+        const count = await contract.count();
+        log('Toplam Proje Sayısı: ' + count.toString());
+        if (count == 0) {
+          listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Henüz yayınlanan bir proje yok.</p>';
+          return;
+        }
+
+        let html = '';
+        for (let i = 1; i <= count; i++) {
+          const l = await contract.launch(i);
+          let meta = { title: 'Proje #' + i, desc: '', img: '' };
+          try { meta = JSON.parse(l.metaURI); } catch(e){}
+
+          const states = ['Funding', 'Active', 'Halted', 'Completed', 'Failed'];
+          const badgeClasses = ['badge-funding', 'badge-active', 'badge-halted', 'badge-funding', 'badge-halted'];
+
+          html += `
+            <div class="card-box launch-card" onclick="openExplore(${i})">
+              ${meta.img ? `<img src="${meta.img}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; margin-bottom:10px;">` : ''}
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h4 style="font-size:16px;">${meta.title || 'Proje #' + i}</h4>
+                <span class="badge ${badgeClasses[l.state]}">${states[l.state]}</span>
+              </div>
+              <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc ? meta.desc.substring(0, 80) + '...' : 'Açıklama yok'}</p>
+              <div style="margin-top:10px; font-size:12px; font-weight:600;">
+                Toplanan: ${ethers.formatEther(l.raised)} ETH / Hedef: ${ethers.formatEther(l.goal)} ETH
+              </div>
+            </div>
+          `;
+        }
+        listDiv.innerHTML = html;
+      } catch (err) {
+        log('Projeler yüklenirken hata: ' + err.message);
+        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Projeler yüklenemedi.</p>';
+      }
+    }
+
+    $('btn-refresh-home').addEventListener('click', loadHomeLaunches);
+
+    function openExplore(id) {
+      $('exp-id').value = id;
+      switchTab('tab-explore');
+      loadExploreDetails(id);
+    }
+
+    // 4. Proje Detayı Yükleme (Explore)
+    async function loadExploreDetails(id) {
+      if (!contract) return alert('Lütfen önce cüzdan ve sözleşme adresini bağlayın.');
+      const detDiv = $('explore-details');
+      detDiv.innerHTML = '<p style="font-size:12px; color:var(--text-sub);">Yükleniyor...</p>';
+
+      try {
+        const l = await contract.launch(id);
+        let meta = { title: 'Proje #' + id, desc: '', img: '' };
+        try { meta = JSON.parse(l.metaURI); } catch(e){}
+
+        detDiv.innerHTML = `
+          <div class="card-box">
+            ${meta.img ? `<img src="${meta.img}" style="width:100%; max-height:200px; object-fit:cover; border-radius:12px; margin-bottom:12px;">` : ''}
+            <h3>${meta.title}</h3>
+            <p style="font-size:13px; color:var(--text-sub); margin-top:8px;">${meta.desc}</p>
+            <hr style="border:none; border-top:1px solid var(--border); margin:12px 0;">
+            <p style="font-size:12px;"><b>Sahibi:</b> ${l.owner}</p>
+            <p style="font-size:12px; margin-top:4px;"><b>Toplanan:</b> ${ethers.formatEther(l.raised)} / ${ethers.formatEther(l.goal)} ETH</p>
+            
+            <label style="margin-top:14px;">Fon Sağla (ETH)</label>
+            <input id="contrib-amount" placeholder="0.1">
+            <button class="btn-main" onclick="contributeToLaunch(${id})">Yatırım Yap (Contribute)</button>
+          </div>
+        `;
+      } catch (err) {
+        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Proje bulunamadı veya hata oluştu.</p>';
+      }
+    }
+
+    $('btn-load-exp').addEventListener('click', () => {
+      const id = $('exp-id').value;
+      if (id) loadExploreDetails(id);
+    });
+
+    // 5. Katkı Yapma (Contribute)
+    async function contributeToLaunch(id) {
+      const val = $('contrib-amount').value;
+      if (!val) return alert('Lütfen miktar girin.');
+      try {
+        log(`Proje #${id} için ${val} ETH yatırım yapılıyor...`);
+        const tx = await contract.contribute(id, { value: ethers.parseEther(val) });
+        await tx.wait();
+        alert('Yatırım başarılı!');
+        loadExploreDetails(id);
+      } catch (err) {
+        alert('İşlem başarısız: ' + err.message);
+      }
+    }
+
+    // 6. Proje Oluşturma (Create Launch)
+    $('btn-create-launch').addEventListener('click', async () => {
+      if (!contract) return alert('Lütfen önce Wallet sekmesinden cüzdan ve sözleşmeyi bağlayın.');
+
+      const title = $('c-title').value;
+      const desc = $('c-desc').value;
+      const file = $('c-file').files[0];
+      const goal = $('c-goal').value;
+      const duration = $('c-duration').value;
+      const shares = $('c-shares').value.split(',').map(s => parseInt(s.trim()));
+
+      if (!title || !goal || !duration || shares.length === 0) {
+        return alert('Lütfen gerekli alanları doldurun.');
+      }
+
+      let imgData = '';
+      if (file) {
+        imgData = await new Promise((res) => {
+          const reader = new FileReader();
+          reader.onload = e => res(e.target.result);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      const metaURI = JSON.stringify({ title, desc, img: imgData });
+
+      try {
+        log('Proje oluşturma işlemi başlatıldı...');
+        const tx = await contract.create(goal, duration, shares, metaURI);
+        await tx.wait();
+        alert('Projeniz başarıyla blokzincirde oluşturuldu!');
+        switchTab('tab-home');
+        loadHomeLaunches();
+      } catch (err) {
+        alert('Proje oluşturma hatası: ' + err.message);
+      }
+    });
+  </script>
 </body>
 </html>
