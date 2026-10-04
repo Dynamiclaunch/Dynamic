@@ -41,6 +41,7 @@
     /* Header */
     header { position: sticky; top: 0; background: var(--card-bg); z-index: 80; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); }
     .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+    .logo img { height: 32px; width: auto; object-fit: contain; }
     .header-actions { display: flex; gap: 8px; align-items: center; }
 
     .icon-btn { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-main); transition: transform 0.1s; }
@@ -88,7 +89,11 @@
 <body>
 
   <header>
-    <div class="logo">⚡ Dynamic</div>
+    <div class="logo">
+      <!-- Buradaki 'logo.png' alanına kendi logo dosyanın yolunu yazabilirsin -->
+      <img src="logo.png" alt="Dynamic Logo" onerror="this.style.display='none'">
+      <span>Dynamic</span>
+    </div>
     <div class="header-actions">
       <button class="icon-btn" id="help-btn" title="How It Works">❓</button>
       <button class="icon-btn" id="theme-btn" title="Toggle Theme">🌙</button>
