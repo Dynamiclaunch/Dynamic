@@ -1,0 +1,27 @@
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: |
+          git config user.email "ci@example.com"
+          git config user.name "ci"
+          forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 foundry-rs/forge-std
+      - run: forge build --sizes
+      - run: forge test -vv
+  slither:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: |
+          git config user.email "ci@example.com"
+          git config user.name "ci"
+          forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 foundry-rs/forge-std
+          pip3 install slither-analyzer solc-select
+          solc-select install 0.8.24 && solc-select use 0.8.24
+          slither . --filter-paths "lib|test" --exclude naming-convention,solc-version

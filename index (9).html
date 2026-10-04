@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dynamic — Milestone Launchpad</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+<style>
+:root{--bg:#f6f7fb;--c:#fff;--t:#12141a;--m:#6b7280;--b:#e3e6ee;--a:#5b5bf0}
+@media(prefers-color-scheme:dark){:root{--bg:#0d0f14;--c:#171a22;--t:#eef0f5;--m:#9aa3b2;--b:#262b37;--a:#8080ff}}
+*{box-sizing:border-box}body{margin:0 auto;background:var(--bg);color:var(--t);font:15px/1.45 system-ui,sans-serif;padding:14px;max-width:760px}
+.c{background:var(--c);border:1px solid var(--b);border-radius:14px;padding:14px;margin:10px 0}
+input{width:100%;font:inherit;padding:8px;margin:3px 0 8px;border:1px solid var(--b);border-radius:10px;background:var(--bg);color:var(--t)}
+button{font:inherit;padding:8px 12px;margin:3px 3px 3px 0;border-radius:10px;border:1px solid var(--b);background:var(--c);color:var(--t)}
+button.p{background:var(--a);color:#fff;border-color:var(--a)}label,.s{font-size:12px;color:var(--m)}
+#log{font-size:12px;white-space:pre-wrap;max-height:140px;overflow:auto}h1{margin:0}h3{margin:0 0 6px}.r{display:flex;gap:8px}.r>div{flex:1}
+</style></head><body>
+<h1>⚡ Dynamic</h1><div class="s">AI-gated, challengeable milestone launchpad with a built-in wallet.</div>
+
+<div class="c"><h3>Wallet</h3>
+<label>Network RPC URL (Base Sepolia testnet by default)</label><input id="rpc" value="https://sepolia.base.org">
+<label>Dynamic contract address</label><input id="addr" placeholder="0x...">
+<label>Wallet password (8+ characters)</label><input id="pw" type="password">
+<button class="p" onclick="newWallet()">Create wallet</button><button onclick="unlock()">Unlock</button><button onclick="impKey()">Import key</button><button onclick="exportKey()">Export key</button><button onclick="lock()">Lock</button>
+<div id="me" class="s"></div>
+<label>Gas helper URL (optional)</label><input id="drip" placeholder="https://your-relayer.example.com/drip"><button onclick="drip()">Get starter gas</button>
+<details><summary class="s">Send funds</summary><label>To</label><input id="to"><label>Token address (empty = native ETH)</label><input id="stk"><label>Amount</label><input id="sam"><button onclick="send()">Send</button></details></div>
+
+<div class="c" id="adm" style="display:none"><h3>Admin</h3><div class="s" id="admi"></div>
+<label>Oracle wallet address</label><input id="orc"><button onclick="run(()=>c.addOracle($('orc').value.trim()))">Add oracle</button><button onclick="run(()=>c.removeOracle($('orc').value.trim()))">Remove oracle</button>
+<label>Approval threshold</label><input id="thr" type="number"><button onclick="run(()=>c.setThreshold(Number($('thr').value)))">Set threshold</button>
+<label>Treasury wallet (receives fees)</label><input id="trs"><button onclick="run(()=>c.setTreasury($('trs').value.trim()))">Set treasury</button>
+<div class="r"><div><label>Release fee (basis points, max 500)</label><input id="fbp" type="number" value="200"></div><div><label>Flat create fee (payment-token units)</label><input id="cfe" value="0"></div></div>
+<button onclick="setFees()">Set fees</button>
+<div class="r"><div><label>Insurance share of fees (bps)</label><input id="isb" type="number" value="2500"></div><div><label>Max insured share of unpaid escrow (bps)</label><input id="cvb" type="number" value="2500"></div></div>
+<div class="r"><div><label>Starter launch cap (goal, payment-token units; 0 = off)</label><input id="stc" value="0"></div><div><label>Min goal to count toward track record</label><input id="rmg" value="0"></div></div>
+<button onclick="setPolicy()">Set policy</button>
+<label>Max goal per launch (payment-token units). The contract starts PAUSED and refuses launches until you set this and unpause.</label><input id="mgl" value="5000">
+<button onclick="setCap()">Set max goal</button><button onclick="run(()=>c.setPaused(false))">Unpause</button><button onclick="run(()=>c.setPaused(true))">Pause</button>
+<div class="s">Fees are paid to the treasury only when a milestone is released, and only apply to launches created after the change. The admin also manages the oracle set, so keep that wallet a multisig.</div></div>
+
+<div class="c"><h3>Create launch</h3>
+<label>Project name</label><input id="pname"><label>Short description</label><input id="pdesc">
+<label>Payment token (e.g. USDC) address</label><input id="pay">
+<label>Sale token address (you must hold goal × rate tokens)</label><input id="sale">
+<div class="r"><div><label>Goal (payment tokens)</label><input id="goal" value="1000"></div><div><label>Sale tokens per 1 payment token</label><input id="tpp" value="20"></div></div>
+<label>Funding window (days)</label><input id="days" value="14">
+<label>Milestones as percent:days:title, comma separated (percents total 100). The oracle only attests milestones whose title matches exactly.</label><input id="mls" value="30:14:Public testnet,40:30:DEX listing,30:60:10k active users">
+<button class="p" onclick="createLaunch()">Create (approves bond + tokens, then creates)</button></div>
+
+<div class="c"><h3>Browse launches</h3><button onclick="browse()">Refresh list</button><div id="list"></div></div>
+<div class="c"><h3>Open launch</h3><input id="id" type="number" placeholder="Launch ID" value="1"><button onclick="load()">Load</button><button onclick="last()">Latest</button><div id="info"></div></div>
+
+<div class="c" id="act" style="display:none"><h3>Actions</h3>
+<input id="amt" placeholder="Amount to contribute"><button class="p" onclick="contribute()">Contribute</button><br>
+<button onclick="claimMs()">Claim milestone (team)</button><button onclick="chal()">Challenge</button>
+<button onclick="run(()=>c.vote(ID,true))">Vote: valid</button><button onclick="run(()=>c.vote(ID,false))">Vote: invalid</button>
+<button onclick="run(()=>c.resolve(ID))">Resolve</button><button onclick="run(()=>c.failByDeadline(ID))">Fail by deadline</button><br>
+<button onclick="run(()=>c.claimTokens(ID))">Claim tokens</button><button onclick="run(()=>c.refund(ID))">Refund</button>
+<button onclick="run(()=>c.closeFunding(ID))">Close funding</button><button onclick="run(()=>c.reclaimSale(ID))">Reclaim sale tokens (team)</button></div>
+<div class="c"><div class="s">Log</div><div id="log"></div></div>
+<script>
+const ABI=["function create(tuple(address pay,address sale,uint256 goal,uint256 rate,uint40 fundEnd,uint16[] bps,uint40[] durations,bytes32[] specs,string metaURI)) returns (uint256)","function contribute(uint256,uint256)","function closeFunding(uint256)","function claimMilestone(uint256,string)","function challenge(uint256)","function vote(uint256,bool)","function resolve(uint256)","function failByDeadline(uint256)","function refund(uint256)","function claimTokens(uint256)","function reclaimSale(uint256)","function count() view returns (uint256)","function owner() view returns (address)","function threshold() view returns (uint8)","function addOracle(address)","function removeOracle(address)","function setPolicy(uint16,uint16,uint256,uint256)","function setMaxGoal(uint256)","function setPaused(bool)","function paused() view returns (bool)","function maxGoal() view returns (uint256)","function metaURI(uint256) view returns (string)","function rep(address) view returns (uint8)","function bondBpsFor(address) view returns (uint16)","function insurance(address) view returns (uint256)","function starterCap() view returns (uint256)","function setThreshold(uint8)","function setTreasury(address)","function setFees(uint16,uint256)","function treasury() view returns (address)","function releaseFeeBps() view returns (uint16)","function createFee() view returns (uint256)","function launch(uint256) view returns (tuple(address team,address pay,address sale,uint256 goal,uint256 raised,uint256 bond,uint256 rate,uint40 fundEnd,uint8 st,uint256 paid,uint256 refundable,uint8 next,uint256 saleReclaimed,uint16 feeBps,uint8 threshold))","function milestones(uint256) view returns (tuple(uint16 bps,uint40 deadline,uint8 st,uint40 claimEnd,uint40 voteEnd,uint8 attests,uint8 round,uint256 yes,uint256 no,address challenger,uint256 stake,bytes32 spec)[])"];
+const ERC=["function approve(address,uint256) returns (bool)","function allowance(address,address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function balanceOf(address) view returns (uint256)","function transfer(address,uint256) returns (bool)"];
+const LS=["Funding","Active","Halted","Completed","Failed"],MS=["Pending","Claimed","Challenged","Released"],SK='dyn_keystore';
+let provider,signer,W,me,c,A,ID,L,M,dec=6;
+const $=i=>document.getElementById(i);
+const err=e=>e.reason||e.shortMessage||e.message;
+function log(s){$('log').textContent=s+"\n"+$('log').textContent}
+function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function fetchS(k){try{return localStorage.getItem(k)}catch(e){return null}}
+$('addr').value=fetchS('dyn_addr')||'';$('rpc').value=fetchS('dyn_rpc')||$('rpc').value;
+async function setup(w){
+ A=$('addr').value.trim();if(!ethers.isAddress(A))return alert('Enter the Dynamic contract address');
+ store('dyn_addr',A);store('dyn_rpc',$('rpc').value.trim());
+ provider=new ethers.JsonRpcProvider($('rpc').value.trim());W=w;signer=w.connect(provider);me=w.address;c=new ethers.Contract(A,ABI,signer);
+ await balances();await adminCheck()}
+async function balances(){try{
+ let t='Address (deposit here): '+me+'\nNative balance: '+ethers.formatEther(await provider.getBalance(me));
+ const p=$('pay').value.trim();if(ethers.isAddress(p)){const e=new ethers.Contract(p,ERC,provider);t+='\n'+await e.symbol()+' balance: '+ethers.formatUnits(await e.balanceOf(me),await e.decimals())}
+ $('me').textContent=t}catch(e){log('Error: '+err(e))}}
+async function adminCheck(){try{
+ const o=await c.owner();$('adm').style.display=o.toLowerCase()==me.toLowerCase()?'block':'none';
+ $('admi').textContent='You are the admin. Approval threshold: '+await c.threshold()+' · release fee: '+await c.releaseFeeBps()+' bps · create fee (raw units): '+await c.createFee()+' · treasury: '+await c.treasury()+' · '+((await c.paused())?'PAUSED (set max goal, then unpause)':'live')}catch(e){}}
+async function newWallet(){const pw=$('pw').value;if(pw.length<8)return alert('Use a password of 8+ characters');
+ if(fetchS(SK)&&!confirm('A wallet already exists on this device. Replacing it without a backup loses its funds. Continue?'))return;
+ const w=ethers.Wallet.createRandom();log('Encrypting wallet…');store(SK,await w.encrypt(pw));await setup(w);
+ alert('Wallet created. Use "Export key" to back it up now. If you lose the key and password, the funds are gone for good.')}
+async function impKey(){const pw=$('pw').value;if(pw.length<8)return alert('Set a password of 8+ characters first');
+ const k=prompt('Private key to import:');if(!k)return;try{const w=new ethers.Wallet(k.trim());log('Encrypting wallet…');store(SK,await w.encrypt(pw));await setup(w)}catch(e){log('Invalid key')}}
+async function unlock(){const j=fetchS(SK);if(!j)return alert('No wallet on this device yet');
+ try{log('Unlocking…');await setup(await ethers.Wallet.fromEncryptedJson(j,$('pw').value))}catch(e){log('Wrong password')}}
+function exportKey(){if(!W)return alert('Unlock first');if(confirm('Anyone with this key controls your funds. Show it?'))prompt('Private key (keep it secret):',W.privateKey)}
+function lock(){W=signer=c=null;me=null;$('me').textContent='Locked';$('adm').style.display='none'}
+async function send(){try{if(!signer)return alert('Unlock first');const to=$('to').value.trim(),tk=$('stk').value.trim();let t;
+ if(!tk)t=await signer.sendTransaction({to,value:ethers.parseEther($('sam').value)});
+ else{const e=new ethers.Contract(tk,ERC,signer);t=await e.transfer(to,ethers.parseUnits($('sam').value,await e.decimals()))}
+ log('Sent '+t.hash);await t.wait();log('Confirmed');balances()}catch(e){log('Error: '+err(e))}}
+async function drip(){try{if(!me)return alert('Unlock your wallet first');const u=$('drip').value.trim();if(!u)return alert('Enter the gas helper URL');
+ const r=await fetch(u,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({address:me})}).then(x=>x.json());log(r.message||r.error||JSON.stringify(r));setTimeout(balances,4000)}catch(e){log('Error: '+err(e))}}
+async function setFees(){await run(async()=>{const pt=$('pay').value.trim();if(!ethers.isAddress(pt))throw new Error('Fill the payment token address in the Create launch box first (used for decimals)');
+ const p=new ethers.Contract(pt,ERC,provider);return c.setFees(Number($('fbp').value),ethers.parseUnits($('cfe').value||'0',await p.decimals()))})}
+const esc=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
+const pmeta=u=>{try{return JSON.parse(decodeURIComponent(u.split(',').slice(1).join(',')))}catch(e){return{}}};
+async function meta(id){try{return pmeta(await c.metaURI(id))}catch(e){return{}}}
+async function browse(){try{const a=$('addr').value.trim();if(!ethers.isAddress(a))return alert('Enter the contract address');
+ store('dyn_addr',a);const rc=new ethers.Contract(a,ABI,new ethers.JsonRpcProvider($('rpc').value.trim())),n=Number(await rc.count());let h='';
+ for(let i=n;i>=Math.max(1,n-19);i--){const l=await rc.launch(i),mt=pmeta(await rc.metaURI(i)),r=await rc.rep(l.team);
+  h+='<div class="c"><b>'+esc(mt.name||('Launch #'+i))+'</b> · '+LS[l.st]+' · '+(l.goal>0n?Number(l.raised*100n/l.goal):0)+'% funded · team track record: '+r+' completed<br><button onclick="$(\'id\').value='+i+';load()">Open #'+i+'</button></div>'}
+ $('list').innerHTML=h||'<div class="s">No launches yet.</div>'}catch(e){log('Error: '+err(e))}}
+async function setCap(){await run(async()=>{const pt=$('pay').value.trim();if(!ethers.isAddress(pt))throw new Error('Fill the payment token address in the Create launch box first (used for decimals)');
+ return c.setMaxGoal(ethers.parseUnits($('mgl').value,await new ethers.Contract(pt,ERC,provider).decimals()))})}
+async function setPolicy(){await run(async()=>{const pt=$('pay').value.trim();if(!ethers.isAddress(pt))throw new Error('Fill the payment token address in the Create launch box first (used for decimals)');
+ const d=await new ethers.Contract(pt,ERC,provider).decimals();return c.setPolicy(Number($('isb').value),Number($('cvb').value),ethers.parseUnits($('stc').value||'0',d),ethers.parseUnits($('rmg').value||'0',d))})}
+async function run(fn){try{if(!c)return alert('Unlock your wallet first');const t=await fn();log('Sent '+t.hash);await t.wait();log('Confirmed');await balances();if(ID)await load();await adminCheck()}catch(e){log('Error: '+err(e))}}
+async function approve(tok,amt){const e=new ethers.Contract(tok,ERC,signer);if((await e.allowance(me,A))<amt){log('Approving…');const t=await e.approve(A,amt);await t.wait()}}
+async function createLaunch(){try{
+ if(!c)return alert('Unlock your wallet first');
+ const pay=$('pay').value.trim(),sale=$('sale').value.trim(),pe=new ethers.Contract(pay,ERC,provider),se=new ethers.Contract(sale,ERC,provider);
+ const pd=Number(await pe.decimals()),sd=Number(await se.decimals());
+ const goal=ethers.parseUnits($('goal').value,pd),rate=ethers.parseUnits($('tpp').value,sd)/(10n**BigInt(pd));
+ if(rate==0n)return alert('Rate too small');
+ const parts=$('mls').value.split(',').map(x=>{const q=x.split(':');return{p:Number(q[0]),d:Number(q[1]),t:q.slice(2).join(':').trim()}}),bps=parts.map(p=>Math.round(p.p*100)),dur=parts.map(p=>p.d*86400),specs=parts.map(p=>ethers.keccak256(ethers.toUtf8Bytes(p.t)));
+ if(parts.some(p=>!p.t))return alert('Every milestone needs a title');
+ const uri='data:application/json,'+encodeURIComponent(JSON.stringify({name:$('pname').value.trim(),desc:$('pdesc').value.trim(),ms:parts.map(p=>p.t)}));
+ if(bps.reduce((a,b)=>a+b,0)!=10000)return alert('Milestones must total 100%');
+ await approve(pay,goal*BigInt(await c.bondBpsFor(me))/10000n+await c.createFee());await approve(sale,goal*rate);
+ const end=Math.floor(Date.now()/1000)+Number($('days').value)*86400;
+ log('Creating…');const t=await c.create({pay,sale,goal,rate,fundEnd:end,bps,durations:dur,specs,metaURI:uri});await t.wait();
+ const n=await c.count();log('Launch created. ID = '+n);$('id').value=n.toString();await load()}catch(e){log('Error: '+err(e))}}
+async function last(){if(!c)return alert('Unlock your wallet first');$('id').value=(await c.count()).toString();load()}
+async function load(){try{
+ if(!c)return;ID=BigInt($('id').value);L=await c.launch(ID);M=await c.milestones(ID);
+ const pe=new ethers.Contract(L.pay,ERC,provider);dec=Number(await pe.decimals());const sym=await pe.symbol(),f=x=>ethers.formatUnits(x,dec);
+ const d=t=>t>0?new Date(Number(t)*1000).toLocaleString():'—';
+ const mt=await meta(ID);let h='<h3>'+esc(mt.name||('Launch #'+ID))+'</h3><div class="s">'+esc(mt.desc||'')+'</div><p><b>'+LS[L.st]+'</b> · raised '+f(L.raised)+' / '+f(L.goal)+' '+sym+' · paid to team '+f(L.paid)+' · bond '+f(L.bond)+(L.st==2||L.st==4?' · refundable pool '+f(L.refundable):'')+'</p><div class="s">Team: '+L.team+'<br>Funding ends: '+d(L.fundEnd)+'</div>';
+ M.forEach((m,i)=>{h+='<div class="c"><b>#'+(i+1)+' '+esc((mt.ms||[])[i]||'')+'</b> '+MS[m.st]+(i==L.next&&L.st==1?' (current)':'')+' · '+(Number(m.bps)/100)+'% · deadline '+d(m.deadline)+'<br><span class="s">Oracle approvals '+m.attests+(m.st==1?' · challenge window ends '+d(m.claimEnd):'')+(m.st==2?' · vote ends '+d(m.voteEnd)+' · valid '+m.yes+' vs invalid '+m.no:'')+'</span></div>'});
+ $('info').innerHTML=h;$('act').style.display='block'}catch(e){log('Error: '+err(e))}}
+async function contribute(){await run(async()=>{const a=ethers.parseUnits($('amt').value,dec);await approve(L.pay,a);return c.contribute(ID,a)})}
+async function claimMs(){const u=prompt('Evidence URL (repo release, tx, report):');if(u)run(()=>c.claimMilestone(ID,u))}
+async function chal(){await run(async()=>{const m=M[L.next];const stake=(L.raised*m.bps/10000n)*500n/10000n;await approve(L.pay,stake);return c.challenge(ID)})}
+</script></body></html>
