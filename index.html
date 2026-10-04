@@ -38,13 +38,18 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg); color: var(--text-main); padding-bottom: 90px; }
 
+    /* SVG Icon Styling */
+    .icon { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
+    .icon-sm { width: 16px; height: 16px; }
+    .icon-lg { width: 24px; height: 24px; }
+
     /* Header */
-    header { position: sticky; top: 0; background: var(--card-bg); z-index: 80; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); }
-    .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-    .logo img { height: 32px; width: auto; object-fit: contain; }
+    header { position: sticky; top: 0; background: var(--card-bg); z-index: 80; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+    .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
+    .logo img { height: 36px; width: auto; object-fit: contain; max-width: 140px; }
     .header-actions { display: flex; gap: 8px; align-items: center; }
 
-    .icon-btn { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-main); transition: transform 0.1s; }
+    .icon-btn { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: transform 0.1s; }
     .icon-btn:active { transform: scale(0.95); }
 
     .container { padding: 16px; max-width: 500px; margin: 0 auto; }
@@ -56,9 +61,9 @@
     input, textarea, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); outline: none; font-size: 14px; transition: border 0.2s; }
     input:focus, textarea:focus { border-color: var(--accent); }
 
-    .btn-main { width: 100%; padding: 14px; border-radius: 14px; background: var(--accent); color: var(--accent-text); border: none; font-weight: 700; font-size: 14px; margin-top: 14px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-main { width: 100%; padding: 14px; border-radius: 14px; background: var(--accent); color: var(--accent-text); border: none; font-weight: 700; font-size: 14px; margin-top: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
     .btn-main:active { opacity: 0.85; }
-    .btn-sub { width: 100%; padding: 12px; border-radius: 14px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border); font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer; }
+    .btn-sub { width: 100%; padding: 12px; border-radius: 14px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border); font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
     .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
     .badge-funding { background: rgba(43, 138, 62, 0.15); color: var(--status-funding); }
@@ -73,7 +78,7 @@
     nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 90; }
     .nav-item { border: none; background: none; color: var(--text-sub); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
     .nav-item.active { color: var(--text-main); font-weight: 800; }
-    .nav-add { width: 46px; height: 46px; background: var(--accent); color: var(--accent-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: none; margin-top: -24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .nav-add { width: 48px; height: 48px; background: var(--accent); color: var(--accent-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; margin-top: -24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
     /* Modals */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
@@ -90,13 +95,17 @@
 
   <header>
     <div class="logo">
-      <!-- Buradaki 'logo.png' alanına kendi logo dosyanın yolunu yazabilirsin -->
-      <img src="logo.png" alt="Dynamic Logo" onerror="this.style.display='none'">
+      <!-- Özel Logo Alanı -->
+      <img id="site-logo" src="https://miclaunch.tech/logo.png" alt="Dynamic Logo" onerror="this.style.display='none'">
       <span>Dynamic</span>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" id="help-btn" title="How It Works">❓</button>
-      <button class="icon-btn" id="theme-btn" title="Toggle Theme">🌙</button>
+      <button class="icon-btn" id="help-btn" title="How It Works">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+      </button>
+      <button class="icon-btn" id="theme-btn" title="Toggle Theme">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z"/></svg>
+      </button>
     </div>
   </header>
 
@@ -104,18 +113,26 @@
 
     <!-- HOME TAB -->
     <div id="tab-home" class="tab-content active">
-      <!-- Quick Start Banner -->
       <div class="card-box" style="border-left: 4px solid var(--accent);">
-        <span style="font-weight:800; font-size:15px; display:block; margin-bottom:6px;">How It Works 🚀</span>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+          <span style="font-weight:800; font-size:15px;">How It Works</span>
+        </div>
         <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; line-height:1.5;">
           <b>Dynamic</b> is a decentralized, milestone-based crowdfunding platform that protects both Web3 entrepreneurs and investors.
         </p>
-        <button class="btn-sub" style="padding: 10px 14px; font-size: 12px; margin:0;" onclick="document.getElementById('help-modal').style.display='flex'">Read Full Guide 📖</button>
+        <button class="btn-sub" style="padding: 10px 14px; font-size: 12px; margin:0;" onclick="document.getElementById('help-modal').style.display='flex'">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+          Read Full Guide
+        </button>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <h3 style="font-size:18px;">Projects</h3>
-        <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">Refresh 🔄</button>
+        <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          Refresh
+        </button>
       </div>
 
       <div id="launches-list">
@@ -123,7 +140,7 @@
       </div>
     </div>
 
-    <!-- EXPLORE / DETAILS TAB -->
+    <!-- EXPLORE TAB -->
     <div id="tab-explore" class="tab-content">
       <div class="card-box">
         <h3>Explore Project Details</h3>
@@ -196,7 +213,10 @@
   <div id="help-modal" class="modal">
     <div class="modal-content">
       <button class="modal-close" id="close-help-btn">✕</button>
-      <h3 style="margin-bottom: 16px; font-size: 18px;">How Platform Works ⚡</h3>
+      <h3 style="margin-bottom: 16px; font-size: 18px; display:flex; align-items:center; gap:8px;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+        How Platform Works
+      </h3>
       
       <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
 
@@ -204,7 +224,7 @@
           <div class="step-number">1</div>
           <div>
             <b>Local Wallet Setup (Wallet)</b><br>
-            No external extensions like MetaMask are required. Enter a password to generate a local wallet. Your private key is encrypted locally using AES in your browser.
+            No external extensions required. Generate a local wallet encrypted with AES in your browser.
           </div>
         </div>
 
@@ -212,7 +232,7 @@
           <div class="step-number">2</div>
           <div>
             <b>Explore & Fund (Home / Explore)</b><br>
-            Browse all active projects deployed on the smart contract. Support projects by contributing ETH directly into the secure contract vault using the <code>Contribute</code> action.
+            Browse active projects and contribute ETH directly into the smart contract vault.
           </div>
         </div>
 
@@ -220,7 +240,7 @@
           <div class="step-number">3</div>
           <div>
             <b>Create Your Own Launch (+)</b><br>
-            Click the <b>"+"</b> button in the bottom menu to submit your project title, media, overall funding target, and milestone release percentages directly to the blockchain.
+            Submit your title, image, funding goal, and milestone allocations directly to the chain.
           </div>
         </div>
 
@@ -228,15 +248,7 @@
           <div class="step-number">4</div>
           <div>
             <b>Milestone Escrow Mechanism</b><br>
-            All raised funds are locked inside the smart contract escrow. Project creators cannot withdraw the full amount at once. Funds are unlocked gradually as each predefined milestone is completed.
-          </div>
-        </div>
-
-        <div class="step-item">
-          <div class="step-number">5</div>
-          <div>
-            <b>Community Oversight & Challenge</b><br>
-            If a creator fails to deliver promised milestones or misleads the community, backers can trigger a <code>Challenge</code> process to halt fund distribution.
+            Funds are locked in smart contract escrow and released as milestones are completed.
           </div>
         </div>
 
@@ -244,12 +256,23 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION -->
+  <!-- BOTTOM NAVIGATION (MODERN SVG ICONS) -->
   <nav>
-    <button class="nav-item active" onclick="switchTab('tab-home', this)">🏠 <span>Home</span></button>
-    <button class="nav-item" onclick="switchTab('tab-explore', this)">⚡ <span>Explore</span></button>
-    <button class="nav-add" onclick="switchTab('tab-create', this)">+</button>
-    <button class="nav-item" onclick="switchTab('tab-wallet', this)">👛 <span>Wallet</span></button>
+    <button class="nav-item active" onclick="switchTab('tab-home', this)">
+      <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-explore', this)">
+      <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg>
+      <span>Explore</span>
+    </button>
+    <button class="nav-add" onclick="switchTab('tab-create', this)">
+      <svg class="icon icon-lg" style="fill:#fff;" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-wallet', this)">
+      <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+      <span>Wallet</span>
+    </button>
   </nav>
 
   <script>
@@ -259,7 +282,6 @@
     let signer = null;
     let contract = null;
 
-    // Minimum ABI
     const ABI = [
       "function count() view returns (uint256)",
       "function launch(uint256) view returns (address owner, uint256 goal, uint256 raised, uint256 duration, uint256 startTime, uint8 state, string metaURI)",
@@ -277,7 +299,6 @@
       box.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n` + box.textContent;
     }
 
-    // Navigation Switch
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -285,56 +306,46 @@
       if(el && el.classList) el.classList.add('active');
     }
 
-    // Theme Toggle
     $('theme-btn').addEventListener('click', () => {
       const isDark = document.body.getAttribute('data-theme') === 'dark';
       document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      $('theme-btn').textContent = isDark ? '🌙' : '☀️';
     });
 
-    // Modal Control
     $('help-btn').addEventListener('click', () =>$('help-modal').style.display = 'flex');
     $('close-help-btn').addEventListener('click', () =>$('help-modal').style.display = 'none');
 
-    // 1. Create Wallet
+    // Wallet Operations
     $('btn-create-wallet').addEventListener('click', async () => {
       const pw = $('pw').value;
       if (pw.length < 8) return alert('Password must be at least 8 characters long.');
 
       try {
-        $('wallet-status').textContent = 'Creating and encrypting wallet...';
-        log('Starting new wallet creation.');
+        $('wallet-status').textContent = 'Creating wallet...';
         const newWallet = ethers.Wallet.createRandom();
         const encryptedJson = await newWallet.encrypt(pw);
         localStorage.setItem(SK, encryptedJson);
         await initWallet(newWallet);
-        alert('Wallet successfully created and encrypted in local storage!');
+        alert('Wallet created!');
       } catch (err) {
-        log('Error: ' + err.message);
-        alert('Wallet creation error: ' + err.message);
+        alert('Error: ' + err.message);
       }
     });
 
-    // 2. Unlock Wallet
     $('btn-unlock-wallet').addEventListener('click', async () => {
       const pw = $('pw').value;
       const encryptedJson = localStorage.getItem(SK);
-      if (!encryptedJson) return alert('No stored wallet found. Please create a new wallet first.');
+      if (!encryptedJson) return alert('No wallet found.');
 
       try {
         $('wallet-status').textContent = 'Decrypting...';
-        log('Unlocking wallet...');
         const decryptedWallet = await ethers.Wallet.fromEncryptedJson(encryptedJson, pw);
         await initWallet(decryptedWallet);
-        alert('Wallet unlocked successfully!');
+        alert('Wallet unlocked!');
       } catch (err) {
-        log('Error: Incorrect password.');
         alert('Incorrect password!');
-        $('wallet-status').textContent = 'Unlock failed.';
       }
     });
 
-    // Initialize Wallet & Contract Connection
     async function initWallet(w) {
       const rpc = $('rpc').value.trim();
       const addr = $('addr').value.trim();
@@ -344,18 +355,13 @@
       wallet = w;
 
       $('wallet-status').textContent = 'Connected: ' + w.address;
-      log('Wallet active: ' + w.address);
 
       if (ethers.isAddress(addr)) {
         contract = new ethers.Contract(addr, ABI, signer);
-        log('Contract connected: ' + addr);
         loadHomeLaunches();
-      } else {
-        log('Contract address is invalid or empty.');
       }
     }
 
-    // 3. Load Projects (Home)
     async function loadHomeLaunches() {
       if (!contract) return;
       const listDiv = $('launches-list');
@@ -363,9 +369,8 @@
 
       try {
         const count = await contract.count();
-        log('Total Projects Count: ' + count.toString());
         if (count == 0) {
-          listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">No published projects found.</p>';
+          listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">No projects found.</p>';
           return;
         }
 
@@ -385,17 +390,16 @@
                 <h4 style="font-size:16px;">${meta.title || 'Project #' + i}</h4>
                 <span class="badge ${badgeClasses[l.state]}">${states[l.state]}</span>
               </div>
-              <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc ? meta.desc.substring(0, 80) + '...' : 'No description provided.'}</p>
+              <p style="font-size:12px; color:var(--text-sub); margin-top:6px;">${meta.desc ? meta.desc.substring(0, 80) + '...' : ''}</p>
               <div style="margin-top:10px; font-size:12px; font-weight:600;">
-                Raised: ${ethers.formatEther(l.raised)} ETH / Goal: ${ethers.formatEther(l.goal)} ETH
+                Raised: ${ethers.formatEther(l.raised)} / ${ethers.formatEther(l.goal)} ETH
               </div>
             </div>
           `;
         }
         listDiv.innerHTML = html;
       } catch (err) {
-        log('Error loading projects: ' + err.message);
-        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Failed to load projects.</p>';
+        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Error loading projects.</p>';
       }
     }
 
@@ -407,9 +411,8 @@
       loadExploreDetails(id);
     }
 
-    // 4. Load Project Details (Explore)
     async function loadExploreDetails(id) {
-      if (!contract) return alert('Please connect your wallet and contract address first.');
+      if (!contract) return alert('Connect wallet and contract first.');
       const detDiv = $('explore-details');
       detDiv.innerHTML = '<p style="font-size:12px; color:var(--text-sub);">Loading...</p>';
 
@@ -433,7 +436,7 @@
           </div>
         `;
       } catch (err) {
-        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Project not found or an error occurred.</p>';
+        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Failed to load details.</p>';
       }
     }
 
@@ -442,24 +445,21 @@
       if (id) loadExploreDetails(id);
     });
 
-    // 5. Contribute Action
     async function contributeToLaunch(id) {
       const val = $('contrib-amount').value;
-      if (!val) return alert('Please enter an amount.');
+      if (!val) return alert('Enter amount.');
       try {
-        log(`Contributing ${val} ETH to Project #${id}...`);
         const tx = await contract.contribute(id, { value: ethers.parseEther(val) });
         await tx.wait();
         alert('Contribution successful!');
         loadExploreDetails(id);
       } catch (err) {
-        alert('Transaction failed: ' + err.message);
+        alert('Failed: ' + err.message);
       }
     }
 
-    // 6. Create Launch Action
     $('btn-create-launch').addEventListener('click', async () => {
-      if (!contract) return alert('Please connect your wallet and contract first in the Wallet tab.');
+      if (!contract) return alert('Connect wallet first.');
 
       const title = $('c-title').value;
       const desc = $('c-desc').value;
@@ -469,7 +469,7 @@
       const shares = $('c-shares').value.split(',').map(s => parseInt(s.trim()));
 
       if (!title || !goal || !duration || shares.length === 0) {
-        return alert('Please fill in all required fields.');
+        return alert('Fill in required fields.');
       }
 
       let imgData = '';
@@ -484,14 +484,13 @@
       const metaURI = JSON.stringify({ title, desc, img: imgData });
 
       try {
-        log('Initiating project creation transaction...');
         const tx = await contract.create(goal, duration, shares, metaURI);
         await tx.wait();
-        alert('Project successfully created on blockchain!');
+        alert('Project created!');
         switchTab('tab-home');
         loadHomeLaunches();
       } catch (err) {
-        alert('Project creation error: ' + err.message);
+        alert('Error: ' + err.message);
       }
     });
   </script>
