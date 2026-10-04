@@ -179,7 +179,27 @@
     <!-- WALLET MANAGEMENT TAB -->
     <div id="tab-wallet" class="tab-content">
       
-      <!-- AUTH CARD (GİRİŞ VEYA YENİ KAYIT) -->
+      <!-- AUTH 1: UNLOCK WALLET (VAR OLAN CÜZDANI ŞİFRE İLE AÇMA) -->
+      <div class="card-box card-accent-left" id="wallet-unlock-box" style="display:none;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:20px; width:auto;" alt="logo">
+          <h3 style="font-size:16px;">Unlock Dynamic Wallet</h3>
+        </div>
+        <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px;">
+          Enter your password to unlock your wallet on this device.
+        </p>
+
+        <label>Password</label>
+        <input id="unlock-pw" type="password" placeholder="Enter password">
+
+        <button class="btn-main" id="btn-unlock-wallet">Unlock Wallet</button>
+
+        <button class="btn-sub btn-danger" id="btn-reset-wallet" style="margin-top:14px;">
+          Remove Wallet From This Device
+        </button>
+      </div>
+
+      <!-- AUTH 2: CREATE / IMPORT (SİSTEMDE CÜZDAN YOKSA GÖRÜNECEK) -->
       <div class="card-box card-accent-left" id="wallet-auth-box">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:20px; width:auto;" alt="logo">
@@ -196,7 +216,6 @@
 
         <hr style="border:0; border-top:1px solid var(--border); margin:16px 0;">
 
-        <!-- IMPORT WALLET SECTION -->
         <div>
           <span style="font-size:12px; font-weight:700; color:var(--text-main);">Import Existing Wallet</span>
           <label>Private Key or Seed Phrase (12 Words)</label>
@@ -266,11 +285,11 @@
           <button class="btn-sub" id="btn-send-eth">Send Transaction</button>
         </div>
 
-        <!-- LOGOUT BUTTON -->
+        <!-- LOGOUT / LOCK BUTTON -->
         <div style="margin-top:20px; margin-bottom:20px;">
           <button class="btn-sub btn-danger" id="btn-logout-wallet">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-            Log Out (Disconnect Wallet)
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            Lock Wallet (Log Out)
           </button>
         </div>
 
@@ -297,9 +316,8 @@
       
       <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
         <p style="margin-bottom:10px;"><b>Dynamic</b> is a decentralized milestone-based crowdfunding platform.</p>
-        <p>1. Create or import your wallet once. Your session stays active on this device.</p>
-        <p>2. Copy your address to deposit funds.</p>
-        <p>3. Use Log Out if you wish to remove your wallet from this browser.</p>
+        <p>1. Create or import your wallet. Your encrypted keys are stored safely on your browser.</p>
+        <p>2. Lock your wallet anytime. Unlock it using your password.</p>
       </div>
     </div>
   </div>
@@ -323,12 +341,12 @@
     </button>
   </nav>
 
-  <!-- JAVASCRIPT CODE LOGIC -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
     const DEFAULT_RPC = "https://sepolia.base.org";
     const DEFAULT_CONTRACT = "0xCEF1B2Ec08CEea761DE8B7D9B8E07441bc3C475d";
 
-    const SK = 'dyn_active_pk'; // Oturum hafızası
+    const SK = 'dyn_keystore_enc'; // Şifrelenmiş Cüzdan Verisi
     let wallet = null;
     let provider = null;
     let signer = null;
@@ -374,34 +392,36 @@
       $('help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'flex'; });
       $('close-help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'none'; });
 
-      // SAYFA YÜKLENDİĞİNDE OTURUMU KONTROL ET
-      checkActiveSession();
+      // SAYFA İLK AÇILDIĞINDA DURUMU KONTROL ET
+      checkStoredWallet();
     });
 
-    // AKTİF OTURUM KONTROLÜ (Sürekli Açık Kalma Mantığı)
-    function checkActiveSession() {
-      const storedPk = localStorage.getItem(SK);
-      if (storedPk) {
-        try {
-          const loadedWallet = new ethers.Wallet(storedPk);
-          initWallet(loadedWallet);
-        } catch (e) {
-          localStorage.removeItem(SK);
-        }
+    // CİHAZDA CÜZDAN VAR MI KONTROL ET
+    function checkStoredWallet() {
+      const encData = localStorage.getItem(SK);
+      if (encData) {
+        // Cüzdan var: Şifre ile giriş (Unlock) ekranını göster
+        $('wallet-auth-box').style.display = 'none';
+        $('wallet-unlock-box').style.display = 'block';$('wallet-dashboard').style.display = 'none';
+      } else {
+        // Cüzdan yok: Create / Import ekranını göster
+        $('wallet-auth-box').style.display = 'block';
+        $('wallet-unlock-box').style.display = 'none';$('wallet-dashboard').style.display = 'none';
       }
     }
 
-    // YENİ CÜZDAN OLUŞTURMA
+    // YENİ CÜZDAN OLUŞTURMA (ŞİFRE İLE KİLİTLE)
     $('btn-create-wallet')?.addEventListener('click', async () => {
       const pw = $('pw').value;
       if (pw.length < 8) return alert('Password must be at least 8 characters.');
 
       try {
-        log('Generating new wallet...');
+        log('Creating encrypted wallet...');
         const newWallet = ethers.Wallet.createRandom();
-        localStorage.setItem(SK, newWallet.privateKey);
+        const encryptedJson = await newWallet.encrypt(pw);
+        localStorage.setItem(SK, encryptedJson);
         await initWallet(newWallet);
-        alert('Wallet created successfully!');
+        alert('Wallet created and locked with your password!');
       } catch (err) {
         alert('Error: ' + err.message);
       }
@@ -409,8 +429,11 @@
 
     // CÜZDAN İÇE AKTARMA (IMPORT)
     $('btn-import-wallet')?.addEventListener('click', async () => {
+      const pw = $('pw').value;
       const importKey = $('import-key').value.trim();
-      if (!importKey) return alert('Please enter a Private Key or 12-word Seed Phrase.');
+
+      if (pw.length < 8) return alert('Set a password of at least 8 characters.');
+      if (!importKey) return alert('Enter a Private Key or 12-word Seed Phrase.');
 
       try {
         log('Importing wallet...');
@@ -421,7 +444,8 @@
           importedWallet = new ethers.Wallet(importKey);
         }
 
-        localStorage.setItem(SK, importedWallet.privateKey);
+        const encryptedJson = await importedWallet.encrypt(pw);
+        localStorage.setItem(SK, encryptedJson);
         await initWallet(importedWallet);
         alert('Wallet imported successfully!');
         $('import-key').value = '';
@@ -430,16 +454,40 @@
       }
     });
 
-    // LOG OUT (ÇIKIŞ YAP)
+    // ŞİFRE İLE CÜZDANI AÇMA (UNLOCK / LOG IN)
+    $('btn-unlock-wallet')?.addEventListener('click', async () => {
+      const pw = $('unlock-pw').value;
+      const encData = localStorage.getItem(SK);
+
+      if (!pw) return alert('Please enter your password.');
+
+      try {
+        log('Decrypting wallet...');
+        const decryptedWallet = await ethers.Wallet.fromEncryptedJson(encData, pw);
+        await initWallet(decryptedWallet);
+        $('unlock-pw').value = '';
+        log('Wallet unlocked successfully.');
+      } catch (err) {
+        alert('Incorrect password!');
+      }
+    });
+
+    // LOCK WALLET (CÜZDANI KİLİTLE / LOG OUT)
     $('btn-logout-wallet')?.addEventListener('click', () => {
-      if (confirm("Are you sure you want to log out? Make sure you have exported your Private Key if needed.")) {
+      wallet = null;
+      signer = null;
+      contract = null;
+      checkStoredWallet();
+      log('Wallet locked.');
+    });
+
+    // CÜZDANI CİHAZDAN SİL
+    $('btn-reset-wallet')?.addEventListener('click', () => {
+      if (confirm("Are you sure you want to remove this wallet from this device? Make sure you backed up your Private Key!")) {
         localStorage.removeItem(SK);
         wallet = null;
-        signer = null;
-        contract = null;
-        $('wallet-dashboard').style.display = 'none';
-        $('wallet-auth-box').style.display = 'block';$('pw').value = '';
-        log('Logged out successfully.');
+        checkStoredWallet();
+        log('Wallet removed from device.');
       }
     });
 
@@ -448,7 +496,7 @@
       signer = w.connect(provider);
       wallet = w;
 
-      $('wallet-auth-box').style.display = 'none';
+      $('wallet-auth-box').style.display = 'none';$('wallet-unlock-box').style.display = 'none';
       $('wallet-dashboard').style.display = 'block';$('dash-address').textContent = w.address;
 
       if (ethers.isAddress(DEFAULT_CONTRACT)) {
