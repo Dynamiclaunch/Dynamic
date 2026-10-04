@@ -1,365 +1,548 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <title>Dynamic — Milestone Launchpad</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0b0f19;
-            --c: rgba(18, 24, 38, 0.75);
-            --t: #f3f4f6;
-            --m: #9ca3af;
-            --b: rgba(255, 255, 255, 0.08);
-            --a: #6366f1;
-            --a-hover: #4f46e5;
-            --accent: #8b5cf6;
-            --input-bg: rgba(10, 14, 23, 0.8);
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Dynamic — Milestone Launchpad</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Light Theme Variables */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --card-bg: #f8f9fa;
+  --text-main: #0d0e12;
+  --text-sub: #6c757d;
+  --border: #f1f3f5;
+  --accent: #000000;
+  --accent-text: #ffffff;
+  --input-bg: #ffffff;
+  --green: #10b981;
+  --logo-filter: none;
+}
 
-        * { box-sizing: border-box; }
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --bg: #0b0e14;
+  --header-bg: rgba(11, 14, 20, 0.85);
+  --card-bg: #161b26;
+  --text-main: #f3f4f6;
+  --text-sub: #9ca3af;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #ffffff;
+  --accent-text: #000000;
+  --input-bg: #0f131d;
+  --green: #34d399;
+  --logo-filter: invert(1);
+}
 
-        body {
-            margin: 0 auto;
-            background: var(--bg);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.12) 0px, transparent 50%);
-            color: var(--t);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 20px 14px;
-            max-width: 780px;
-            min-height: 100vh;
-        }
+:root {
+  --radius: 16px;
+  --nav-height: 64px;
+}
 
-        /* Header & Logo */
-        header {
-            text-align: center;
-            margin-bottom: 24px;
-            padding-top: 10px;
-        }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        .logo-container {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 6px;
-        }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  padding-bottom: calc(var(--nav-height) + 20px);
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
 
-        .logo-svg {
-            width: 36px;
-            height: 36px;
-            filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.5));
-        }
+header {
+  position: sticky;
+  top: 0;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--border);
+}
 
-        h1 {
-            margin: 0;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.8px;
-            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
 
-        header .s {
-            color: var(--m);
-            font-size: 13px;
-        }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-        /* Modern Glass Cards */
-        .c {
-            background: var(--c);
-            border: 1px solid var(--b);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 16px 0;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-        }
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: var(--logo-filter);
+  transition: filter 0.2s ease;
+}
 
-        h3 {
-            margin: 0 0 14px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
 
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--m);
-            margin: 10px 0 4px;
-        }
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-        input {
-            width: 100%;
-            font: inherit;
-            padding: 10px 12px;
-            margin: 2px 0 8px;
-            border: 1px solid var(--b);
-            border-radius: 10px;
-            background: var(--input-bg);
-            color: var(--t);
-            outline: none;
-            transition: all 0.2s ease;
-        }
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
 
-        input:focus {
-            border-color: var(--a);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
+.cat-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.cat-tabs::-webkit-scrollbar { display: none; }
 
-        /* Buttons */
-        button {
-            font: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 9px 14px;
-            margin: 4px 4px 4px 0;
-            border-radius: 10px;
-            border: 1px solid var(--b);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--t);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+.cat-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--card-bg);
+  color: var(--text-sub);
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
 
-        button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
-        }
+.cat-tab.active {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
 
-        button.p {
-            background: linear-gradient(135deg, var(--a), var(--accent));
-            color: #fff;
-            border: none;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
-        }
+.screen { display: none; padding: 16px; }
+.screen.active { display: block; }
 
-        button.p:hover {
-            opacity: 0.95;
-            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.45);
-        }
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
 
-        .s {
-            font-size: 12px;
-            color: var(--m);
-            line-height: 1.5;
-        }
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-        #log {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
-            white-space: pre-wrap;
-            max-height: 140px;
-            overflow-y: auto;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--b);
-            color: #a5b4fc;
-        }
+.item-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  overflow: hidden;
+}
 
-        .r { display: flex; gap: 10px; }
-        .r > div { flex: 1; }
+.item-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-        details {
-            margin-top: 12px;
-            padding-top: 8px;
-            border-top: 1px solid var(--b);
-        }
+.item-info .title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
 
-        summary {
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--m);
-        }
+.item-info .sub {
+  color: var(--text-sub);
+  font-size: 12px;
+}
 
-        summary:hover { color: var(--t); }
+.item-right { text-align: right; }
+.item-right .val { font-weight: 700; font-size: 14px; }
+.item-right .badge { color: var(--green); font-weight: 600; font-size: 12px; }
 
-        /* Nested launch item cards */
-        #list .c, #info .c {
-            background: rgba(10, 14, 23, 0.5);
-            margin: 10px 0;
-            padding: 12px;
-            border-radius: 12px;
-        }
-    </style>
+.card-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+  margin-top: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Cihazdan Fotoğraf Yükleme Alanı Stilleri */
+.file-upload-box {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--input-bg);
+  transition: border-color 0.2s ease;
+  margin-top: 6px;
+}
+
+.file-upload-box:hover {
+  border-color: var(--accent);
+}
+
+.preview-container {
+  display: none;
+  position: relative;
+  margin-top: 10px;
+}
+
+.preview-img {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.remove-img-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+button.btn-main {
+  width: 100%;
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: var(--nav-height);
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-item.active { color: var(--text-main); }
+
+.nav-item-add {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 300;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+#log {
+  font-family: monospace;
+  font-size: 11px;
+  background: var(--input-bg);
+  color: var(--text-sub);
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  max-height: 100px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+</style>
 </head>
 <body>
 
 <header>
-    <div class="logo-container">
-        <!-- Modern Dynamic SVG Logo -->
-        <svg class="logo-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="36" height="36" rx="10" fill="url(#logo-grad)"/>
-            <path d="M19.5 7L10 19H17L16.5 29L26 17H19L19.5 7Z" fill="white" stroke="#6366f1" stroke-width="1.5" stroke-linejoin="round"/>
-            <defs>
-                <linearGradient id="logo-grad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#6366F1"/>
-                    <stop offset="1" stop-color="#8B5CF6"/>
-                </linearGradient>
-            </defs>
-        </svg>
-        <h1>Dynamic</h1>
+  <div class="top-bar">
+    <div class="brand">
+      <img src="https://i.ibb.co/1tnYf0hb/1000085794.png" alt="Dynamic Logo" class="brand-logo">
+      <span class="logo-text">Dynamic</span>
     </div>
-    <div class="s">AI-gated, challengeable milestone launchpad with a built-in wallet.</div>
+    <div class="top-actions">
+      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
+      <div class="icon-btn" onclick="switchTab('screen-wallet')">👛</div>
+    </div>
+  </div>
+  
+  <div class="cat-tabs">
+    <button class="cat-tab active" onclick="setSubCat(this)">Trending</button>
+    <button class="cat-tab" onclick="setSubCat(this)">Top</button>
+    <button class="cat-tab" onclick="setSubCat(this)">New</button>
+    <button class="cat-tab" onclick="setSubCat(this)">Creators</button>
+  </div>
 </header>
 
-<div class="c">
-    <h3>Wallet</h3>
-    <label>Network RPC URL (Base Sepolia testnet by default)</label>
+<!-- SCREEN 1: BROWSE LAUNCHES -->
+<div id="screen-browse" class="screen active">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+    <span style="font-weight: 700; font-size: 16px;">Launches</span>
+    <button onclick="browse()" style="border:none; background:none; color:var(--text-sub); font-weight:600; cursor:pointer;">Refresh</button>
+  </div>
+  <div id="list">
+    <div style="text-align:center; padding: 20px; color:var(--text-sub);">Click refresh or wallet to setup.</div>
+  </div>
+</div>
+
+<!-- SCREEN 2: OPEN / VIEW LAUNCH -->
+<div id="screen-launch" class="screen">
+  <div style="display:flex; gap: 8px; margin-bottom: 12px;">
+    <input id="id" type="number" placeholder="Launch ID" value="1">
+    <button class="btn-main" style="margin:0; width: auto; padding: 0 16px;" onclick="load()">Load</button>
+    <button class="btn-main" style="margin:0; width: auto; padding: 0 16px; background:var(--card-bg); color:var(--text-main); border:1px solid var(--border);" onclick="last()">Latest</button>
+  </div>
+  <div id="info"></div>
+  
+  <div id="act" class="card-box" style="display:none; margin-top:16px;">
+    <span style="font-weight:700;">Actions</span>
+    <input id="amt" placeholder="Amount to contribute" style="margin-top:8px;">
+    <button class="btn-main" onclick="contribute()">Contribute</button>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+      <button style="flex:1; padding:8px;" onclick="claimMs()">Claim MS</button>
+      <button style="flex:1; padding:8px;" onclick="chal()">Challenge</button>
+      <button style="flex:1; padding:8px;" onclick="run(()=>c.vote(ID,true))">Vote Yes</button>
+      <button style="flex:1; padding:8px;" onclick="run(()=>c.vote(ID,false))">Vote No</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: CREATE LAUNCH (GÖRSEL YÜKLEME BUTONU) -->
+<div id="screen-create" class="screen">
+  <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Create Launch</span>
+  <div class="card-box">
+    <label>Project Name</label>
+    <input id="pname" placeholder="My Web3 Project">
+    
+    <label>Project Image / Logo</label>
+    <div class="file-upload-box" onclick="document.getElementById('fileInput').click()">
+      <span style="font-size:20px; display:block;">📁</span>
+      <span style="font-weight:600; font-size:13px; color:var(--text-main);">Click to upload image from device</span>
+      <span style="font-size:11px; color:var(--text-sub); display:block; margin-top:2px;">PNG, JPG, WEBP up to 2MB</span>
+      <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+    </div>
+    
+    <div id="previewContainer" class="preview-container">
+      <img id="pimgPreview" class="preview-img" alt="Project Preview">
+      <button class="remove-img-btn" onclick="removeImage()">✕</button>
+    </div>
+    <input type="hidden" id="pimgData">
+
+    <label>Short Description</label>
+    <input id="pdesc" placeholder="Brief details...">
+    
+    <label>Payment Token Address</label>
+    <input id="pay" placeholder="0x...">
+    
+    <label>Sale Token Address</label>
+    <input id="sale" placeholder="0x...">
+    
+    <label>Goal (Payment Tokens)</label>
+    <input id="goal" value="1000">
+    
+    <label>Sale Tokens per 1 Payment Token</label>
+    <input id="tpp" value="20">
+    
+    <label>Funding Window (Days)</label>
+    <input id="days" value="14">
+    
+    <label>Milestones (percent:days:title)</label>
+    <input id="mls" value="30:14:Public testnet,40:30:DEX listing,30:60:10k users">
+    
+    <button class="btn-main" onclick="createLaunch()">Create Launch</button>
+  </div>
+</div>
+
+<!-- SCREEN 4: WALLET & SETTINGS -->
+<div id="screen-wallet" class="screen">
+  <span style="font-weight: 700; font-size: 18px; display:block; margin-bottom:12px;">Wallet Management</span>
+  <div class="card-box">
+    <label>RPC URL</label>
     <input id="rpc" value="https://sepolia.base.org">
-    
-    <label>Dynamic contract address</label>
+    <label>Contract Address</label>
     <input id="addr" placeholder="0x...">
-    
-    <label>Wallet password (8+ characters)</label>
+    <label>Password</label>
     <input id="pw" type="password">
     
-    <div style="margin-top: 8px;">
-        <button class="p" onclick="newWallet()">Create wallet</button>
-        <button onclick="unlock()">Unlock</button>
-        <button onclick="impKey()">Import key</button>
-        <button onclick="exportKey()">Export key</button>
-        <button onclick="lock()">Lock</button>
+    <button class="btn-main" onclick="newWallet()">Create Wallet</button>
+    <button class="btn-main" style="background:var(--card-bg); color:var(--text-main); border:1px solid var(--border);" onclick="unlock()">Unlock</button>
+    <div style="display:flex; gap:6px; margin-top:8px;">
+      <button style="flex:1; padding:8px;" onclick="impKey()">Import</button>
+      <button style="flex:1; padding:8px;" onclick="exportKey()">Export</button>
+      <button style="flex:1; padding:8px;" onclick="lock()">Lock</button>
     </div>
-    
-    <div id="me" class="s" style="margin-top: 10px;"></div>
-    
-    <label>Gas helper URL (optional)</label>
-    <input id="drip" placeholder="https://your-relayer.example.com/drip">
-    <button onclick="drip()">Get starter gas</button>
-    
-    <details>
-        <summary class="s">Send funds</summary>
-        <label>To</label>
-        <input id="to">
-        <label>Token address (empty = native ETH)</label>
-        <input id="stk">
-        <label>Amount</label>
-        <input id="sam">
-        <button class="p" onclick="send()">Send</button>
-    </details>
+  </div>
+  <div id="me" style="font-size:12px; color:var(--text-sub); white-space:pre-wrap; margin-bottom:12px;"></div>
+  
+  <div class="card-box">
+    <label>Activity Log</label>
+    <div id="log">Logs will appear here...</div>
+  </div>
 </div>
 
-<div class="c" id="adm" style="display:none">
-    <h3>Admin</h3>
-    <div class="s" id="admi"></div>
-    
-    <label>Oracle wallet address</label>
-    <input id="orc">
-    <button onclick="run(()=>c.addOracle($('orc').value.trim()))">Add oracle</button>
-    <button onclick="run(()=>c.removeOracle($('orc').value.trim()))">Remove oracle</button>
-    
-    <label>Approval threshold</label>
-    <input id="thr" type="number">
-    <button onclick="run(()=>c.setThreshold(Number($('thr').value)))">Set threshold</button>
-    
-    <label>Treasury wallet (receives fees)</label>
-    <input id="trs">
-    <button onclick="run(()=>c.setTreasury($('trs').value.trim()))">Set treasury</button>
-    
-    <div class="r">
-        <div><label>Release fee (basis points, max 500)</label><input id="fbp" type="number" value="200"></div>
-        <div><label>Flat create fee (payment-token units)</label><input id="cfe" value="0"></div>
-    </div>
-    <button onclick="setFees()">Set fees</button>
-    
-    <div class="r">
-        <div><label>Insurance share of fees (bps)</label><input id="isb" type="number" value="2500"></div>
-        <div><label>Max insured share of unpaid escrow (bps)</label><input id="cvb" type="number" value="2500"></div>
-    </div>
-    <div class="r">
-        <div><label>Starter launch cap (goal, payment-token units; 0 = off)</label><input id="stc" value="0"></div>
-        <div><label>Min goal to count toward track record</label><input id="rmg" value="0"></div>
-    </div>
-    <button onclick="setPolicy()">Set policy</button>
-    
-    <label>Max goal per launch (payment-token units). The contract starts PAUSED and refuses launches until you set this and unpause.</label>
-    <input id="mgl" value="5000">
-    
-    <button onclick="setCap()">Set max goal</button>
-    <button onclick="run(()=>c.setPaused(false))">Unpause</button>
-    <button onclick="run(()=>c.setPaused(true))">Pause</button>
-    
-    <div class="s" style="margin-top: 8px;">Fees are paid to the treasury only when a milestone is released, and only apply to launches created after the change. The admin also manages the oracle set, so keep that wallet a multisig.</div>
-</div>
-
-<div class="c">
-    <h3>Create launch</h3>
-    <label>Project name</label><input id="pname">
-    <label>Short description</label><input id="pdesc">
-    <label>Payment token (e.g. USDC) address</label><input id="pay">
-    <label>Sale token address (you must hold goal × rate tokens)</label><input id="sale">
-    
-    <div class="r">
-        <div><label>Goal (payment tokens)</label><input id="goal" value="1000"></div>
-        <div><label>Sale tokens per 1 payment token</label><input id="tpp" value="20"></div>
-    </div>
-    
-    <label>Funding window (days)</label><input id="days" value="14">
-    <label>Milestones as percent:days:title, comma separated (percents total 100). The oracle only attests milestones whose title matches exactly.</label>
-    <input id="mls" value="30:14:Public testnet,40:30:DEX listing,30:60:10k active users">
-    
-    <button class="p" style="margin-top: 10px; width: 100%;" onclick="createLaunch()">Create (approves bond + tokens, then creates)</button>
-</div>
-
-<div class="c">
-    <h3>Browse launches</h3>
-    <button onclick="browse()">Refresh list</button>
-    <div id="list" style="margin-top: 10px;"></div>
-</div>
-
-<div class="c">
-    <h3>Open launch</h3>
-    <div class="r">
-        <div><input id="id" type="number" placeholder="Launch ID" value="1"></div>
-        <div style="flex: 0 0 auto; display: flex; align-items: center;">
-            <button onclick="load()">Load</button>
-            <button onclick="last()">Latest</button>
-        </div>
-    </div>
-    <div id="info" style="margin-top: 10px;"></div>
-</div>
-
-<div class="c" id="act" style="display:none">
-    <h3>Actions</h3>
-    <input id="amt" placeholder="Amount to contribute">
-    <button class="p" onclick="contribute()">Contribute</button><br><br>
-    
-    <button onclick="claimMs()">Claim milestone (team)</button>
-    <button onclick="chal()">Challenge</button>
-    <button onclick="run(()=>c.vote(ID,true))">Vote: valid</button>
-    <button onclick="run(()=>c.vote(ID,false))">Vote: invalid</button>
-    <button onclick="run(()=>c.resolve(ID))">Resolve</button>
-    <button onclick="run(()=>c.failByDeadline(ID))">Fail by deadline</button><br><br>
-    
-    <button onclick="run(()=>c.claimTokens(ID))">Claim tokens</button>
-    <button onclick="run(()=>c.refund(ID))">Refund</button>
-    <button onclick="run(()=>c.closeFunding(ID))">Close funding</button>
-    <button onclick="run(()=>c.reclaimSale(ID))">Reclaim sale tokens (team)</button>
-</div>
-
-<div class="c">
-    <div class="s" style="margin-bottom: 6px;">Activity Log</div>
-    <div id="log"></div>
+<!-- BOTTOM NAVIGATION -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="switchTab('screen-browse', this)">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    <span>Home</span>
+  </button>
+  
+  <button class="nav-item" onclick="switchTab('screen-launch', this)">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    <span>Explore</span>
+  </button>
+  
+  <button class="nav-item-add" onclick="switchTab('screen-create', this)">+</button>
+  
+  <button class="nav-item" onclick="switchTab('screen-wallet', this)">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+    <span>Wallet</span>
+  </button>
 </div>
 
 <script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  document.getElementById('theme-btn').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+  try { localStorage.setItem('dyn_theme', newTheme); } catch(e){}
+}
+
+(function initTheme() {
+  const saved = localStorage.getItem('dyn_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('theme-btn');
+    if(btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+function switchTab(screenId, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  if(btn) {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    if(!btn.classList.contains('nav-item-add')) btn.classList.add('active');
+  }
+}
+
+function setSubCat(btn) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Dosya Seçimi ve Önizleme İşleyicisi
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      document.getElementById('pimgData').value = evt.target.result;
+      document.getElementById('pimgPreview').src = evt.target.result;
+      document.getElementById('previewContainer').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function removeImage() {
+  document.getElementById('fileInput').value = '';
+  document.getElementById('pimgData').value = '';
+  document.getElementById('previewContainer').style.display = 'none';
+}
+
 const ABI=["function create(tuple(address pay,address sale,uint256 goal,uint256 rate,uint40 fundEnd,uint16[] bps,uint40[] durations,bytes32[] specs,string metaURI)) returns (uint256)","function contribute(uint256,uint256)","function closeFunding(uint256)","function claimMilestone(uint256,string)","function challenge(uint256)","function vote(uint256,bool)","function resolve(uint256)","function failByDeadline(uint256)","function refund(uint256)","function claimTokens(uint256)","function reclaimSale(uint256)","function count() view returns (uint256)","function owner() view returns (address)","function threshold() view returns (uint8)","function addOracle(address)","function removeOracle(address)","function setPolicy(uint16,uint16,uint256,uint256)","function setMaxGoal(uint256)","function setPaused(bool)","function paused() view returns (bool)","function maxGoal() view returns (uint256)","function metaURI(uint256) view returns (string)","function rep(address) view returns (uint8)","function bondBpsFor(address) view returns (uint16)","function insurance(address) view returns (uint256)","function starterCap() view returns (uint256)","function setThreshold(uint8)","function setTreasury(address)","function setFees(uint16,uint256)","function treasury() view returns (address)","function releaseFeeBps() view returns (uint16)","function createFee() view returns (uint256)","function launch(uint256) view returns (tuple(address team,address pay,address sale,uint256 goal,uint256 raised,uint256 bond,uint256 rate,uint40 fundEnd,uint8 st,uint256 paid,uint256 refundable,uint8 next,uint256 saleReclaimed,uint16 feeBps,uint8 threshold))","function milestones(uint256) view returns (tuple(uint16 bps,uint40 deadline,uint8 st,uint40 claimEnd,uint40 voteEnd,uint8 attests,uint8 round,uint256 yes,uint256 no,address challenger,uint256 stake,bytes32 spec)[])"];
-const ERC=["function approve(address,uint256) returns (bool)","function allowance(address,address) view returns (uint256)","function decimals() view returns (uint8)","function symbol() view returns (string)","function balanceOf(address) view returns (uint256)","function transfer(address,uint256) returns (bool)"];
 const LS=["Funding","Active","Halted","Completed","Failed"],MS=["Pending","Claimed","Challenged","Released"],SK='dyn_keystore';
 let provider,signer,W,me,c,A,ID,L,M,dec=6;
 const $=i=>document.getElementById(i);
@@ -367,76 +550,80 @@ const err=e=>e.reason||e.shortMessage||e.message;
 function log(s){$('log').textContent=s+"\n"+$('log').textContent}
 function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function fetchS(k){try{return localStorage.getItem(k)}catch(e){return null}}
-$('addr').value=fetchS('dyn_addr')||'';$('rpc').value=fetchS('dyn_rpc')||$('rpc').value;
+$('addr').value=fetchS('dyn_addr')||'';$('rpc').value=fetchS('dyn_rpc')\vert{}\vert{}$('rpc').value;
+
 async function setup(w){
- A=$('addr').value.trim();if(!ethers.isAddress(A))return alert('Enter the Dynamic contract address');
+ A=$('addr').value.trim();if(!ethers.isAddress(A))return alert('Enter contract address');
  store('dyn_addr',A);store('dyn_rpc',$('rpc').value.trim());
  provider=new ethers.JsonRpcProvider($('rpc').value.trim());W=w;signer=w.connect(provider);me=w.address;c=new ethers.Contract(A,ABI,signer);
- await balances();await adminCheck()}
+ await balances();}
+
 async function balances(){try{
- let t='Address (deposit here): '+me+'\nNative balance: '+ethers.formatEther(await provider.getBalance(me));
- const p=$('pay').value.trim();if(ethers.isAddress(p)){const e=new ethers.Contract(p,ERC,provider);t+='\n'+await e.symbol()+' balance: '+ethers.formatUnits(await e.balanceOf(me),await e.decimals())}
+ let t='Wallet: '+me+'\nETH: '+ethers.formatEther(await provider.getBalance(me));
  $('me').textContent=t}catch(e){log('Error: '+err(e))}}
-async function adminCheck(){try{
- const o=await c.owner();$('adm').style.display=o.toLowerCase()==me.toLowerCase()?'block':'none';
- $('admi').textContent='You are the admin. Approval threshold: '+await c.threshold()+' · release fee: '+await c.releaseFeeBps()+' bps · create fee (raw units): '+await c.createFee()+' · treasury: '+await c.treasury()+' · '+((await c.paused())?'PAUSED (set max goal, then unpause)':'live')}catch(e){}}
-async function newWallet(){const pw=$('pw').value;if(pw.length<8)return alert('Use a password of 8+ characters');
- if(fetchS(SK)&&!confirm('A wallet already exists on this device. Replacing it without a backup loses its funds. Continue?'))return;
- const w=ethers.Wallet.createRandom();log('Encrypting wallet…');store(SK,await w.encrypt(pw));await setup(w);
- alert('Wallet created. Use "Export key" to back it up now. If you lose the key and password, the funds are gone for good.')}
-async function impKey(){const pw=$('pw').value;if(pw.length<8)return alert('Set a password of 8+ characters first');
- const k=prompt('Private key to import:');if(!k)return;try{const w=new ethers.Wallet(k.trim());log('Encrypting wallet…');store(SK,await w.encrypt(pw));await setup(w)}catch(e){log('Invalid key')}}
-async function unlock(){const j=fetchS(SK);if(!j)return alert('No wallet on this device yet');
- try{log('Unlocking…');await setup(await ethers.Wallet.fromEncryptedJson(j,$('pw').value))}catch(e){log('Wrong password')}}
-function exportKey(){if(!W)return alert('Unlock first');if(confirm('Anyone with this key controls your funds. Show it?'))prompt('Private key (keep it secret):',W.privateKey)}
-function lock(){W=signer=c=null;me=null;$('me').textContent='Locked';$('adm').style.display='none'}
-async function send(){try{if(!signer)return alert('Unlock first');const to=$('to').value.trim(),tk=$('stk').value.trim();let t;
- if(!tk)t=await signer.sendTransaction({to,value:ethers.parseEther($('sam').value)});
- else{const e=new ethers.Contract(tk,ERC,signer);t=await e.transfer(to,ethers.parseUnits($('sam').value,await e.decimals()))}
- log('Sent '+t.hash);await t.wait();log('Confirmed');balances()}catch(e){log('Error: '+err(e))}}
-async function drip(){try{if(!me)return alert('Unlock your wallet first');const u=$('drip').value.trim();if(!u)return alert('Enter the gas helper URL');
- const r=await fetch(u,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({address:me})}).then(x=>x.json());log(r.message||r.error||JSON.stringify(r));setTimeout(balances,4000)}catch(e){log('Error: '+err(e))}}
-async function setFees(){await run(async()=>{const pt=$('pay').value.trim();if(!ethers.isAddress(pt))throw new Error('Fill the payment token address in the Create launch box first (used for decimals)');
- const p=new ethers.Contract(pt,ERC,provider);return c.setFees(Number($('fbp').value),ethers.parseUnits($('cfe').value||'0',await p.decimals()))})}
+
+async function newWallet(){const pw=$('pw').value;if(pw.length<8)return alert('Min 8 chars password');
+ const w=ethers.Wallet.createRandom();store(SK,await w.encrypt(pw));await setup(w);alert('Wallet created!')}
+
+async function unlock(){const j=fetchS(SK);if(!j)return alert('No wallet saved');
+ try{await setup(await ethers.Wallet.fromEncryptedJson(j,$('pw').value));alert('Unlocked!')}catch(e){log('Wrong password')}}
+
+function exportKey(){if(!W)return;prompt('Private Key:',W.privateKey)}
+function lock(){W=signer=c=null;me=null;$('me').textContent='Locked'}
+async function run(fn){try{if(!c)return alert('Unlock wallet');const t=await fn();log('TX: '+t.hash);await t.wait();log('Confirmed')}catch(e){log('Error: '+err(e))}}
+
 const esc=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 const pmeta=u=>{try{return JSON.parse(decodeURIComponent(u.split(',').slice(1).join(',')))}catch(e){return{}}};
-async function meta(id){try{return pmeta(await c.metaURI(id))}catch(e){return{}}}
-async function browse(){try{const a=$('addr').value.trim();if(!ethers.isAddress(a))return alert('Enter the contract address');
- store('dyn_addr',a);const rc=new ethers.Contract(a,ABI,new ethers.JsonRpcProvider($('rpc').value.trim())),n=Number(await rc.count());let h='';
- for(let i=n;i>=Math.max(1,n-19);i--){const l=await rc.launch(i),mt=pmeta(await rc.metaURI(i)),r=await rc.rep(l.team);
-  h+='<div class="c"><b>'+esc(mt.name||('Launch #'+i))+'</b> · '+LS[l.st]+' · '+(l.goal>0n?Number(l.raised*100n/l.goal):0)+'% funded · team track record: '+r+' completed<br><button onclick="$(\'id\').value='+i+';load()">Open #'+i+'</button></div>'}
- $('list').innerHTML=h||'<div class="s">No launches yet.</div>'}catch(e){log('Error: '+err(e))}}
-async function setCap(){await run(async()=>{const pt=$('pay').value.trim();if(!ethers.isAddress(pt))throw new Error('Fill the payment token address in the Create launch box first (used for decimals)');
- return c.setMaxGoal(ethers.parseUnits($('mgl').value,await new ethers.Contract(pt,ERC,provider).decimals()))})}
-async function setPolicy(){await run(async()=>{const pt=$('pay').value.trim();if(!ethers.isAddress(pt))throw new Error('Fill the payment token address in the Create launch box first (used for decimals)');
- const d=await new ethers.Contract(pt,ERC,provider).decimals();return c.setPolicy(Number($('isb').value),Number($('cvb').value),ethers.parseUnits($('stc').value||'0',d),ethers.parseUnits($('rmg').value||'0',d))})}
-async function run(fn){try{if(!c)return alert('Unlock your wallet first');const t=await fn();log('Sent '+t.hash);await t.wait();log('Confirmed');await balances();if(ID)await load();await adminCheck()}catch(e){log('Error: '+err(e))}}
-async function approve(tok,amt){const e=new ethers.Contract(tok,ERC,signer);if((await e.allowance(me,A))<amt){log('Approving…');const t=await e.approve(A,amt);await t.wait()}}
-async function createLaunch(){try{
- if(!c)return alert('Unlock your wallet first');
- const pay=$('pay').value.trim(),sale=$('sale').value.trim(),pe=new ethers.Contract(pay,ERC,provider),se=new ethers.Contract(sale,ERC,provider);
- const pd=Number(await pe.decimals()),sd=Number(await se.decimals());
- const goal=ethers.parseUnits($('goal').value,pd),rate=ethers.parseUnits($('tpp').value,sd)/(10n**BigInt(pd));
- if(rate==0n)return alert('Rate too small');
- const parts=$('mls').value.split(',').map(x=>{const q=x.split(':');return{p:Number(q[0]),d:Number(q[1]),t:q.slice(2).join(':').trim()}}),bps=parts.map(p=>Math.round(p.p*100)),dur=parts.map(p=>p.d*86400),specs=parts.map(p=>ethers.keccak256(ethers.toUtf8Bytes(p.t)));
- if(parts.some(p=>!p.t))return alert('Every milestone needs a title');
- const uri='data:application/json,'+encodeURIComponent(JSON.stringify({name:$('pname').value.trim(),desc:$('pdesc').value.trim(),ms:parts.map(p=>p.t)}));
- if(bps.reduce((a,b)=>a+b,0)!=10000)return alert('Milestones must total 100%');
- await approve(pay,goal*BigInt(await c.bondBpsFor(me))/10000n+await c.createFee());await approve(sale,goal*rate);
- const end=Math.floor(Date.now()/1000)+Number($('days').value)*86400;
- log('Creating…');const t=await c.create({pay,sale,goal,rate,fundEnd:end,bps,durations:dur,specs,metaURI:uri});await t.wait();
- const n=await c.count();log('Launch created. ID = '+n);$('id').value=n.toString();await load()}catch(e){log('Error: '+err(e))}}
-async function last(){if(!c)return alert('Unlock your wallet first');$('id').value=(await c.count()).toString();load()}
+
+async function browse(){try{
+ const a=$('addr').value.trim();if(!ethers.isAddress(a))return alert('Enter contract address in Wallet tab');
+ const rc=new ethers.Contract(a,ABI,new ethers.JsonRpcProvider($('rpc').value.trim())),n=Number(await rc.count());let h='';
+ for(let i=n;i>=Math.max(1,n-19);i--){
+  const l=await rc.launch(i),mt=pmeta(await rc.metaURI(i)),pct=(l.goal>0n?Number(l.raised*100n/l.goal):0);
+  const imgTag = mt.image ? `<img src="${esc(mt.image)}">` : (mt.name ? mt.name[0] : '#');
+  h+='<div class="list-item" onclick="$(\'id\').value='+i+';switchTab(\'screen-launch\');load();"><div class="item-left"><div class="item-icon">'+imgTag+'</div><div class="item-info"><div class="title">'+esc(mt.name||('Launch #'+i))+'</div><div class="sub">'+LS[l.st]+' · #'+i+'</div></div></div><div class="item-right"><div class="val">'+pct+'%</div><div class="badge">Funded</div></div></div>';
+ }
+ $('list').innerHTML=h||'<div style="text-align:center; padding:20px; color:var(--text-sub);">No launches yet.</div>'}catch(e){log('Error: '+err(e))}}
+
 async function load(){try{
- if(!c)return;ID=BigInt($('id').value);L=await c.launch(ID);M=await c.milestones(ID);
- const pe=new ethers.Contract(L.pay,ERC,provider);dec=Number(await pe.decimals());const sym=await pe.symbol(),f=x=>ethers.formatUnits(x,dec);
- const d=t=>t>0?new Date(Number(t)*1000).toLocaleString():'—';
- const mt=await meta(ID);let h='<h3>'+esc(mt.name||('Launch #'+ID))+'</h3><div class="s">'+esc(mt.desc||'')+'</div><p><b>'+LS[L.st]+'</b> · raised '+f(L.raised)+' / '+f(L.goal)+' '+sym+' · paid to team '+f(L.paid)+' · bond '+f(L.bond)+(L.st==2||L.st==4?' · refundable pool '+f(L.refundable):'')+'</p><div class="s">Team: '+L.team+'<br>Funding ends: '+d(L.fundEnd)+'</div>';
- M.forEach((m,i)=>{h+='<div class="c"><b>#'+(i+1)+' '+esc((mt.ms||[])[i]||'')+'</b> '+MS[m.st]+(i==L.next&&L.st==1?' (current)':'')+' · '+(Number(m.bps)/100)+'% · deadline '+d(m.deadline)+'<br><span class="s">Oracle approvals '+m.attests+(m.st==1?' · challenge window ends '+d(m.claimEnd):'')+(m.st==2?' · vote ends '+d(m.voteEnd)+' · valid '+m.yes+' vs invalid '+m.no:'')+'</span></div>'});
+ if(!c)return alert('Unlock wallet first');ID=BigInt($('id').value);L=await c.launch(ID);M=await c.milestones(ID);
+ const mt=pmeta(await c.metaURI(ID));
+ const imgHeader = mt.image ? `<img src="${esc(mt.image)}" style="width:100%; height:180px; object-fit:cover; border-radius:12px; margin-bottom:12px;">` : '';
+ let h='<div class="card-box">'+imgHeader+'<h3>'+esc(mt.name||('Launch #'+ID))+'</h3><p style="color:var(--text-sub);">'+esc(mt.desc||'')+'</p><div>Status: <b>'+LS[L.st]+'</b></div></div>';
+ M.forEach((m,i)=>{h+='<div class="card-box"><b>Milestone '+(i+1)+'</b>: '+MS[m.st]+' ('+(Number(m.bps)/100)+'%)</div>'});
  $('info').innerHTML=h;$('act').style.display='block'}catch(e){log('Error: '+err(e))}}
-async function contribute(){await run(async()=>{const a=ethers.parseUnits($('amt').value,dec);await approve(L.pay,a);return c.contribute(ID,a)})}
-async function claimMs(){const u=prompt('Evidence URL (repo release, tx, report):');if(u)run(()=>c.claimMilestone(ID,u))}
-async function chal(){await run(async()=>{const m=M[L.next];const stake=(L.raised*m.bps/10000n)*500n/10000n;await approve(L.pay,stake);return c.challenge(ID)})}
+
+async function contribute(){await run(async()=>{const a=ethers.parseUnits($('amt').value,dec);return c.contribute(ID,a)})}
+async function claimMs(){const u=prompt('Evidence URL:');if(u)run(()=>c.claimMilestone(ID,u))}
+async function chal(){run(()=>c.challenge(ID))}
+
+async function createLaunch(){
+  await run(async () => {
+    const name = $('pname').value.trim();
+    const image = $('pimgData').value;
+    const desc = $('pdesc').value.trim();
+    const metaObj = { name, image, desc };
+    const metaURI = "data:application/json," + encodeURIComponent(JSON.stringify(metaObj));
+    
+    const pay = $('pay').value.trim();
+    const sale = $('sale').value.trim();
+    const goal = ethers.parseUnits($('goal').value, dec);
+    const rate = ethers.parseUnits($('tpp').value, 18);
+    const fundEnd = Math.floor(Date.now() / 1000) + (Number($('days').value) * 86400);
+    
+    const rawMls = $('mls').value.split(',');
+    const bps = [], durations = [], specs = [];
+    rawMls.forEach(m => {
+      const [p, d, t] = m.split(':');
+      bps.push(Number(p) * 100);
+      durations.push(Number(d) * 86400);
+      specs.push(ethers.keccak256(ethers.toUtf8Bytes(t)));
+    });
+    
+    const params = { pay, sale, goal, rate, fundEnd, bps, durations, specs, metaURI };
+    return c.create(params);
+  });
+}
 </script>
 </body>
 </html>
