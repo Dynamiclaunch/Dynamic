@@ -71,6 +71,10 @@
     .balance-amount { font-size: 26px; font-weight: 800; margin: 8px 0; letter-spacing: -0.5px; }
     .address-tag { font-size: 11px; color: var(--text-sub); background: var(--accent-soft); padding: 6px 10px; border-radius: 8px; cursor: pointer; display: inline-block; font-weight: 600; word-break: break-all; }
 
+    .wallet-actions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+    .wallet-action-btn { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 12px; padding: 10px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text-main); font-size: 11px; font-weight: 700; }
+    .wallet-action-btn:active { transform: scale(0.96); }
+
     nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 90; }
     .nav-item { border: none; background: none; color: var(--text-sub); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
     .nav-item.active { color: var(--text-main); font-weight: 800; }
@@ -124,7 +128,7 @@
         </button>
       </div>
 
-      <div style="display:flex; justify-space-between; align-items:center; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <h3 style="font-size:18px; font-weight:800;">Projects</h3>
         <button class="btn-sub" id="btn-refresh-home" style="width:auto; padding:6px 12px; margin:0; font-size:12px;">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
@@ -244,6 +248,26 @@
           <div class="balance-amount" id="dash-eth-balance">0.0000 ETH</div>
           <div class="address-tag" id="dash-address" onclick="copyAddress()" title="Click to Copy">0x0000...0000</div>
 
+          <!-- WALLET QUICK ACTIONS GRID -->
+          <div class="wallet-actions-grid">
+            <button class="wallet-action-btn" onclick="openModal('send-modal')">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              Send
+            </button>
+            <button class="wallet-action-btn" onclick="openModal('receive-modal')">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              Receive
+            </button>
+            <button class="wallet-action-btn" onclick="openModal('swap-modal')">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+              Swap
+            </button>
+            <button class="wallet-action-btn" onclick="openModal('withdraw-modal')">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-4H8l4-4 4 4h-3v4z"/></svg>
+              Withdraw
+            </button>
+          </div>
+
           <div style="margin-top:14px; display:flex; gap:8px;">
             <button class="btn-main" onclick="copyAddress()" style="margin:0; padding:10px 12px; font-size:12px; flex:1;">
               <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
@@ -276,17 +300,66 @@
   <!-- HELP MODAL -->
   <div id="help-modal" class="modal">
     <div class="modal-content">
-      <button class="modal-close" id="close-help-btn">✕</button>
+      <button class="modal-close" onclick="closeModals()">✕</button>
       <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
         <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:22px; width:auto;" alt="logo">
         <h3 style="font-size: 18px;">How Platform Works</h3>
       </div>
-      
       <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
         <p style="margin-bottom:10px;"><b>Dynamic</b> is a decentralized milestone-based crowdfunding platform.</p>
         <p>1. Create or import your wallet. Your encrypted keys are stored safely on your browser.</p>
         <p>2. Lock your wallet anytime. Unlock it using your password.</p>
       </div>
+    </div>
+  </div>
+
+  <!-- SEND MODAL -->
+  <div id="send-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModals()">✕</button>
+      <h3 style="font-size:16px; margin-bottom:12px;">Send ETH</h3>
+      <label>Recipient Address</label>
+      <input id="send-to" placeholder="0x...">
+      <label>Amount (ETH)</label>
+      <input id="send-amount" type="number" placeholder="0.01">
+      <button class="btn-main" onclick="executeSend()">Send Transaction</button>
+    </div>
+  </div>
+
+  <!-- RECEIVE MODAL -->
+  <div id="receive-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModals()">✕</button>
+      <h3 style="font-size:16px; margin-bottom:12px;">Receive Funds</h3>
+      <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px;">Share your wallet address to receive ETH on Base Sepolia:</p>
+      <div id="receive-address-box" style="background:var(--bg); padding:14px; border-radius:12px; font-family:monospace; font-size:12px; word-break:break-all; border:1px solid var(--border); text-align:center; margin-bottom:12px;">-</div>
+      <button class="btn-main" onclick="copyAddress()">Copy Address</button>
+    </div>
+  </div>
+
+  <!-- SWAP MODAL -->
+  <div id="swap-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModals()">✕</button>
+      <h3 style="font-size:16px; margin-bottom:12px;">Swap Tokens</h3>
+      <label>You Pay</label>
+      <input id="swap-from-amount" type="number" placeholder="0.0">
+      <label>You Receive (Estimated)</label>
+      <input id="swap-to-amount" type="number" placeholder="0.0" disabled>
+      <button class="btn-main" onclick="alert('Swap feature is currently routing via liquidity pools.')">Swap Now</button>
+    </div>
+  </div>
+
+  <!-- WITHDRAW MODAL -->
+  <div id="withdraw-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModals()">✕</button>
+      <h3 style="font-size:16px; margin-bottom:12px;">Withdraw Funds</h3>
+      <label>Destination Address</label>
+      <input id="withdraw-to" placeholder="0x...">
+      <label>Amount (ETH)</label>
+      <input id="withdraw-amount" type="number" placeholder="0.0">
+      <button class="btn-main" onclick="executeWithdraw()">Withdraw</button>
     </div>
   </div>
 
@@ -352,6 +425,18 @@
       if (el && el.classList) el.classList.add('active');
     }
 
+    function openModal(modalId) {
+      if (!wallet) return alert('Please unlock your wallet first.');
+      if (modalId === 'receive-modal') {
+        $('receive-address-box').textContent = wallet.address;
+      }
+      $(modalId).style.display = 'flex';
+    }
+
+    function closeModals() {
+      document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       $('theme-btn')?.addEventListener('click', () => {
         const isDark = document.body.getAttribute('data-theme') === 'dark';
@@ -359,9 +444,7 @@
       });
 
       $('help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'flex'; });
-      $('close-help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'none'; });
 
-      // Görsel seçildiğinde Base64 dönüşümü ve Önizleme
       $('c-image-file')?.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -494,7 +577,54 @@
       }
     }
 
-    // PROJE OLUŞTURMA İŞLEMİ (GÖRSEL DAHİL)
+    function copyAddress() {
+      if (!wallet) return;
+      navigator.clipboard.writeText(wallet.address);
+      alert('Address copied to clipboard!');
+    }
+
+    async function executeSend() {
+      const to = $('send-to').value.trim();
+      const amount = $('send-amount').value;
+      if (!ethers.isAddress(to)) return alert('Invalid recipient address.');
+      if (!amount || amount <= 0) return alert('Enter a valid amount.');
+
+      try {
+        log('Sending transaction...');
+        const tx = await signer.sendTransaction({
+          to: to,
+          value: ethers.parseEther(amount)
+        });
+        await tx.wait();
+        alert('Transaction successful!');
+        closeModals();
+        updateWalletBalance();
+      } catch (err) {
+        alert('Transaction failed: ' + err.message);
+      }
+    }
+
+    async function executeWithdraw() {
+      const to = $('withdraw-to').value.trim();
+      const amount = $('withdraw-amount').value;
+      if (!ethers.isAddress(to)) return alert('Invalid destination address.');
+      if (!amount || amount <= 0) return alert('Enter a valid amount.');
+
+      try {
+        log('Withdrawing funds...');
+        const tx = await signer.sendTransaction({
+          to: to,
+          value: ethers.parseEther(amount)
+        });
+        await tx.wait();
+        alert('Withdrawal successful!');
+        closeModals();
+        updateWalletBalance();
+      } catch (err) {
+        alert('Withdrawal failed: ' + err.message);
+      }
+    }
+
     $('btn-create-launch')?.addEventListener('click', async () => {
       if (!contract) return alert('Please unlock your wallet first.');
 
@@ -533,7 +663,6 @@
         await tx.wait();
         alert('Launch Created Successfully!');
         
-        // Form Temizleme
         $('c-title').value = '';
         $('c-desc').value = '';$('c-goal').value = '';
         $('c-duration').value = '';$('c-shares').value = '';
