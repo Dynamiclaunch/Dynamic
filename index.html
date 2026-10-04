@@ -38,7 +38,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg); color: var(--text-main); padding-bottom: 90px; }
 
-    /* SVG Icon Styling */
+    /* Modern SVG Icon Styling */
     .icon { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
     .icon-sm { width: 16px; height: 16px; }
     .icon-lg { width: 24px; height: 24px; }
@@ -46,7 +46,7 @@
     /* Header */
     header { position: sticky; top: 0; background: var(--card-bg); z-index: 80; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--border); }
     .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
-    .logo img { height: 36px; width: auto; object-fit: contain; max-width: 140px; }
+    .logo img { height: 36px; width: auto; object-fit: contain; max-width: 140px; border-radius: 6px; }
     .header-actions { display: flex; gap: 8px; align-items: center; }
 
     .icon-btn { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: transform 0.1s; }
@@ -95,8 +95,7 @@
 
   <header>
     <div class="logo">
-      <!-- Özel Logo Alanı -->
-      <img id="site-logo" src="https://miclaunch.tech/logo.png" alt="Dynamic Logo" onerror="this.style.display='none'">
+      <img id="site-logo" src="https://i.ibb.co/1tnYf0hb/logo.png" alt="Dynamic Logo" onerror="this.onerror=null; this.src='https://ibb.co/1tnYf0hb';">
       <span>Dynamic</span>
     </div>
     <div class="header-actions">
@@ -256,7 +255,7 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION (MODERN SVG ICONS) -->
+  <!-- BOTTOM NAVIGATION (SVG ICONS) -->
   <nav>
     <button class="nav-item active" onclick="switchTab('tab-home', this)">
       <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -325,7 +324,7 @@
         const encryptedJson = await newWallet.encrypt(pw);
         localStorage.setItem(SK, encryptedJson);
         await initWallet(newWallet);
-        alert('Wallet created!');
+        alert('Wallet created successfully!');
       } catch (err) {
         alert('Error: ' + err.message);
       }
@@ -334,13 +333,13 @@
     $('btn-unlock-wallet').addEventListener('click', async () => {
       const pw = $('pw').value;
       const encryptedJson = localStorage.getItem(SK);
-      if (!encryptedJson) return alert('No wallet found.');
+      if (!encryptedJson) return alert('No wallet found in local storage.');
 
       try {
-        $('wallet-status').textContent = 'Decrypting...';
+        $('wallet-status').textContent = 'Decrypting wallet...';
         const decryptedWallet = await ethers.Wallet.fromEncryptedJson(encryptedJson, pw);
         await initWallet(decryptedWallet);
-        alert('Wallet unlocked!');
+        alert('Wallet unlocked successfully!');
       } catch (err) {
         alert('Incorrect password!');
       }
@@ -365,7 +364,7 @@
     async function loadHomeLaunches() {
       if (!contract) return;
       const listDiv = $('launches-list');
-      listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Loading...</p>';
+      listDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Loading projects...</p>';
 
       try {
         const count = await contract.count();
@@ -399,7 +398,7 @@
         }
         listDiv.innerHTML = html;
       } catch (err) {
-        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Error loading projects.</p>';
+        listDiv.innerHTML = '<p style="color:red; font-size:12px;">Error loading projects from contract.</p>';
       }
     }
 
@@ -412,9 +411,9 @@
     }
 
     async function loadExploreDetails(id) {
-      if (!contract) return alert('Connect wallet and contract first.');
+      if (!contract) return alert('Please connect wallet and set a valid contract address first.');
       const detDiv = $('explore-details');
-      detDiv.innerHTML = '<p style="font-size:12px; color:var(--text-sub);">Loading...</p>';
+      detDiv.innerHTML = '<p style="font-size:12px; color:var(--text-sub);">Loading details...</p>';
 
       try {
         const l = await contract.launch(id);
@@ -436,7 +435,7 @@
           </div>
         `;
       } catch (err) {
-        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Failed to load details.</p>';
+        detDiv.innerHTML = '<p style="color:red; font-size:12px;">Failed to load project details.</p>';
       }
     }
 
@@ -447,19 +446,19 @@
 
     async function contributeToLaunch(id) {
       const val = $('contrib-amount').value;
-      if (!val) return alert('Enter amount.');
+      if (!val) return alert('Please enter a valid amount.');
       try {
         const tx = await contract.contribute(id, { value: ethers.parseEther(val) });
         await tx.wait();
         alert('Contribution successful!');
         loadExploreDetails(id);
       } catch (err) {
-        alert('Failed: ' + err.message);
+        alert('Transaction failed: ' + err.message);
       }
     }
 
     $('btn-create-launch').addEventListener('click', async () => {
-      if (!contract) return alert('Connect wallet first.');
+      if (!contract) return alert('Please connect wallet first.');
 
       const title = $('c-title').value;
       const desc = $('c-desc').value;
@@ -469,7 +468,7 @@
       const shares = $('c-shares').value.split(',').map(s => parseInt(s.trim()));
 
       if (!title || !goal || !duration || shares.length === 0) {
-        return alert('Fill in required fields.');
+        return alert('Please fill in all required fields.');
       }
 
       let imgData = '';
@@ -486,7 +485,7 @@
       try {
         const tx = await contract.create(goal, duration, shares, metaURI);
         await tx.wait();
-        alert('Project created!');
+        alert('Project created successfully!');
         switchTab('tab-home');
         loadHomeLaunches();
       } catch (err) {
