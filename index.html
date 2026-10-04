@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dynamic Launchpad</title>
   
-  <!-- Favicon / Site Icon -->
   <link rel="icon" type="image/png" href="https://i.ibb.co/1tnYf0hb/logo.png">
   <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/1tnYf0hb/logo.png">
   <link rel="apple-touch-icon" href="https://i.ibb.co/1tnYf0hb/logo.png">
@@ -23,9 +22,7 @@
       --accent: #000000;
       --accent-text: #ffffff;
       --accent-soft: #f1f3f5;
-      --status-funding: #2b8a3e;
-      --status-active: #1864ab;
-      --status-halted: #e03131;
+      --danger: #e03131;
     }
 
     [data-theme="dark"] {
@@ -37,20 +34,16 @@
       --accent: #ffffff;
       --accent-text: #000000;
       --accent-soft: #2a2a2a;
-      --status-funding: #40c057;
-      --status-active: #4dabf7;
-      --status-halted: #ff6b6b;
+      --danger: #ff6b6b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg); color: var(--text-main); padding-bottom: 90px; }
 
-    /* Icons */
     .icon { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
     .icon-sm { width: 16px; height: 16px; }
     .icon-lg { width: 24px; height: 24px; }
 
-    /* Header */
     header { position: sticky; top: 0; background: var(--card-bg); z-index: 80; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--border); }
     .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
     .logo img { height: 28px; width: auto; object-fit: contain; }
@@ -61,7 +54,6 @@
 
     .container { padding: 16px; max-width: 500px; margin: 0 auto; }
 
-    /* Cards */
     .card-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
     .card-accent-left { border-left: 4px solid var(--accent); }
 
@@ -72,25 +64,22 @@
     .btn-main { width: 100%; padding: 14px; border-radius: 14px; background: var(--accent); color: var(--accent-text); border: none; font-weight: 700; font-size: 14px; margin-top: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
     .btn-main:active { opacity: 0.85; }
     .btn-sub { width: 100%; padding: 12px; border-radius: 14px; background: var(--accent-soft); color: var(--text-main); border: 1px solid var(--border); font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-danger { background: rgba(224, 49, 49, 0.1); color: var(--danger); border: 1px solid var(--danger); }
 
-    /* Balance Card */
     .balance-card { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 20px; padding: 18px; margin-bottom: 16px; position: relative; overflow: hidden; }
     .balance-watermark { position: absolute; right: -10px; bottom: -10px; height: 90px; opacity: 0.05; pointer-events: none; }
     .balance-amount { font-size: 26px; font-weight: 800; margin: 8px 0; letter-spacing: -0.5px; }
     .address-tag { font-size: 11px; color: var(--text-sub); background: var(--accent-soft); padding: 6px 10px; border-radius: 8px; cursor: pointer; display: inline-block; font-weight: 600; word-break: break-all; }
 
-    /* Navigation */
-    nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-space-around: align-items: center; padding: 10px 0; z-index: 90; }
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 90; }
     .nav-item { border: none; background: none; color: var(--text-sub); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
     .nav-item.active { color: var(--text-main); font-weight: 800; }
     .nav-add { width: 48px; height: 48px; background: var(--accent); color: var(--accent-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; margin-top: -24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-    /* Modal */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
     .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; max-width: 460px; width: 100%; padding: 22px; max-height: 85vh; overflow-y: auto; position: relative; }
     .modal-close { position: absolute; top: 14px; right: 14px; border: none; background: var(--accent-soft); color: var(--text-main); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
 
-    /* Tab Display Logic */
     .tab-content { display: none; }
     .tab-content.active { display: block !important; }
     .launch-card { cursor: pointer; transition: transform 0.1s; }
@@ -190,29 +179,36 @@
     <!-- WALLET MANAGEMENT TAB -->
     <div id="tab-wallet" class="tab-content">
       
-      <!-- AUTH CARD -->
+      <!-- AUTH CARD (GİRİŞ VEYA YENİ KAYIT) -->
       <div class="card-box card-accent-left" id="wallet-auth-box">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <img src="https://i.ibb.co/1tnYf0hb/logo.png" style="height:20px; width:auto;" alt="logo">
           <h3 style="font-size:16px;">Dynamic Wallet</h3>
         </div>
         <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px;">
-          In-browser secure Web3 wallet. Set a password to generate or unlock your wallet.
+          Set a password to create a new wallet or import an existing Private Key / Seed Phrase.
         </p>
 
-        <label>Wallet Password</label>
+        <label>Set Wallet Password</label>
         <input id="pw" type="password" placeholder="Min 8 characters">
 
-        <div style="display:flex; gap:10px; margin-top:10px;">
-          <button class="btn-main" id="btn-create-wallet" style="margin:0;">Create Wallet</button>
-          <button class="btn-sub" id="btn-unlock-wallet" style="margin:0;">Unlock Wallet</button>
+        <button class="btn-main" id="btn-create-wallet">Create New Wallet</button>
+
+        <hr style="border:0; border-top:1px solid var(--border); margin:16px 0;">
+
+        <!-- IMPORT WALLET SECTION -->
+        <div>
+          <span style="font-size:12px; font-weight:700; color:var(--text-main);">Import Existing Wallet</span>
+          <label>Private Key or Seed Phrase (12 Words)</label>
+          <input id="import-key" type="password" placeholder="0x... or 12 words seed phrase">
+          <button class="btn-sub" id="btn-import-wallet" style="margin-top:10px;">Import Wallet</button>
         </div>
       </div>
 
-      <!-- DASHBOARD (UNLOCKED STATE) -->
+      <!-- DASHBOARD (OTURUM AÇIKKEN GÖRÜNECEK KISIM) -->
       <div id="wallet-dashboard" style="display:none;">
         
-        <!-- BALANCE CARD WITH DIRECT DEPOSIT COPY -->
+        <!-- BALANCE CARD -->
         <div class="balance-card">
           <img src="https://i.ibb.co/1tnYf0hb/logo.png" class="balance-watermark" alt="watermark">
           <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -225,10 +221,13 @@
           <div class="balance-amount" id="dash-eth-balance">0.0000 ETH</div>
           <div class="address-tag" id="dash-address" onclick="copyAddress()" title="Click to Copy">0x0000...0000</div>
 
-          <div style="margin-top:14px;">
-            <button class="btn-main" onclick="copyAddress()" style="margin:0; padding:10px 12px; font-size:12px;">
+          <div style="margin-top:14px; display:flex; gap:8px;">
+            <button class="btn-main" onclick="copyAddress()" style="margin:0; padding:10px 12px; font-size:12px; flex:1;">
               <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-              Copy Deposit Address
+              Copy Address
+            </button>
+            <button class="btn-sub" onclick="exportPrivateKey()" style="margin:0; padding:10px 12px; font-size:12px; flex:1;">
+              Export Key
             </button>
           </div>
         </div>
@@ -267,6 +266,14 @@
           <button class="btn-sub" id="btn-send-eth">Send Transaction</button>
         </div>
 
+        <!-- LOGOUT BUTTON -->
+        <div style="margin-top:20px; margin-bottom:20px;">
+          <button class="btn-sub btn-danger" id="btn-logout-wallet">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            Log Out (Disconnect Wallet)
+          </button>
+        </div>
+
       </div>
 
       <!-- LOGS CARD -->
@@ -290,9 +297,9 @@
       
       <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
         <p style="margin-bottom:10px;"><b>Dynamic</b> is a decentralized milestone-based crowdfunding platform.</p>
-        <p>1. Create or unlock your wallet using a single password.</p>
-        <p>2. Copy your wallet address to deposit ETH from any exchange or external wallet.</p>
-        <p>3. Fund active projects or launch your own campaign seamlessly.</p>
+        <p>1. Create or import your wallet once. Your session stays active on this device.</p>
+        <p>2. Copy your address to deposit funds.</p>
+        <p>3. Use Log Out if you wish to remove your wallet from this browser.</p>
       </div>
     </div>
   </div>
@@ -321,7 +328,7 @@
     const DEFAULT_RPC = "https://sepolia.base.org";
     const DEFAULT_CONTRACT = "0xCEF1B2Ec08CEea761DE8B7D9B8E07441bc3C475d";
 
-    const SK = 'dyn_keystore';
+    const SK = 'dyn_active_pk'; // Oturum hafızası
     let wallet = null;
     let provider = null;
     let signer = null;
@@ -343,52 +350,56 @@
       }
     }
 
-    // SEKMELER ARASI GEÇİŞ FONKSİYONU (BEYAZ EKRAN BAZI ÇÖZER)
     function switchTab(tabId, el) {
-      const allTabs = document.querySelectorAll('.tab-content');
-      allTabs.forEach(tab => {
+      document.querySelectorAll('.tab-content').forEach(tab => {
         tab.style.display = 'none';
         tab.classList.remove('active');
       });
-
-      const allNavItems = document.querySelectorAll('.nav-item, .nav-add');
-      allNavItems.forEach(nav => nav.classList.remove('active'));
+      document.querySelectorAll('.nav-item, .nav-add').forEach(nav => nav.classList.remove('active'));
 
       const targetTab = document.getElementById(tabId);
       if (targetTab) {
         targetTab.style.display = 'block';
         targetTab.classList.add('active');
       }
-
-      if (el && el.classList) {
-        el.classList.add('active');
-      }
+      if (el && el.classList) el.classList.add('active');
     }
 
-    // TEMA & MODAL DİNLEYİCİLERİ
     document.addEventListener("DOMContentLoaded", () => {
       $('theme-btn')?.addEventListener('click', () => {
         const isDark = document.body.getAttribute('data-theme') === 'dark';
         document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
       });
 
-      $('help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'flex';
-      });
+      $('help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'flex'; });
+      $('close-help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'none'; });
 
-      $('close-help-btn')?.addEventListener('click', () => {$('help-modal').style.display = 'none';
-      });
+      // SAYFA YÜKLENDİĞİNDE OTURUMU KONTROL ET
+      checkActiveSession();
     });
 
-    // CÜZDAN OLUŞTURMA VE KİLİT AÇMA
+    // AKTİF OTURUM KONTROLÜ (Sürekli Açık Kalma Mantığı)
+    function checkActiveSession() {
+      const storedPk = localStorage.getItem(SK);
+      if (storedPk) {
+        try {
+          const loadedWallet = new ethers.Wallet(storedPk);
+          initWallet(loadedWallet);
+        } catch (e) {
+          localStorage.removeItem(SK);
+        }
+      }
+    }
+
+    // YENİ CÜZDAN OLUŞTURMA
     $('btn-create-wallet')?.addEventListener('click', async () => {
       const pw = $('pw').value;
       if (pw.length < 8) return alert('Password must be at least 8 characters.');
 
       try {
-        log('Creating new wallet...');
+        log('Generating new wallet...');
         const newWallet = ethers.Wallet.createRandom();
-        const encryptedJson = await newWallet.encrypt(pw);
-        localStorage.setItem(SK, encryptedJson);
+        localStorage.setItem(SK, newWallet.privateKey);
         await initWallet(newWallet);
         alert('Wallet created successfully!');
       } catch (err) {
@@ -396,18 +407,39 @@
       }
     });
 
-    $('btn-unlock-wallet')?.addEventListener('click', async () => {
-      const pw = $('pw').value;
-      const encryptedJson = localStorage.getItem(SK);
-      if (!encryptedJson) return alert('No wallet found. Please create a wallet first.');
+    // CÜZDAN İÇE AKTARMA (IMPORT)
+    $('btn-import-wallet')?.addEventListener('click', async () => {
+      const importKey = $('import-key').value.trim();
+      if (!importKey) return alert('Please enter a Private Key or 12-word Seed Phrase.');
 
       try {
-        log('Decrypting wallet...');
-        const decryptedWallet = await ethers.Wallet.fromEncryptedJson(encryptedJson, pw);
-        await initWallet(decryptedWallet);
-        alert('Wallet unlocked successfully!');
+        log('Importing wallet...');
+        let importedWallet;
+        if (importKey.includes(" ")) {
+          importedWallet = ethers.Wallet.fromPhrase(importKey);
+        } else {
+          importedWallet = new ethers.Wallet(importKey);
+        }
+
+        localStorage.setItem(SK, importedWallet.privateKey);
+        await initWallet(importedWallet);
+        alert('Wallet imported successfully!');
+        $('import-key').value = '';
       } catch (err) {
-        alert('Incorrect password!');
+        alert('Failed to import: ' + err.message);
+      }
+    });
+
+    // LOG OUT (ÇIKIŞ YAP)
+    $('btn-logout-wallet')?.addEventListener('click', () => {
+      if (confirm("Are you sure you want to log out? Make sure you have exported your Private Key if needed.")) {
+        localStorage.removeItem(SK);
+        wallet = null;
+        signer = null;
+        contract = null;
+        $('wallet-dashboard').style.display = 'none';
+        $('wallet-auth-box').style.display = 'block';$('pw').value = '';
+        log('Logged out successfully.');
       }
     });
 
@@ -416,6 +448,7 @@
       signer = w.connect(provider);
       wallet = w;
 
+      $('wallet-auth-box').style.display = 'none';
       $('wallet-dashboard').style.display = 'block';$('dash-address').textContent = w.address;
 
       if (ethers.isAddress(DEFAULT_CONTRACT)) {
@@ -441,65 +474,49 @@
     function copyAddress() {
       if (wallet && wallet.address) {
         navigator.clipboard.writeText(wallet.address).then(() => {
-          alert('Wallet address copied:\n' + wallet.address + '\n\nYou can transfer ETH/Tokens to this address from any exchange or wallet.');
-        }).catch(() => {
-          const tempInput = document.createElement('input');
-          tempInput.value = wallet.address;
-          document.body.appendChild(tempInput);
-          tempInput.select();
-          document.execCommand('copy');
-          document.body.removeChild(tempInput);
-          alert('Wallet address copied:\n' + wallet.address);
+          alert('Address copied: ' + wallet.address);
         });
-      } else {
-        alert('Please unlock or create a wallet first.');
       }
     }
 
-    // ETH GÖNDERME
+    function exportPrivateKey() {
+      if (wallet && wallet.privateKey) {
+        alert('YOUR PRIVATE KEY:\n\n' + wallet.privateKey);
+      }
+    }
+
     $('btn-send-eth')?.addEventListener('click', async () => {
       const to = $('send-to-address').value.trim();
       const amount = $('send-eth-amount').value;
-
-      if (!ethers.isAddress(to) || !amount) return alert('Please enter a valid recipient address and amount.');
+      if (!ethers.isAddress(to) || !amount) return alert('Enter valid address and amount.');
 
       try {
-        log('Initiating transaction...');
-        const tx = await signer.sendTransaction({
-          to: to,
-          value: ethers.parseEther(amount)
-        });
-        log('Tx Sent: ' + tx.hash);
+        log('Sending transaction...');
+        const tx = await signer.sendTransaction({ to: to, value: ethers.parseEther(amount) });
         await tx.wait();
-        alert('ETH sent successfully!');
+        alert('ETH Sent!');
         updateWalletBalance();
       } catch (err) {
-        alert('Transaction failed: ' + err.message);
+        alert('Send failed: ' + err.message);
       }
     });
 
-    // SWAP İŞLEMİ
     $('btn-execute-swap')?.addEventListener('click', async () => {
       const amount = $('swap-eth-amount').value;
       const token = $('swap-token-select').value;
-
-      if (!amount || amount <= 0) return alert('Please enter a valid swap amount.');
+      if (!amount || amount <= 0) return alert('Enter valid amount.');
 
       try {
-        log(`Executing Swap: ${amount} ETH -> ${token}`);
-        const tx = await signer.sendTransaction({
-          to: DEFAULT_CONTRACT,
-          value: ethers.parseEther(amount)
-        });
+        log(`Swapping ${amount} ETH -> ${token}`);
+        const tx = await signer.sendTransaction({ to: DEFAULT_CONTRACT, value: ethers.parseEther(amount) });
         await tx.wait();
-        alert(`Swap Success! Transferred ${amount} ETH worth of ${token}.`);
+        alert(`Swap Success!`);
         updateWalletBalance();
       } catch (err) {
         alert('Swap Failed: ' + err.message);
       }
     });
 
-    // HOME PROJELERİNİ YÜKLEME
     async function loadHomeLaunches() {
       if (!contract) return;
       const listDiv = $('launches-list');
@@ -515,7 +532,7 @@
         let html = '';
         for (let i = 1; i <= count; i++) {
           const l = await contract.launch(i);
-          let meta = { title: 'Project #' + i, desc: '', img: '' };
+          let meta = { title: 'Project #' + i, desc: '' };
           try { meta = JSON.parse(l.metaURI); } catch(e){}
 
           html += `
@@ -534,11 +551,16 @@
       }
     }
 
-    // EXPLORE DETAY GETİRME
+    function openExplore(id) {
+      switchTab('tab-explore');
+      $('exp-id').value = id;
+      fetchExploreDetails(id);
+    }
+
     async function fetchExploreDetails(id) {
-      if (!contract) return alert('Please unlock your wallet first.');
+      if (!contract) return alert('Please unlock or connect wallet.');
       const detailsDiv = $('explore-details');
-      detailsDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Fetching project details...</p>';
+      detailsDiv.innerHTML = '<p style="color:var(--text-sub); font-size:13px; text-align:center;">Fetching details...</p>';
 
       try {
         const l = await contract.launch(id);
@@ -548,13 +570,12 @@
         detailsDiv.innerHTML = `
           <div class="card-box card-accent-left">
             <h3 style="font-size:18px;">${meta.title || 'Project #' + id}</h3>
-            <p style="font-size:13px; color:var(--text-sub); margin-top:6px;">${meta.desc || 'No description provided.'}</p>
+            <p style="font-size:13px; color:var(--text-sub); margin-top:6px;">${meta.desc || 'No description.'}</p>
             <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
             <div style="font-size:12px; line-height:1.6;">
               <div><b>Owner:</b> ${l.owner}</div>
               <div><b>Goal:</b> ${ethers.formatEther(l.goal)} ETH</div>
               <div><b>Raised:</b> ${ethers.formatEther(l.raised)} ETH</div>
-              <div><b>Status:</b> ${l.state == 0 ? 'Funding' : l.state == 1 ? 'Successful' : 'Halted'}</div>
             </div>
             <div style="margin-top:14px;">
               <label>Contribute Amount (ETH)</label>
@@ -564,14 +585,8 @@
           </div>
         `;
       } catch (err) {
-        detailsDiv.innerHTML = '<p style="color:red; font-size:12px; text-align:center;">Project not found or error loading details.</p>';
+        detailsDiv.innerHTML = '<p style="color:red; font-size:12px; text-align:center;">Project not found.</p>';
       }
-    }
-
-    function openExplore(id) {
-      switchTab('tab-explore');
-      $('exp-id').value = id;
-      fetchExploreDetails(id);
     }
 
     $('btn-load-exp')?.addEventListener('click', () => {
@@ -581,10 +596,10 @@
 
     async function contributeToProject(id) {
       const amount = $('contrib-amount').value;
-      if (!amount || amount <= 0) return alert('Please enter a valid contribution amount.');
+      if (!amount || amount <= 0) return alert('Enter valid amount.');
 
       try {
-        log(`Funding Project #${id} with ${amount} ETH...`);
+        log(`Funding Project #${id}...`);
         const tx = await contract.contribute(id, { value: ethers.parseEther(amount) });
         await tx.wait();
         alert('Contribution successful!');
