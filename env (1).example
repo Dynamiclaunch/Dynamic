@@ -1,0 +1,9 @@
+# Copy to .env and fill in. NEVER commit .env and never put a private key or seed phrase in it.
+OWNER=0x91C2c876F6f6e7319C70635B978cBeb42d873969   # admin wallet (the account created on the Dynamic site)
+TREASURY=0x0000000000000000000000000000000000000000
+ORACLES=0xOracle1...,0xOracle2...,0xOracle3...
+THRESHOLD=2
+FEE_BPS=200
+CREATE_FEE=0
+BASE_RPC_URL=https://mainnet.base.org
+BASESCAN_API_KEY=

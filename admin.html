@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'unsafe-inline'; img-src data:; connect-src https://mainnet.base.org https://sepolia.base.org; base-uri 'none'; form-action 'none'">
+  <title>Dynamic Admin</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+  <style>
+    :root { --bg:#f8f9fa; --card:#fff; --border:#e9ecef; --text:#121212; --sub:#6c757d; --accent:#000; --ok:#198754; --bad:#dc3545; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    body { background:var(--bg); color:var(--text); padding:16px; max-width:640px; margin:0 auto; }
+    h1 { font-size:20px; margin-bottom:4px; }
+    h3 { font-size:14px; margin-bottom:8px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; margin-top:12px; }
+    .sub { font-size:12px; color:var(--sub); line-height:1.5; word-break:break-all; }
+    label { display:block; font-size:12px; font-weight:600; margin:8px 0 4px; }
+    input { width:100%; padding:10px; border:1px solid var(--border); border-radius:10px; font-size:14px; background:var(--bg); }
+    button { width:100%; margin-top:8px; padding:11px; border:0; border-radius:10px; background:var(--accent); color:#fff; font-weight:700; font-size:14px; cursor:pointer; }
+    button.alt { background:#fff; color:var(--text); border:1px solid var(--border); }
+    button:disabled { opacity:.35; cursor:not-allowed; }
+    .row { display:flex; gap:8px; } .row > * { flex:1; }
+    .kv { display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:5px 0; border-bottom:1px solid var(--border); }
+    .kv:last-child { border:0; } .kv b { text-align:right; word-break:break-all; }
+    #msg { margin-top:12px; font-size:13px; font-weight:600; min-height:18px; word-break:break-word; }
+    .ok { color:var(--ok); } .err { color:var(--bad); }
+    .badge { display:inline-block; padding:3px 8px; border-radius:20px; font-size:11px; font-weight:700; }
+    .b-ok { background:#d1e7dd; color:#0f5132; } .b-no { background:#f8d7da; color:#842029; }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Admin</h1>
+  <p class="sub">Your login is your owner wallet. There is no password. Only the wallet set as the contract's owner can send these transactions, everyone else can only look.</p>
+
+  <div class="card">
+    <h3>1. Connect</h3>
+    <label>Dynamic contract address</label>
+    <input id="addr" placeholder="0x...">
+    <button onclick="connect()">Connect wallet &amp; load</button>
+    <p class="sub" id="wallet" style="margin-top:8px;"></p>
+  </div>
+
+  <div class="card">
+    <h3>Status <span id="who" class="badge b-no">not connected</span></h3>
+    <div id="status"><p class="sub">Connect your wallet to see the contract state.</p></div>
+  </div>
+
+  <div class="card">
+    <h3>Open / close the launchpad</h3>
+    <p class="sub">Paused blocks new launches and new contributions only. Refunds and token claims always stay open.</p>
+    <div class="row">
+      <button class="act" onclick="run('Unpause', () => c.setPaused(false))">Unpause</button>
+      <button class="act alt" onclick="run('Pause', () => c.setPaused(true))">Pause</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Payment token (USDC)</h3>
+    <p class="sub">Launches can only raise money in tokens you allow. Uses the official native USDC for the connected network.</p>
+    <div class="row">
+      <button class="act" onclick="usdcAllow(true)">Allow USDC</button>
+      <button class="act alt" onclick="usdcAllow(false)">Block USDC</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Max goal per project</h3>
+    <label>Amount in USDC (e.g. 500)</label>
+    <input id="maxgoal" type="number" min="0" placeholder="500">
+    <button class="act" onclick="setMax()">Set max goal</button>
+  </div>
+
+  <div class="card">
+    <h3>Fees</h3>
+    <label>Release fee in basis points (200 = 2%, max 500)</label>
+    <input id="feebps" type="number" min="0" max="500" placeholder="200">
+    <label>Flat create fee in USDC (0 = none, capped at 5% of each goal)</label>
+    <input id="flatfee" type="number" min="0" placeholder="0">
+    <button class="act" onclick="setFeesUi()">Set fees</button>
+    <label>Treasury address (receives fees)</label>
+    <input id="treasury" placeholder="0x...">
+    <button class="act" onclick="setTreasuryUi()">Set treasury</button>
+  </div>
+
+  <div class="card">
+    <h3>Oracles</h3>
+    <p class="sub">Changes only affect launches created afterwards. Existing launches keep the oracles they started with.</p>
+    <label>Oracle address</label>
+    <input id="oracle" placeholder="0x...">
+    <div class="row">
+      <button class="act" onclick="oracleUi(true)">Add</button>
+      <button class="act alt" onclick="oracleUi(false)">Remove</button>
+    </div>
+    <label>Approvals needed (threshold)</label>
+    <input id="thr" type="number" min="1" placeholder="2">
+    <button class="act" onclick="thrUi()">Set threshold</button>
+  </div>
+
+  <div class="card">
+    <h3>Transfer admin rights</h3>
+    <p class="sub">Two steps for safety: the current owner starts the transfer, then the new wallet confirms it.</p>
+    <label>New owner address</label>
+    <input id="newowner" placeholder="0x...">
+    <button class="act" onclick="ownerUi()">Start transfer</button>
+    <button id="accept" class="alt" onclick="run('Accept ownership', () => c.acceptOwnership())" disabled>Accept ownership (new owner only)</button>
+  </div>
+
+  <p id="msg"></p>
+  <p class="sub" style="margin-top:12px;">Tip: use a dedicated wallet for the owner role, never share its seed phrase, and only open this page by typing the address yourself.</p>
+
+  <script>
+    const ABI = [
+      "function owner() view returns (address)", "function pendingOwner() view returns (address)",
+      "function paused() view returns (bool)", "function maxGoal() view returns (uint256)",
+      "function treasury() view returns (address)", "function releaseFeeBps() view returns (uint16)",
+      "function createFee() view returns (uint256)", "function threshold() view returns (uint8)",
+      "function oracleCount() view returns (uint256)", "function oracleList(uint256) view returns (address)",
+      "function allowedPay(address) view returns (bool)", "function count() view returns (uint256)",
+      "function setPaused(bool)", "function setMaxGoal(uint256)", "function setAllowedPay(address,bool)",
+      "function setFees(uint16,uint256)", "function setTreasury(address)", "function addOracle(address)",
+      "function removeOracle(address)", "function setThreshold(uint8)",
+      "function transferOwnership(address)", "function acceptOwnership()"
+    ];
+    const USDC = { 8453: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 84532: '0x036CbD53842c5426634e7929541eC2318f3dCF7e' };
+    const NAMES = { 8453: 'Base mainnet', 84532: 'Base Sepolia (test network)' };
+    const $ = id => document.getElementById(id);
+    let provider, signer, me, chainId, c;
+
+    try { $('addr').value = localStorage.getItem('dyn_admin_addr') || ''; } catch (e) {}
+
+    function msg(t, bad) { const m = $('msg'); m.textContent = t; m.className = bad ? 'err' : 'ok'; }
+    function row(k, v) {
+      const d = document.createElement('div'); d.className = 'kv';
+      const a = document.createElement('span'); a.textContent = k;
+      const b = document.createElement('b'); b.textContent = v;
+      d.append(a, b); return d;
+    }
+
+    async function connect() {
+      if (!window.ethereum) return msg('No wallet found. Open this page inside the MetaMask or Coinbase Wallet app browser.', true);
+      try {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send('eth_requestAccounts', []);
+        signer = await provider.getSigner();
+        me = await signer.getAddress();
+        chainId = Number((await provider.getNetwork()).chainId);
+        $('wallet').textContent = me + ' on ' + (NAMES[chainId] || 'chain ' + chainId);
+        await load();
+      } catch (e) { msg('Could not connect: ' + (e.shortMessage || e.message), true); }
+    }
+
+    async function load() {
+      const addr = $('addr').value.trim();
+      if (!ethers.isAddress(addr)) return msg('Enter a valid contract address.', true);
+      try { localStorage.setItem('dyn_admin_addr', addr); } catch (e) {}
+      try {
+        c = new ethers.Contract(addr, ABI, signer);
+        const [owner, pending, paused, maxGoal, treasury, fee, cfee, thr, n, launches] = await Promise.all([
+          c.owner(), c.pendingOwner(), c.paused(), c.maxGoal(), c.treasury(), c.releaseFeeBps(),
+          c.createFee(), c.threshold(), c.oracleCount(), c.count()
+        ]);
+        const oracles = [];
+        for (let i = 0; i < Number(n); i++) oracles.push(await c.oracleList(i));
+        const usdcOk = USDC[chainId] ? await c.allowedPay(USDC[chainId]) : false;
+        const isOwner = owner.toLowerCase() === me.toLowerCase();
+        const who = $('who'); who.textContent = isOwner ? 'you are the owner' : 'read only (not the owner)';
+        who.className = 'badge ' + (isOwner ? 'b-ok' : 'b-no');
+        document.querySelectorAll('.act').forEach(b => b.disabled = !isOwner);
+        $('accept').disabled = pending === ethers.ZeroAddress || pending.toLowerCase() !== me.toLowerCase();
+        const s = $('status'); s.textContent = '';
+        s.append(
+          row('Network', NAMES[chainId] || 'chain ' + chainId),
+          row('Owner', owner),
+          row('Launchpad', paused ? 'PAUSED' : 'OPEN'),
+          row('Max goal', ethers.formatUnits(maxGoal, 6) + ' USDC'),
+          row('USDC allowed', usdcOk ? 'yes' : 'no'),
+          row('Release fee', (Number(fee) / 100) + '%'),
+          row('Create fee', ethers.formatUnits(cfee, 6) + ' USDC'),
+          row('Treasury', treasury),
+          row('Oracles', n + ' (need ' + thr + ' approvals)'),
+          row('Launches created', launches.toString())
+        );
+        oracles.forEach((o, i) => s.append(row('Oracle ' + (i + 1), o)));
+        if (pending !== ethers.ZeroAddress) s.append(row('Pending new owner', pending));
+        msg('Loaded.');
+      } catch (e) { msg('Could not read the contract. Check the address and that your wallet is on the right network. ' + (e.shortMessage || ''), true); }
+    }
+
+    async function run(label, fn) {
+      if (!c) return msg('Connect and load the contract first.', true);
+      if (!confirm('Send this transaction?\n\n' + label)) return;
+      try {
+        msg('Confirm in your wallet...');
+        const tx = await fn();
+        msg('Sent, waiting for confirmation...');
+        await tx.wait();
+        await load();
+        msg('Done: ' + label);
+      } catch (e) { msg('Failed: ' + (e.shortMessage || e.message), true); }
+    }
+
+    const addrOk = v => ethers.isAddress(v.trim());
+    function usdcAllow(ok) {
+      if (!USDC[chainId]) return msg('No USDC address known for this network.', true);
+      run((ok ? 'Allow' : 'Block') + ' USDC (' + USDC[chainId] + ')', () => c.setAllowedPay(USDC[chainId], ok));
+    }
+    function setMax() {
+      const v = $('maxgoal').value; if (v === '' || Number(v) < 0) return msg('Enter the max goal in USDC.', true);
+      run('Set max goal to ' + v + ' USDC', () => c.setMaxGoal(ethers.parseUnits(v, 6)));
+    }
+    function setFeesUi() {
+      const bps = $('feebps').value, flat = $('flatfee').value || '0';
+      if (bps === '' || Number(bps) < 0 || Number(bps) > 500) return msg('Release fee must be between 0 and 500.', true);
+      run('Set release fee to ' + bps + ' bps and create fee to ' + flat + ' USDC', () => c.setFees(Number(bps), ethers.parseUnits(flat, 6)));
+    }
+    function setTreasuryUi() {
+      const v = $('treasury').value; if (!addrOk(v)) return msg('Enter a valid treasury address.', true);
+      run('Set treasury to ' + v.trim(), () => c.setTreasury(v.trim()));
+    }
+    function oracleUi(add) {
+      const v = $('oracle').value; if (!addrOk(v)) return msg('Enter a valid oracle address.', true);
+      run((add ? 'Add' : 'Remove') + ' oracle ' + v.trim(), () => add ? c.addOracle(v.trim()) : c.removeOracle(v.trim()));
+    }
+    function thrUi() {
+      const v = $('thr').value; if (!v || Number(v) < 1) return msg('Enter the number of approvals needed.', true);
+      run('Set threshold to ' + v, () => c.setThreshold(Number(v)));
+    }
+    function ownerUi() {
+      const v = $('newowner').value; if (!addrOk(v)) return msg('Enter a valid address.', true);
+      run('Start ownership transfer to ' + v.trim() + '. Double-check this address, the new owner gets full admin rights.', () => c.transferOwnership(v.trim()));
+    }
+  </script>
+</body>
+</html>
