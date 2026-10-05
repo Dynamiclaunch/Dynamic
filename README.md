@@ -1,2 +1,0 @@
-# Dynamic
-Dynamic secure launch
