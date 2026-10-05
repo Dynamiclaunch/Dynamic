@@ -812,6 +812,13 @@
       alert('Address copied to clipboard!');
     }
 
+    function exportPrivateKey() {
+      if (!wallet) return alert('Please unlock your wallet first.');
+      if (confirm('WARNING: Never share your private key with anyone. Anyone with your private key can steal your funds. Do you want to view it?')) {
+        prompt('Your Private Key:', wallet.privateKey);
+      }
+    }
+
     async function executeSend() {
       const to = $('send-to').value.trim();
       const amount = $('send-amount').value;
